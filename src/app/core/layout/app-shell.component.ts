@@ -1,0 +1,126 @@
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthStore } from '../store/auth.store';
+import { HasRoleDirective } from '../../shared/directives/has-role.directive';
+import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
+
+interface NavItem {
+  label: string;
+  route: string;
+  icon: string;
+  requiredRole?: string;
+  requiredPermission?: string;
+}
+
+@Component({
+  selector: 'app-shell',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    HasRoleDirective,
+    HasPermissionDirective,
+  ],
+  template: `
+    <!-- Header -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-40 dark:bg-neutral-900 dark:border-neutral-800">
+      <div class="flex items-center justify-between px-6 py-4">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">
+            F
+          </div>
+          <span class="text-xl font-bold text-neutral-900 dark:text-neutral-50">Fusion</span>
+        </div>
+
+        <!-- Navigation (hidden on mobile) -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a routerLink="/dashboard" routerLinkActive="font-semibold text-primary-600"
+            class="text-neutral-600 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-50">
+            Dashboard
+          </a>
+          <a routerLink="/billing" routerLinkActive="font-semibold text-primary-600"
+            class="text-neutral-600 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-50">
+            Billing
+          </a>
+          <a routerLink="/analytics" routerLinkActive="font-semibold text-primary-600"
+            class="text-neutral-600 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-50">
+            Analytics
+          </a>
+          <a *hasRole="'admin'" routerLink="/admin" routerLinkActive="font-semibold text-primary-600"
+            class="text-neutral-600 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-50">
+            Admin
+          </a>
+          <a *hasPermission="'developer.manage'" routerLink="/developer" routerLinkActive="font-semibold text-primary-600"
+            class="text-neutral-600 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-50">
+            Developer
+          </a>
+        </nav>
+
+        <!-- User menu -->
+        <div class="flex items-center gap-4">
+          <!-- Notifications bell -->
+          <button class="relative text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-danger-600 rounded-full"></span>
+          </button>
+
+          <!-- User dropdown -->
+          <button (click)="toggleUserMenu()" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div class="w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center text-primary-700 font-semibold dark:bg-primary-900 dark:text-primary-200">
+              {{ authStore.userName().charAt(0).toUpperCase() }}
+            </div>
+            <span class="hidden sm:inline text-sm font-medium text-neutral-700 dark:text-neutral-300">
+              {{ authStore.userName() }}
+            </span>
+          </button>
+
+          <!-- User menu dropdown -->
+          <div *ngIf="showUserMenu()" class="absolute top-16 right-6 bg-white border border-neutral-200 rounded-lg shadow-lg dark:bg-neutral-900 dark:border-neutral-800 w-48 py-2">
+            <a routerLink="/account" class="block px-4 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+              Account Settings
+            </a>
+            <button (click)="logout()" class="w-full text-left px-4 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="flex-1 overflow-auto">
+      <!-- Breadcrumbs -->
+      <div class="border-b border-neutral-200 bg-neutral-50 px-6 py-3 dark:bg-neutral-900 dark:border-neutral-800">
+        <nav class="flex gap-2 text-sm text-muted">
+          <a routerLink="/dashboard" class="hover:text-neutral-700 dark:hover:text-neutral-300">Dashboard</a>
+          <span>/</span>
+          <span class="text-neutral-900 dark:text-neutral-50">Current Page</span>
+        </nav>
+      </div>
+
+      <!-- Page content -->
+      <div class="p-6">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  `,
+})
+export class AppShellComponent {
+  authStore = inject(AuthStore);
+  showUserMenu = signal(false);
+
+  toggleUserMenu() {
+    this.showUserMenu.update((v) => !v);
+  }
+
+  logout() {
+    this.authStore.logout();
+    this.showUserMenu.set(false);
+  }
+}
