@@ -7,6 +7,9 @@ import { SignupComponent } from './domains/auth/pages/signup.component';
 import { DashboardComponent } from './domains/dashboard/pages/dashboard.component';
 import { ApiKeysComponent } from './domains/api-keys/pages/api-keys.component';
 import { AdminDashboardComponent } from './domains/admin/pages/admin-dashboard.component';
+import { BillingComponent } from './domains/billing/pages/billing.component';
+import { ProjectsComponent } from './domains/projects/pages/projects.component';
+import { AnalyticsComponent } from './domains/analytics/pages/analytics.component';
 import { PlaceholderComponent } from './domains/shared/pages/placeholder.component';
 
 export const routes: Routes = [
@@ -55,31 +58,19 @@ export const routes: Routes = [
       // Billing domain
       {
         path: 'billing',
-        component: PlaceholderComponent,
-        data: {
-          title: 'Billing & Subscriptions',
-          description: 'Manage your subscription and invoices',
-        },
+        component: BillingComponent,
       },
 
       // Projects domain
       {
         path: 'projects',
-        component: PlaceholderComponent,
-        data: {
-          title: 'Projects',
-          description: 'Manage your projects',
-        },
+        component: ProjectsComponent,
       },
 
       // Analytics domain
       {
         path: 'analytics',
-        component: PlaceholderComponent,
-        data: {
-          title: 'Analytics & Insights',
-          description: 'View detailed analytics and performance metrics',
-        },
+        component: AnalyticsComponent,
       },
 
       // Account settings
