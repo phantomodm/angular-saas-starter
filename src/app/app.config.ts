@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import { AuthAdapter, AUTH_ADAPTER } from './core/auth/auth.adapter';
 import { MockAuthService } from './core/auth/providers/mock-auth.service';
@@ -9,6 +10,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideHttpClient(),
 
     // Provide the auth adapter (use MockAuthService by default, swap for real provider when ready)
     {

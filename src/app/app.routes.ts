@@ -4,12 +4,14 @@ import { roleGuard } from './core/guards/role.guard';
 import { AppShellComponent } from './core/layout/app-shell.component';
 import { LoginComponent } from './domains/auth/pages/login.component';
 import { SignupComponent } from './domains/auth/pages/signup.component';
+import { OnboardingComponent } from './domains/auth/pages/onboarding.component';
 import { DashboardComponent } from './domains/dashboard/pages/dashboard.component';
 import { ApiKeysComponent } from './domains/api-keys/pages/api-keys.component';
 import { AdminDashboardComponent } from './domains/admin/pages/admin-dashboard.component';
 import { BillingComponent } from './domains/billing/pages/billing.component';
 import { ProjectsComponent } from './domains/projects/pages/projects.component';
 import { AnalyticsComponent } from './domains/analytics/pages/analytics.component';
+import { AccountSettingsComponent } from './domains/account/pages/account-settings.component';
 import { PlaceholderComponent } from './domains/shared/pages/placeholder.component';
 
 export const routes: Routes = [
@@ -37,6 +39,11 @@ export const routes: Routes = [
       title: 'Reset Password',
       description: 'Enter your new password',
     },
+  },
+  {
+    path: 'onboarding',
+    component: OnboardingComponent,
+    canActivate: [authGuard],
   },
 
   // Protected routes with app shell
@@ -76,11 +83,7 @@ export const routes: Routes = [
       // Account settings
       {
         path: 'account',
-        component: PlaceholderComponent,
-        data: {
-          title: 'Account Settings',
-          description: 'Manage your account and security',
-        },
+        component: AccountSettingsComponent,
       },
 
       // Admin domain (requires admin role)

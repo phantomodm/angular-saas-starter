@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthStore } from '../store/auth.store';
+import { ThemeService } from '../services/theme.service';
 import { HasRoleDirective } from '../../shared/directives/has-role.directive';
 import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
 
@@ -68,6 +69,20 @@ interface NavItem {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             <span class="absolute top-0 right-0 w-2 h-2 bg-danger-600 rounded-full"></span>
+          </button>
+
+          <!-- Theme toggle -->
+          <button
+            (click)="themeService.toggleTheme()"
+            [title]="'Current: ' + themeService.getCurrentThemeLabel()"
+            class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50 transition-colors"
+          >
+            <svg *ngIf="!themeService.isDark()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1m-16 0H1m15.364 1.636l.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg *ngIf="themeService.isDark()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
           </button>
 
           <!-- Mobile menu toggle (visible only on small screens) -->
@@ -159,6 +174,7 @@ interface NavItem {
 })
 export class AppShellComponent {
   authStore = inject(AuthStore);
+  themeService = inject(ThemeService);
   showUserMenu = signal(false);
   showMobileMenu = signal(false);
 
