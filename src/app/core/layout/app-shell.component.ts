@@ -27,7 +27,7 @@ interface NavItem {
   template: `
     <!-- Header -->
     <header class="bg-white border-b border-neutral-200 sticky top-0 z-40 dark:bg-neutral-900 dark:border-neutral-800">
-      <div class="flex items-center justify-between px-6 py-4">
+      <div class="flex items-center justify-between px-4 sm:px-6 py-4">
         <!-- Logo -->
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">
@@ -60,8 +60,8 @@ interface NavItem {
           </a>
         </nav>
 
-        <!-- User menu -->
-        <div class="flex items-center gap-4">
+        <!-- User menu & mobile hamburger -->
+        <div class="flex items-center gap-2 sm:gap-4">
           <!-- Notifications bell -->
           <button class="relative text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,9 +70,19 @@ interface NavItem {
             <span class="absolute top-0 right-0 w-2 h-2 bg-danger-600 rounded-full"></span>
           </button>
 
+          <!-- Mobile menu toggle (visible only on small screens) -->
+          <button (click)="toggleMobileMenu()" class="md:hidden text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-50">
+            <svg *ngIf="!showMobileMenu()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg *ngIf="showMobileMenu()" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
           <!-- User dropdown -->
           <button (click)="toggleUserMenu()" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div class="w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center text-primary-700 font-semibold dark:bg-primary-900 dark:text-primary-200">
+            <div class="w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center text-primary-700 font-semibold dark:bg-primary-900 dark:text-primary-200 text-sm">
               {{ authStore.userName().charAt(0).toUpperCase() }}
             </div>
             <span class="hidden sm:inline text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -81,8 +91,8 @@ interface NavItem {
           </button>
 
           <!-- User menu dropdown -->
-          <div *ngIf="showUserMenu()" class="absolute top-16 right-6 bg-white border border-neutral-200 rounded-lg shadow-lg dark:bg-neutral-900 dark:border-neutral-800 w-48 py-2">
-            <a routerLink="/account" class="block px-4 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+          <div *ngIf="showUserMenu()" class="absolute top-16 right-4 sm:right-6 bg-white border border-neutral-200 rounded-lg shadow-lg dark:bg-neutral-900 dark:border-neutral-800 w-48 py-2 z-50">
+            <a routerLink="/account" (click)="closeAllMenus()" class="block px-4 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
               Account Settings
             </a>
             <button (click)="logout()" class="w-full text-left px-4 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
@@ -90,6 +100,42 @@ interface NavItem {
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Mobile Navigation Menu -->
+      <div *ngIf="showMobileMenu()" class="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 animate-fade-in">
+        <nav class="flex flex-col px-4 py-2 space-y-1">
+          <a routerLink="/dashboard" routerLinkActive="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 font-semibold"
+            (click)="closeMobileMenu()"
+            class="block px-4 py-3 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors dark:text-neutral-400 dark:hover:bg-neutral-800">
+            Dashboard
+          </a>
+          <a routerLink="/billing" routerLinkActive="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 font-semibold"
+            (click)="closeMobileMenu()"
+            class="block px-4 py-3 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors dark:text-neutral-400 dark:hover:bg-neutral-800">
+            Billing
+          </a>
+          <a routerLink="/projects" routerLinkActive="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 font-semibold"
+            (click)="closeMobileMenu()"
+            class="block px-4 py-3 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors dark:text-neutral-400 dark:hover:bg-neutral-800">
+            Projects
+          </a>
+          <a routerLink="/analytics" routerLinkActive="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 font-semibold"
+            (click)="closeMobileMenu()"
+            class="block px-4 py-3 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors dark:text-neutral-400 dark:hover:bg-neutral-800">
+            Analytics
+          </a>
+          <a *hasRole="'admin'" routerLink="/admin" routerLinkActive="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 font-semibold"
+            (click)="closeMobileMenu()"
+            class="block px-4 py-3 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors dark:text-neutral-400 dark:hover:bg-neutral-800">
+            Admin
+          </a>
+          <a *hasPermission="'developer.manage'" routerLink="/developer" routerLinkActive="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 font-semibold"
+            (click)="closeMobileMenu()"
+            class="block px-4 py-3 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors dark:text-neutral-400 dark:hover:bg-neutral-800">
+            Developer
+          </a>
+        </nav>
       </div>
     </header>
 
@@ -114,13 +160,27 @@ interface NavItem {
 export class AppShellComponent {
   authStore = inject(AuthStore);
   showUserMenu = signal(false);
+  showMobileMenu = signal(false);
 
   toggleUserMenu() {
     this.showUserMenu.update((v) => !v);
   }
 
+  toggleMobileMenu() {
+    this.showMobileMenu.update((v) => !v);
+  }
+
+  closeMobileMenu() {
+    this.showMobileMenu.set(false);
+  }
+
+  closeAllMenus() {
+    this.showUserMenu.set(false);
+    this.showMobileMenu.set(false);
+  }
+
   logout() {
     this.authStore.logout();
-    this.showUserMenu.set(false);
+    this.closeAllMenus();
   }
 }
