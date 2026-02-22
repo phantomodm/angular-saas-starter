@@ -8,6 +8,7 @@ import { OnboardingComponent } from './domains/auth/pages/onboarding.component';
 import { DashboardComponent } from './domains/dashboard/pages/dashboard.component';
 import { ApiKeysComponent } from './domains/api-keys/pages/api-keys.component';
 import { AdminDashboardComponent } from './domains/admin/pages/admin-dashboard.component';
+import { LogsViewerComponent } from './domains/admin/pages/logs-viewer.component';
 import { BillingComponent } from './domains/billing/pages/billing.component';
 import { ProjectsComponent } from './domains/projects/pages/projects.component';
 import { AnalyticsComponent } from './domains/analytics/pages/analytics.component';
@@ -89,9 +90,18 @@ export const routes: Routes = [
       // Admin domain (requires admin role)
       {
         path: 'admin',
-        component: AdminDashboardComponent,
         canActivate: [roleGuard],
         data: { roles: ['admin'] },
+        children: [
+          {
+            path: '',
+            component: AdminDashboardComponent,
+          },
+          {
+            path: 'logs',
+            component: LogsViewerComponent,
+          },
+        ],
       },
 
       // Developer domain

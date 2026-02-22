@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { CardComponent, CardBodyComponent, CardHeaderComponent } from '../../../shared/ui/card.component';
 
 interface AdminUser {
@@ -14,13 +15,80 @@ interface AdminUser {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, CardComponent, CardBodyComponent, CardHeaderComponent],
+  imports: [CommonModule, RouterLink, CardComponent, CardBodyComponent, CardHeaderComponent],
   template: `
     <div class="space-y-8">
       <!-- Header -->
       <div>
         <h1 class="section-header">Admin Dashboard</h1>
         <p class="section-subheader mt-2">Manage users, roles, and system settings</p>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <a
+          routerLink="/admin/logs"
+          class="p-4 bg-primary-50 dark:bg-primary-900 border border-primary-200 dark:border-primary-700 rounded-lg
+            hover:bg-primary-100 dark:hover:bg-primary-800 transition cursor-pointer"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div>
+              <h3 class="font-semibold text-primary-900 dark:text-primary-50">View Logs</h3>
+              <p class="text-sm text-primary-700 dark:text-primary-300">Monitor errors & activity</p>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="p-4 bg-success-50 dark:bg-success-900 border border-success-200 dark:border-success-700 rounded-lg
+            hover:bg-success-100 dark:hover:bg-success-800 transition cursor-pointer"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-success-600 dark:text-success-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <div>
+              <h3 class="font-semibold text-success-900 dark:text-success-50">Analytics</h3>
+              <p class="text-sm text-success-700 dark:text-success-300">View system metrics</p>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="p-4 bg-warning-50 dark:bg-warning-900 border border-warning-200 dark:border-warning-700 rounded-lg
+            hover:bg-warning-100 dark:hover:bg-warning-800 transition cursor-pointer"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-warning-600 dark:text-warning-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 0v2m0-6h4m-6 0h4m0-6H8m6 0H8m0 0h4m0 0h-4m0-2h4m0 2h-4" />
+            </svg>
+            <div>
+              <h3 class="font-semibold text-warning-900 dark:text-warning-50">Settings</h3>
+              <p class="text-sm text-warning-700 dark:text-warning-300">System configuration</p>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="p-4 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg
+            hover:bg-neutral-100 dark:hover:bg-neutral-600 transition cursor-pointer"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">Support</h3>
+              <p class="text-sm text-neutral-700 dark:text-neutral-300">Get help & resources</p>
+            </div>
+          </div>
+        </a>
       </div>
 
       <!-- Statistics -->
