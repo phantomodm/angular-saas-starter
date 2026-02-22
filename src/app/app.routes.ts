@@ -9,10 +9,14 @@ import { DashboardComponent } from './domains/dashboard/pages/dashboard.componen
 import { ApiKeysComponent } from './domains/api-keys/pages/api-keys.component';
 import { AdminDashboardComponent } from './domains/admin/pages/admin-dashboard.component';
 import { LogsViewerComponent } from './domains/admin/pages/logs-viewer.component';
+import { AuditTrailComponent } from './domains/admin/pages/audit-trail.component';
 import { BillingComponent } from './domains/billing/pages/billing.component';
+import { SubscriptionManagerComponent } from './domains/billing/pages/subscription-manager.component';
 import { ProjectsComponent } from './domains/projects/pages/projects.component';
 import { AnalyticsComponent } from './domains/analytics/pages/analytics.component';
 import { AccountSettingsComponent } from './domains/account/pages/account-settings.component';
+import { TwoFactorSetupComponent } from './domains/account/pages/two-factor-setup.component';
+import { TeamManagementComponent } from './domains/team/pages/team-management.component';
 import { PlaceholderComponent } from './domains/shared/pages/placeholder.component';
 
 export const routes: Routes = [
@@ -66,7 +70,22 @@ export const routes: Routes = [
       // Billing domain
       {
         path: 'billing',
-        component: BillingComponent,
+        children: [
+          {
+            path: '',
+            component: BillingComponent,
+          },
+          {
+            path: 'subscription',
+            component: SubscriptionManagerComponent,
+          },
+        ],
+      },
+
+      // Team management
+      {
+        path: 'team',
+        component: TeamManagementComponent,
       },
 
       // Projects domain
@@ -84,7 +103,16 @@ export const routes: Routes = [
       // Account settings
       {
         path: 'account',
-        component: AccountSettingsComponent,
+        children: [
+          {
+            path: '',
+            component: AccountSettingsComponent,
+          },
+          {
+            path: '2fa',
+            component: TwoFactorSetupComponent,
+          },
+        ],
       },
 
       // Admin domain (requires admin role)
@@ -100,6 +128,10 @@ export const routes: Routes = [
           {
             path: 'logs',
             component: LogsViewerComponent,
+          },
+          {
+            path: 'audit',
+            component: AuditTrailComponent,
           },
         ],
       },
