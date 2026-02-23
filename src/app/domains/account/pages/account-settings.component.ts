@@ -2,12 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileStore } from '../../../core/store/profile.store';
-import { CardComponent, CardBodyComponent, CardHeaderComponent } from '../../../shared/ui/card.component';
+import { CardComponent } from '../../../shared/ui/card.component';
 
 @Component({
   selector: 'app-account-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, CardBodyComponent, CardHeaderComponent],
+  imports: [CommonModule, FormsModule, CardComponent],
   template: `
     <div class="space-y-8">
       <!-- Header -->

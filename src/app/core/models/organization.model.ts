@@ -275,3 +275,184 @@ export interface PaymentMethod {
   createdAt: Date;
   updatedAt: Date;
 }
+
+/**
+ * Webhook configuration
+ */
+export interface Webhook {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string;
+  url: string;
+  events: WebhookEvent[];
+  secret: string; // For HMAC signature verification
+  headers?: Record<string, string>; // Custom headers
+  isActive: boolean;
+  retryPolicy: {
+    maxRetries: number;
+    retryDelay: number; // milliseconds
+    exponentialBackoff: boolean;
+  };
+  rateLimit?: {
+    maxRequests: number;
+    windowSeconds: number;
+  };
+  metadata?: Record<string, any>;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  lastTriggeredAt?: Date;
+  totalDeliveries: number;
+  failedDeliveries: number;
+}
+
+/**
+ * Webhook event types
+ */
+export type WebhookEvent =
+  | 'user.created'
+  | 'user.updated'
+  | 'user.deleted'
+  | 'team.created'
+  | 'team.updated'
+  | 'team.deleted'
+  | 'member.invited'
+  | 'member.joined'
+  | 'member.removed'
+  | 'subscription.created'
+  | 'subscription.updated'
+  | 'subscription.canceled'
+  | 'payment.succeeded'
+  | 'payment.failed'
+  | 'invoice.created'
+  | 'invoice.paid'
+  | 'api_key.created'
+  | 'api_key.deleted';
+
+/**
+ * Webhook delivery (log of webhook executions)
+ */
+export interface WebhookDelivery {
+  id: string;
+  webhookId: string;
+  organizationId: string;
+  event: WebhookEvent;
+  payload: Record<string, any>;
+  url: string;
+  method: 'POST' | 'PUT';
+  status: 'pending' | 'success' | 'failed' | 'retrying';
+  statusCode?: number;
+  responseTime: number; // milliseconds
+  responseBody?: string;
+  error?: string;
+  retryCount: number;
+  nextRetryAt?: Date;
+  createdAt: Date;
+  completedAt?: Date;
+}
+
+/**
+ * API rate limit and quota
+ */
+export interface ApiQuota {
+  id: string;
+  organizationId: string;
+  apiKeyId: string;
+  quotaType: 'requests' | 'storage' | 'bandwidth';
+  limit: number; // per time period
+  period: 'minute' | 'hour' | 'day' | 'month';
+  currentUsage: number;
+  resetAt: Date;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Rate limit record for tracking
+ */
+export interface RateLimitRecord {
+  id: string;
+  organizationId: string;
+  apiKeyId?: string;
+  ipAddress?: string;
+  endpoint: string;
+  requestCount: number;
+  windowStart: Date;
+  windowEnd: Date;
+  isBlocked: boolean;
+  blockReason?: string;
+}
+
+/**
+ * Help Center / Support article
+ */
+export interface SupportArticle {
+  id: string;
+  organizationId: string;
+  slug: string;
+  title: string;
+  description: string;
+  content: string; // Markdown or HTML
+  category: string;
+  tags: string[];
+  order: number;
+  isPublished: boolean;
+  views: number;
+  helpful: number; // thumbs up
+  unhelpful: number; // thumbs down
+  relatedArticles?: string[]; // IDs
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+}
+
+/**
+ * Help Center category
+ */
+export interface SupportCategory {
+  id: string;
+  organizationId: string;
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  order: number;
+  isPublished: boolean;
+  articleCount: number;
+}
+
+/**
+ * Support ticket/feedback
+ */
+export interface SupportTicket {
+  id: string;
+  organizationId: string;
+  userId: string;
+  userEmail: string;
+  subject: string;
+  message: string;
+  category: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: 'open' | 'in_progress' | 'waiting_for_customer' | 'resolved' | 'closed';
+  replies: SupportReply[];
+  attachments?: string[]; // URLs
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt?: Date;
+}
+
+/**
+ * Support ticket reply
+ */
+export interface SupportReply {
+  id: string;
+  ticketId: string;
+  userId: string;
+  userName: string;
+  userRole: 'customer' | 'support' | 'admin';
+  message: string;
+  attachments?: string[];
+  createdAt: Date;
+}
