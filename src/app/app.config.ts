@@ -17,6 +17,7 @@ import { AuthAdapter, AUTH_ADAPTER } from './core/auth/auth.adapter';
 import { FirebaseAuthService } from './core/auth/providers/firebase-auth.service';
 import { AuthInterceptor } from './core/http/auth.interceptor';
 import { ErrorInterceptor } from './core/http/error.interceptor';
+import { MockAuthService } from './core/auth/providers/mock-auth.service';
 
 Chart.register(...registerables);
 
@@ -29,14 +30,14 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(NgChartsModule),
 
     // Provide the auth adapter with production Firebase implementation
-    {
-      provide: AUTH_ADAPTER,
-      useClass: FirebaseAuthService,
-    },
-    {
-      provide: AuthAdapter,
-      useClass: FirebaseAuthService,
-    },
+    // {
+    //   provide: AUTH_ADAPTER,
+    //   useClass: FirebaseAuthService,
+    // },
+    // {
+    //   provide: AuthAdapter,
+    //   useClass: FirebaseAuthService,
+    // },
 
     // Register HTTP interceptors (order matters - auth first, then error handling)
     {
@@ -48,6 +49,15 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true,
+    },
+    // Provide the auth adapter (use MockAuthService by default, swap for real provider when ready)
+    {
+      provide: AUTH_ADAPTER,
+      useClass: MockAuthService,
+    },
+    {
+      provide: AuthAdapter,
+      useClass: MockAuthService,
     },
   ],
 };

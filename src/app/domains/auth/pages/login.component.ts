@@ -130,7 +130,7 @@ export class LoginComponent {
     // Redirect on successful login
     setTimeout(() => {
       if (this.authStore.isAuthenticated()) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/continuity']);
       }
     }, 600);
   }

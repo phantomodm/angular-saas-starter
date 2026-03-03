@@ -1,9 +1,11 @@
 <div class="overview-container">
   <!-- HEADER -->
   <ce-header
-    [nodeTypes]="nodeTypes"
-    [nodes]="nodesForCategory"
+    [nodeTypes]="nodeTypes()"
+    [nodes]="nodesForCategory()"
     [lastUpdated]="lastUpdated()"
+    [selectedCategory]="selectedCategory()"
+    [selectedSymbol]="selectedSymbol()"
   ></ce-header>
 
   <!-- TIMEFRAME FILTER -->

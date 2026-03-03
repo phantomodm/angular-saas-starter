@@ -18,7 +18,7 @@ from backend.stripe_service import stripe_service
 from backend.database import get_firestore_db
 from backend.dependencies import verify_token, get_current_user, verify_organization_access, require_admin
 from backend.models import TokenData, UserInfo, ApiResponse, HealthCheckResponse
-from backend.routes import billing, teams
+from backend.routes import billing, teams, members
 
 # Load environment variables
 load_dotenv()
@@ -99,6 +99,7 @@ logger.info("FastAPI app created")
 
 app.include_router(billing.router)
 app.include_router(teams.router)
+app.include_router(members.router)
 
 logger.info("All routers included")
 

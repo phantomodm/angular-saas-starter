@@ -71,8 +71,8 @@ export class OverviewPage implements OnInit {
   selectedCategory = signal<string>('Equities');
 
   // CATEGORY + SYMBOL
-  nodeTypes: string[] = [];
-  nodesForCategory: string[] = [];
+  nodeTypes = signal<string[]>([]);
+  nodesForCategory = signal<string[]>([]);
 
   // STATE
   symbolState = signal<any>(null);
@@ -98,7 +98,6 @@ export class OverviewPage implements OnInit {
         timestamp: p.timestamp,
         regime: p.regime,
       }));
-      console.log(data)
     return data;
   });
 
@@ -148,23 +147,24 @@ export class OverviewPage implements OnInit {
   async ngOnInit() {
     try {
       // Load categories
-      this.nodeTypes = await this.continuity.getNodeTypes();
-      if (!this.nodeTypes.length) return;
+      this.nodeTypes.set(await this.continuity.getNodeTypes());
+      console.log(this.nodeTypes())
+      if (!this.nodeTypes().length) return;
 
       // Select first category
-      this.selectedCategory.set(this.nodeTypes[0]);
+      //this.selectedCategory.set(this.nodeTypes()[0]);
 
       // Load symbols for that category
-      this.nodesForCategory = await this.continuity.getNodes(
-        this.selectedCategory(),
+      this.nodesForCategory.set(
+        await this.continuity.getNodes(this.selectedCategory()),
       );
-      if (!this.nodesForCategory.length) return;
+      if (!this.nodesForCategory().length) return;
 
       if (this.selectedCategory() && this.selectedSymbol()) {
         this.poller.setSymbol(this.selectedSymbol());
       } else {
-        this.selectedSymbol.set(this.nodesForCategory[0]);
-        this.poller.setSymbol(this.nodesForCategory[0]);
+        this.selectedSymbol.set(this.nodesForCategory()[0]);
+        this.poller.setSymbol(this.nodesForCategory()[0]);
       }
     } catch (e) {
       console.error('Error loading continuity data:', e);

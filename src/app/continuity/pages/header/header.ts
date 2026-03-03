@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, effect, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,15 +18,26 @@ import { MatChipsModule } from '@angular/material/chips';
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
 })
-export class Header {
-  @Input() nodeTypes: string[] = [];
-  @Input() nodes: string[] = [];
-  @Input() selectedCategory = '';
-  @Input() selectedSymbol = '';
-  @Input() lastUpdated = 'N/A';
+export class Header implements OnInit {
+  nodeTypes = input<string[]>([]);
+  nodes = input<string[]>([]);
+  selectedCategory = input<string>('');
+  selectedSymbol = input<string>('N/A');
+  lastUpdated = input<string>('N/A');
 
   @Output() categoryChange = new EventEmitter<string>();
   @Output() symbolChange = new EventEmitter<string>();
+
+  constructor(){
+    effect(() => {
+      const symbol = this.selectedSymbol();
+      const category = this.selectedCategory();
+      console.log('Header detected change - Category:', category, 'Symbol:', symbol);
+      if (symbol && category) {
+        
+      }
+    })
+  }
 
   onCategoryChange(value: string) {
     this.categoryChange.emit(value);
@@ -34,5 +45,11 @@ export class Header {
 
   onSymbolChange(value: string) {
     this.symbolChange.emit(value);
+  }
+
+  ngOnInit() {
+    // Initialization logic if needed
+    console.log('Header component initialized with categories:', this.nodeTypes());
+    console.log('Header component initialized with symbols:', this.nodes());
   }
 }

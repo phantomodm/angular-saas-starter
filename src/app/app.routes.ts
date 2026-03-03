@@ -58,7 +58,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AppShellComponent,
-    canActivate: [authGuard],
+    //canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
@@ -66,7 +66,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/dashboard',
+        redirectTo: '/continuity',
         pathMatch: 'full',
       },
       {

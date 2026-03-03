@@ -49,7 +49,6 @@ export class SignalCardsComponent implements OnInit {
     if (value === null) return '#6b7280';
     if (value > 0) return '#16a34a';
     if (value < 0) return '#dc2626';
-    console.log(this.state());
     return '#6b7280';
   }
 
