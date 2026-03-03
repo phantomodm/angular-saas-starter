@@ -1,0 +1,30 @@
+import { Component, inject, input, Input, OnChanges } from '@angular/core';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { ForecastData } from '../../../core/models/types';
+import { Continuity } from '../../../core/services/continuity';
+
+@Component({
+  selector: 'forecast-table',
+  imports: [CommonModule, MatCardModule, MatTableModule, DatePipe, DecimalPipe],
+  templateUrl: './factory-table.html',
+  styleUrl: './factory-table.scss',
+})
+export class FactoryTable implements OnChanges {
+  private continuity = inject(Continuity);
+  symbol = input<string>('');
+  displayedColumns = ['date', 'continuity', 'trend', 'acceleration'];
+  rows: any[] = [];
+  loading = false;
+
+  constructor() {}
+
+  async ngOnChanges() {
+    if (!this.symbol) return;
+    this.loading = true;
+    const data: ForecastData = await this.continuity.getForecast(this.symbol());
+    this.rows = data.forecast ?? [];
+    this.loading = false;
+  }
+}

@@ -1,0 +1,15 @@
+<mat-card class="regime-card">
+  <h3 class="section-title">Regime Timeline</h3>
+
+  <div class="timeline">
+    @for(seg of segments(); track seg.timestamp){
+      <div
+      class="segment"
+      [style.width]="seg.width"
+      [style.backgroundColor]="colorFor(seg.regime)"
+      matTooltip="{{ seg.regime | titlecase }} • {{ seg.timestamp | date:'short' }}"
+    ></div>
+    }
+    
+  </div>
+</mat-card>

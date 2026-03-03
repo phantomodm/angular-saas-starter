@@ -1,0 +1,46 @@
+<div class="signal-grid">
+
+  <!-- Continuity -->
+  <mat-card class="signal-card">
+    <div class="label">Continuity</div>
+    <div class="value" [style.color]="colorFor(continuity())">
+      {{ continuity() | number:'1.6-6' }}
+    </div>
+  </mat-card>
+
+  <!-- Trend -->
+  <mat-card class="signal-card">
+    <div class="label">Trend</div>
+    <div class="value" [style.color]="colorFor(trend())">
+      {{ trend() | number:'1.6-6' }}
+    </div>
+  </mat-card>
+
+  <!-- Acceleration -->
+  <mat-card class="signal-card">
+    <div class="label">Acceleration</div>
+    <div class="value" [style.color]="colorFor(acceleration())">
+      {{ acceleration() | number:'1.6-6' }}
+    </div>
+  </mat-card>
+
+  <!-- Regime -->
+  <mat-card class="signal-card">
+    <div class="label">Regime</div>
+    <div class="value" [style.color]="regimeColor(regime())">
+      {{ regime() | titlecase }}
+    </div>
+  </mat-card>
+
+  <!-- Collapse Score (optional) -->
+   @if(collapseScore() !== null){
+    <mat-card class="signal-card">
+    <div class="label">Collapse Score</div>
+    <div class="value">
+      {{ collapseScore() | number:'1.2-2' }}
+    </div>
+  </mat-card>
+   }
+  
+
+</div>

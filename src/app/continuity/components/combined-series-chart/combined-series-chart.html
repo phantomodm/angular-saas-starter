@@ -1,0 +1,12 @@
+<mat-card class="combined-card">
+  <h3 class="section-title">Signal Stack</h3>
+
+  <div class="chart-wrapper">
+    <canvas
+      baseChart
+      [data]="chartData()"
+      [options]="chartOptions"
+      type="line"
+    ></canvas>
+  </div>
+</mat-card>

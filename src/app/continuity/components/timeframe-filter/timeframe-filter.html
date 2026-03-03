@@ -1,0 +1,20 @@
+<div class="tf-container">
+
+  <div class="tf-section">
+    <div class="tf-label">WINDOW</div>
+
+    <mat-button-toggle-group
+      [value]="window()"
+      (change)="onWindowChange($event.value)"
+      class="tf-toggle"
+      appearance="legacy"
+    >
+      @for (w of windows; track w.value) {
+        <mat-button-toggle [value]="w.value">
+          {{ w.label }}
+        </mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+  </div>
+
+</div>

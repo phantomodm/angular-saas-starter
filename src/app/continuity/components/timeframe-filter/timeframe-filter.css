@@ -1,0 +1,41 @@
+.tf-container {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.tf-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tf-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: #6b7280;
+}
+
+.tf-toggle {
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 4px 6px;
+
+  .mat-button-toggle {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: #374151;
+  }
+
+  .mat-button-toggle-checked {
+    background: #2563eb !important;
+    color: white !important;
+  }
+
+  .mat-button-toggle:hover:not(.mat-button-toggle-checked) {
+    background: rgba(0,0,0,0.05);
+  }
+}

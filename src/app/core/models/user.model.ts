@@ -5,6 +5,7 @@ export interface User {
   photoUrl?: string;
   roles: string[];
   permissions: string[];
+  organizationId?: string;
   createdAt: Date;
   lastLogin?: Date;
 }

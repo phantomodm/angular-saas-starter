@@ -1,0 +1,44 @@
+<div class="overview-container">
+  <!-- HEADER -->
+  <ce-header
+    [nodeTypes]="nodeTypes"
+    [nodes]="nodesForCategory"
+    [lastUpdated]="lastUpdated()"
+  ></ce-header>
+
+  <!-- TIMEFRAME FILTER -->
+  <ce-timeframe-filter
+    [resolution]="timeframeFilter.resolution()"
+    [window]="timeframeFilter.window()"
+    (resolutionChange)="timeframeFilter.onResolutionChange($event)"
+    (windowChange)="timeframeFilter.onWindowChange($event)"  
+  ></ce-timeframe-filter>
+
+  <!-- SIGNAL CARDS -->
+  <ce-signal-cards [state]="symbolState()"></ce-signal-cards>
+
+  <!-- COMBINED SERIES CHART -->
+  <ce-combined-series-chart
+    [continuity]="continuitySeries()"
+    [trend]="trendSeries()"
+    [acceleration]="accelerationSeries()"
+  ></ce-combined-series-chart>
+
+  <!-- REGIME TIMELINE -->
+  <ce-regime-timeline [data]="regimeSeries()"></ce-regime-timeline>
+
+  <!-- MINI HEATMAP -->
+  <ce-mini-heatmap [data]="heatmapData"></ce-mini-heatmap>
+
+  <!-- FORECAST + ALERTS -->
+  <div class="forecast-alerts-grid">
+    <ce-forecast-table [symbol]="selectedSymbol()"></ce-forecast-table>
+    <!-- <ce-alerts-panel
+      [alerts]="alerts"
+      [symbol]="selectedSymbol()"
+    ></ce-alerts-panel> -->
+  </div>
+
+  <!-- EXPLANATION PANEL -->
+  <ce-explanation-panel></ce-explanation-panel>
+</div>

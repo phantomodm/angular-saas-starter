@@ -136,6 +136,11 @@
   }
 }
 
+.active-link {
+  color: var(--mat-sys-primary);
+  font-weight: 600;
+}
+
 /* Accessibility improvements */
 @layer utilities {
   .sr-only {
@@ -154,3 +159,6 @@
     @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950;
   }
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

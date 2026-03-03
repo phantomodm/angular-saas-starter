@@ -8,11 +8,19 @@ import { OnboardingComponent } from './domains/auth/pages/onboarding.component';
 import { DashboardComponent } from './domains/dashboard/pages/dashboard.component';
 import { ApiKeysComponent } from './domains/api-keys/pages/api-keys.component';
 import { AdminDashboardComponent } from './domains/admin/pages/admin-dashboard.component';
+import { LogsViewerComponent } from './domains/admin/pages/logs-viewer.component';
+import { AuditTrailComponent } from './domains/admin/pages/audit-trail.component';
 import { BillingComponent } from './domains/billing/pages/billing.component';
+import { SubscriptionManagerComponent } from './domains/billing/pages/subscription-manager.components';
 import { ProjectsComponent } from './domains/projects/pages/projects.component';
 import { AnalyticsComponent } from './domains/analytics/pages/analytics.component';
 import { AccountSettingsComponent } from './domains/account/pages/account-settings.component';
+import { TwoFactorSetupComponent } from './domains/account/pages/two-factor-setup.component';
+import { TeamManagementComponent } from './domains/team/pages/team-management.component';
 import { PlaceholderComponent } from './domains/shared/pages/placeholder.component';
+import { WebhooksManagementComponent } from './domains/integration/pages/webhooks-management.component';
+import { RateLimitingDashboardComponent } from './domains/integration/pages/rate-limiting-dashboard.component';
+import { HelpCenterComponent } from './domains/support/pages/help-center.component';
 
 export const routes: Routes = [
   // Public auth routes
@@ -61,11 +69,29 @@ export const routes: Routes = [
         redirectTo: '/dashboard',
         pathMatch: 'full',
       },
-
+      {
+        path: 'continuity',
+        loadChildren: () => import('./continuity/continuity.routes').then((m) => m.CONTINUITY_ROUTES),
+      },
       // Billing domain
       {
         path: 'billing',
-        component: BillingComponent,
+        children: [
+          {
+            path: '',
+            component: BillingComponent,
+          },
+          {
+            path: 'subscription',
+            component: SubscriptionManagerComponent,
+          },
+        ],
+      },
+
+      // Team management
+      {
+        path: 'team',
+        component: TeamManagementComponent,
       },
 
       // Projects domain
@@ -83,18 +109,40 @@ export const routes: Routes = [
       // Account settings
       {
         path: 'account',
-        component: AccountSettingsComponent,
+        children: [
+          {
+            path: '',
+            component: AccountSettingsComponent,
+          },
+          {
+            path: '2fa',
+            component: TwoFactorSetupComponent,
+          },
+        ],
       },
 
       // Admin domain (requires admin role)
       {
         path: 'admin',
-        component: AdminDashboardComponent,
         canActivate: [roleGuard],
         data: { roles: ['admin'] },
+        children: [
+          {
+            path: '',
+            component: AdminDashboardComponent,
+          },
+          {
+            path: 'logs',
+            component: LogsViewerComponent,
+          },
+          {
+            path: 'audit',
+            component: AuditTrailComponent,
+          },
+        ],
       },
 
-      // Developer domain
+      // Developer/Integration domain
       {
         path: 'developer',
         children: [
@@ -103,19 +151,25 @@ export const routes: Routes = [
             component: ApiKeysComponent,
           },
           {
+            path: 'webhooks',
+            component: WebhooksManagementComponent,
+          },
+          {
+            path: 'rate-limiting',
+            component: RateLimitingDashboardComponent,
+          },
+          {
             path: '',
             redirectTo: '/developer/api-keys',
             pathMatch: 'full',
           },
-          {
-            path: 'webhooks',
-            component: PlaceholderComponent,
-            data: {
-              title: 'Webhooks',
-              description: 'Configure webhooks for integrations',
-            },
-          },
         ],
+      },
+
+      // Support domain
+      {
+        path: 'help',
+        component: HelpCenterComponent,
       },
 
       // Unauthorized page

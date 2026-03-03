@@ -1,0 +1,108 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { CommonModule } from '@angular/common';
+import { NgChartsModule } from 'ng2-charts';
+//import { ChartConfiguration, ChartType } from 'chart.js';
+import { Header } from '../header/header';
+import { Continuity } from '../../../core/services/continuity';
+//import { TimeSeriesChart } from '../../components/time-series-chart/time-series-chart';
+import { AlertsPanel } from '../../components/alerts-panel/alerts-panel';
+import { Heatmap } from '../../components/heatmap/heatmap';
+import { RegimeTimeline } from '../../components/regime-timeline/regime-timeline';
+import { ForecastTable } from '../../components/forecast-table/forecast-table';
+import { TimeframeAwareComponent } from '../../base/timeframe-aware.component';
+import { TimeframeFilter } from '../../components/timeframe-filter/timeframe-filter';
+import { CombinedSeriesChart } from '../../components/combined-series-chart/combined-series-chart';
+import { SignalCardsComponent } from '../../components/signal-cards/signal-cards';
+import { MiniHeatmapComponent } from '../../components/mini-heatmap/mini-heatmap';
+import { ExplanationPanelComponent } from '../../components/explanation-panel/explanation-panel';
+import { AlertItem, ContinuityHeatmapPoint, RegimeSeriesPoint, SeriesPoint } from '../../../core/models/types';
+
+@Component({
+  selector: 'app-overview-page',
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatGridListModule,
+    NgChartsModule,
+    Header,
+    AlertsPanel,
+    RegimeTimeline,
+    ForecastTable,
+    TimeframeFilter,
+    CombinedSeriesChart,
+    SignalCardsComponent,
+    MiniHeatmapComponent,
+    RegimeTimeline,
+    ForecastTable,
+    ExplanationPanelComponent,
+  ],
+  templateUrl: './overview-page.html',
+  styleUrls: ['./overview-page.scss'],
+})
+export class OverviewPage extends TimeframeAwareComponent implements OnInit {
+  private continuity = inject(Continuity);
+
+  nodeTypes: string[] = [];
+  nodesForCategory: string[] = [];
+  selectedCategory = '';
+  symbolState: any;
+  continuitySeries: SeriesPoint[] = [];
+  trendSeries: SeriesPoint[] = [];
+  accelerationSeries: SeriesPoint[] = [];
+  regimeSeries: RegimeSeriesPoint[] = [];
+  heatmapData: ContinuityHeatmapPoint[] = [];
+  alerts: AlertItem[] = [];
+  lastUpdated = 'N/A';
+
+  constructor() {
+    super();
+  }
+
+  async ngOnInit() {
+    this.nodeTypes = await this.continuity.getNodeTypes();
+    this.selectedCategory = this.nodeTypes[0];
+    this.nodesForCategory = await this.continuity.getNodes(
+      this.selectedCategory,
+    );
+    this.selectedSymbol.set(this.nodesForCategory[0]);
+    await this.loadSymbolData(this.selectedSymbol());
+    this.heatmapData = await this.continuity.getContinuityHeatmap();
+    this.alerts = await this.continuity.getLatestAlerts();
+  }
+
+  async loadSymbolData(symbol: string) {
+    const [state, continuity, trend, accel, regime] = await Promise.all([
+      this.continuity.getSymbolState(symbol),
+      this.continuity.getContinuitySeries(symbol),
+      this.continuity.getTrendSeries(symbol),
+      this.continuity.getAccelerationSeries(symbol),
+      this.continuity.getHistoricalRegime(symbol),
+    ]);
+    this.symbolState = state;
+    this.continuitySeries = continuity;
+    this.trendSeries = trend;
+    this.accelerationSeries = accel;
+    this.regimeSeries = regime;
+    this.lastUpdated = state.timestamp
+      ? new Date(state.timestamp).toLocaleString()
+      : 'N/A';
+  }
+  async onCategoryChange(category: string) {
+    this.selectedCategory = category;
+    this.nodesForCategory = await this.continuity.getNodes(category);
+    if (this.nodesForCategory.length > 0) {
+      this.selectedSymbol.set(this.nodesForCategory[0]);
+      await this.onSymbolChange(this.selectedSymbol());
+    }
+  }
+  async onSymbolChange(symbol: string) {
+    this.selectedSymbol.set(symbol);
+    await this.loadSymbolData(symbol);
+  }
+}

@@ -1,0 +1,39 @@
+<mat-card class="header-container">
+  <div class="header-left">
+    <h1 class="header-title">Continuity Dashboard</h1>
+
+    <mat-chip-listbox class="category-chips" aria-label="Category selection">
+      @for (type of nodeTypes; track type) {
+        <mat-chip-option
+          [selected]="type === selectedCategory"
+          (click)="onCategoryChange(type)"
+        >
+          {{ type }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+
+  <div class="header-right">
+    <!-- SYMBOL SELECTOR -->
+    <mat-form-field appearance="outline" class="symbol-select">
+      <mat-label>Symbol</mat-label>
+      <mat-select
+        [value]="selectedSymbol"
+        (selectionChange)="onSymbolChange($event.value)"
+      >
+        @for (s of nodes; track s) {
+          <mat-option [value]="s">
+            {{ s }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- LAST UPDATED -->
+    <div class="last-updated">
+      <mat-icon>schedule</mat-icon>
+      <span>{{ lastUpdated }}</span>
+    </div>
+  </div>
+</mat-card>

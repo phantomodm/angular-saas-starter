@@ -1,0 +1,196 @@
+<mat-sidenav-container class="h-screen">
+  <!-- SIDENAV (Desktop + Mobile) -->
+  <mat-sidenav
+    #drawer
+    class="w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800"
+    mode="side"
+    [opened]="!isMobile()"
+  >
+    <div class="p-4 flex items-center gap-2">
+      <div
+        class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold"
+      >
+        F
+      </div>
+      <span class="text-xl font-bold text-neutral-900 dark:text-neutral-50"
+        >Fusion</span
+      >
+    </div>
+    <mat-nav-list>
+      <!-- Dashboard -->
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
+        Dashboard
+      </a>
+
+      <!-- Continuity Engine (Primary Product) -->
+      <mat-divider class="my-2"></mat-divider>
+
+      <h3
+        class="px-4 py-2 text-sm font-semibold text-neutral-500 dark:text-neutral-400"
+      >
+        Continuity Engine
+      </h3>
+
+      <a
+        mat-list-item
+        routerLink="/continuity/overview"
+        routerLinkActive="active-link"
+      >
+        Overview
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/continuity/nodes"
+        routerLinkActive="active-link"
+      >
+        Node Explorer
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/continuity/collapse"
+        routerLinkActive="active-link"
+      >
+        Collapse Monitor
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/continuity/alerts"
+        routerLinkActive="active-link"
+      >
+        Alerts
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/continuity/regimes"
+        routerLinkActive="active-link"
+      >
+        Regime History
+      </a>
+
+      <!-- Other App Sections -->
+      <mat-divider class="my-2"></mat-divider>
+
+      <a mat-list-item routerLink="/billing" routerLinkActive="active-link">
+        Billing
+      </a>
+
+      <a mat-list-item routerLink="/projects" routerLinkActive="active-link">
+        Projects
+      </a>
+
+      <a mat-list-item routerLink="/analytics" routerLinkActive="active-link">
+        Analytics
+      </a>
+
+      <a
+        mat-list-item
+        *hasRole="'admin'"
+        routerLink="/admin"
+        routerLinkActive="active-link"
+      >
+        Admin
+      </a>
+
+      <a
+        mat-list-item
+        *hasPermission="'developer.manage'"
+        routerLink="/developer"
+        routerLinkActive="active-link"
+      >
+        Developer
+      </a>
+
+      <a mat-list-item routerLink="/help" routerLinkActive="active-link">
+        Help Center
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- MAIN CONTENT -->
+  <mat-sidenav-content>
+    <!-- TOP TOOLBAR -->
+    <mat-toolbar
+      class="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 px-4"
+    >
+      <button mat-icon-button class="md:hidden" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="flex-1"></span>
+
+      <!-- Theme toggle -->
+      <button mat-icon-button (click)="themeService.toggleTheme()">
+        @if (!themeService.isDark()) {
+          <mat-icon>light_mode</mat-icon>
+        }
+        @if (themeService.isDark()) {
+          <mat-icon>dark_mode</mat-icon>
+        }
+      </button>
+
+      <!-- Notifications -->
+      <button mat-icon-button>
+        <mat-icon>notifications</mat-icon>
+      </button>
+
+      <!-- User menu -->
+      <button mat-button (click)="toggleUserMenu()">
+        <div
+          class="w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center text-primary-700 dark:bg-primary-900 dark:text-primary-200 text-sm"
+        >
+          {{ authStore.userName().charAt(0).toUpperCase() }}
+        </div>
+        <span
+          class="hidden sm:inline text-sm font-medium text-neutral-700 dark:text-neutral-300"
+        >
+          {{ authStore.userName() }}
+        </span>
+      </button>
+
+      <!-- User dropdown -->
+      @if (showUserMenu()) {
+        <div
+          class="absolute top-16 right-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg w-48 py-2 z-50"
+        >
+          <a
+            routerLink="/account"
+            (click)="closeAllMenus()"
+            class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          >
+            Account Settings
+          </a>
+          <button
+            (click)="logout()"
+            class="w-full text-left px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          >
+            Logout
+          </button>
+        </div>
+      }
+    </mat-toolbar>
+
+    <!-- BREADCRUMBS -->
+    <div
+      class="border-b border-neutral-200 bg-neutral-50 dark:bg-neutral-900 dark:border-neutral-800 px-6 py-3"
+    >
+      <nav class="flex gap-2 text-sm text-muted">
+        <a
+          routerLink="/dashboard"
+          class="hover:text-neutral-700 dark:hover:text-neutral-300"
+          >Dashboard</a
+        >
+        <span>/</span>
+        <span class="text-neutral-900 dark:text-neutral-50">Current Page</span>
+      </nav>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="p-6">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
