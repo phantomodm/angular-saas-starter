@@ -1,0 +1,45 @@
+<mat-card class="p-4 space-y-4">
+
+  <div class="text-xl font-bold">
+    Direction:
+    <span [class]="{
+      'text-green-500': direction() === 'buy',
+      'text-red-500': direction() === 'sell',
+      'text-gray-500': direction() === 'neutral'
+    }">
+      {{ direction() | uppercase }}
+    </span>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
+    <mat-card class="p-2 text-center">
+      <div class="text-sm text-gray-500">Continuity</div>
+      <div class="text-lg font-semibold">{{ continuity() | number:'1.4-4' }}</div>
+    </mat-card>
+
+    <mat-card class="p-2 text-center">
+      <div class="text-sm text-gray-500">Trend</div>
+      <div class="text-lg font-semibold">{{ trend() | number:'1.4-4' }}</div>
+    </mat-card>
+
+    <mat-card class="p-2 text-center">
+      <div class="text-sm text-gray-500">Acceleration</div>
+      <div class="text-lg font-semibold">{{ acceleration() | number:'1.4-4' }}</div>
+    </mat-card>
+  </div>
+
+  <div class="mt-4">
+    <mat-progress-bar
+      mode="determinate"
+      [value]="scheerIntensity() * 100"
+      [class]="{
+        'bg-red-500': collapseWarning(),
+        'bg-blue-500': !collapseWarning()
+      }"
+    ></mat-progress-bar>
+    <div class="text-sm mt-1">
+      Scheer Intensity: {{ scheerIntensity() | number:'1.4-4' }}
+    </div>
+  </div>
+
+</mat-card>

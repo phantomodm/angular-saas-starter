@@ -33,7 +33,7 @@ You now have a **production-ready, multi-tenant billing system** with Stripe int
 
 - **`requirements.txt`**: Added `stripe==7.10.0`
 - **`.env`**: Added Stripe API key and webhook secret placeholders
-- **`main.py`**: 
+- **`main.py`**:
   - Import new services and routes
   - Initialize Stripe and Firestore on startup
   - Include all new routers
@@ -46,8 +46,9 @@ You now have a **production-ready, multi-tenant billing system** with Stripe int
 ## API Endpoints (15 new endpoints)
 
 ### Billing (10 endpoints)
+
 - `GET /api/billing/plans` - List available plans
-- `GET /api/billing/subscriptions?org_id=...` - List subscriptions  
+- `GET /api/billing/subscriptions?org_id=...` - List subscriptions
 - `POST /api/billing/subscriptions` - Create subscription
 - `PATCH /api/billing/subscriptions/{id}` - Change plan
 - `POST /api/billing/subscriptions/{id}/cancel` - Cancel subscription
@@ -58,6 +59,7 @@ You now have a **production-ready, multi-tenant billing system** with Stripe int
 - `DELETE /api/billing/payment-methods/{id}` - Remove payment method
 
 ### Teams (8 endpoints)
+
 - `POST /api/teams` - Create team
 - `GET /api/teams/{id}` - Get team
 - `PATCH /api/teams/{id}` - Update team
@@ -68,30 +70,36 @@ You now have a **production-ready, multi-tenant billing system** with Stripe int
 - `DELETE /api/teams/{id}/members/{id}` - Remove member
 
 ### Organization Members (backward compatibility)
+
 - `GET /api/org/{org_id}/members` - List org members
 - `POST /api/org/{org_id}/members` - Add org member
 
 ## Architecture Highlights
 
 ### Multi-Tenant Scoping
+
 Every request includes:
+
 - **Authorization Header**: Firebase JWT token (verified by backend)
 - **X-Organization-Id Header**: Org context (auto-added by AuthInterceptor)
 - **Firestore Query**: Results filtered by organization_id
 
 ### Stripe Integration
+
 - Automatic customer creation when org subscribes
 - Stripe customer ID stored in Firestore
 - All invoice/subscription queries scoped to org's customer
 - Payment method management at organization level
 
 ### Team Management
+
 - Teams belong to organizations
 - Members have roles: member, admin, owner
 - Invitations workflow with email (ready for implementation)
 - Member count tracking on team
 
 ### Security
+
 - All endpoints require Firebase JWT authentication
 - Organization access verified for each request
 - Role-based access control (member/admin/owner)
@@ -103,6 +111,7 @@ Every request includes:
 Your existing Angular services already connect to these endpoints:
 
 **`billing.service.ts`**:
+
 - `createSubscription(orgId, priceId)` → Real Stripe subscription
 - `getSubscription(orgId)` → Real Stripe subscription data
 - `changePlan(orgId, priceId)` → Real plan change with proration
@@ -110,15 +119,18 @@ Your existing Angular services already connect to these endpoints:
 - `getPaymentMethods(orgId)` → Real payment methods from Stripe
 
 **`organization.service.ts`**:
+
 - `getTeamMembers(teamId)` → Real team members from Firestore
 - `addTeamMember(orgId, email, role)` → Real member invitation
 
 **`profile.service.ts`**:
+
 - Unchanged (uses `/api/user/*` endpoints)
 
 ## Next Steps
 
 ### Immediate (1-2 hours):
+
 1. Get Stripe test API key from https://dashboard.stripe.com/test/apikeys
 2. Set `STRIPE_API_KEY` in `.env`
 3. Create one test product/price in Stripe Dashboard
@@ -126,18 +138,21 @@ Your existing Angular services already connect to these endpoints:
 5. Test `/api/billing/plans` endpoint
 
 ### Short-term (2-4 hours):
+
 1. Create Angular billing components (SubscriptionComponent, PaymentMethodComponent)
 2. Add Stripe Elements to frontend for card input
 3. Test full subscription flow: card input → backend → Stripe → success
 4. Add team management UI
 
 ### Medium-term (4-8 hours):
+
 1. Set up Stripe webhooks for production events
 2. Implement webhook handler (POST `/api/billing/webhook`)
 3. Add email notifications for subscriptions and invoices
 4. Create admin dashboard for revenue monitoring
 
 ### Production Deployment:
+
 1. Switch to Stripe live API key
 2. Update CORS origins
 3. Set up production Firebase rules
@@ -156,6 +171,7 @@ Your existing Angular services already connect to these endpoints:
 ## Testing Stripe Integration
 
 ### Quick Test: Get Plans
+
 ```bash
 # In Stripe Dashboard go to Products to find a price_id first
 curl http://localhost:8000/api/billing/plans \
@@ -164,6 +180,7 @@ curl http://localhost:8000/api/billing/plans \
 ```
 
 ### Test Stripe Card
+
 - Card: `4242 4242 4242 4242`
 - Exp: Any future date (e.g., 12/25)
 - CVC: Any 3 digits (e.g., 123)
@@ -173,15 +190,19 @@ curl http://localhost:8000/api/billing/plans \
 All endpoints return consistent format:
 
 **Success** (HTTP 200):
+
 ```json
 {
   "success": true,
-  "data": { /* endpoint-specific data */ },
+  "data": {
+    /* endpoint-specific data */
+  },
   "timestamp": "2024-01-15T12:00:00Z"
 }
 ```
 
 **Error** (HTTP 4xx/5xx):
+
 ```json
 {
   "success": false,
@@ -239,6 +260,7 @@ this.orgService.getTeamMembers(teamId).subscribe(
 ## Summary
 
 **You now have**:
+
 - ✅ Complete Stripe integration (subscriptions, invoices, payment methods)
 - ✅ Multi-tenant organization scoping
 - ✅ Team management with roles and invitations
@@ -247,11 +269,11 @@ this.orgService.getTeamMembers(teamId).subscribe(
 - ✅ Comprehensive setup and implementation guides
 
 **Your Angular services**:
+
 - ✅ Already connected to real backend endpoints
 - ✅ No breaking changes from previous mock implementations
 - ✅ Graceful fallbacks for unimplemented endpoints
 - ✅ Ready for UI component integration
 
-**Next phase**: 
+**Next phase**:
 Create the UI components that call these services, set up Stripe checkout, and handle webhooks for production subscriptions management.
-

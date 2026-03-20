@@ -9,22 +9,35 @@ import { AuthStore } from '../../../core/store/auth.store';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-blue-50 dark:from-neutral-950 dark:to-neutral-900 px-4">
+    <div
+      class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-blue-50 dark:from-neutral-950 dark:to-neutral-900 px-4"
+    >
       <div class="w-full max-w-md">
         <!-- Logo & Title -->
         <div class="text-center mb-8">
-          <div class="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold mx-auto mb-4">
+          <div
+            class="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold mx-auto mb-4"
+          >
             F
           </div>
-          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">Create account</h1>
-          <p class="text-neutral-600 dark:text-neutral-400 mt-2">Join Fusion and start building</p>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">
+            Create account
+          </h1>
+          <p class="text-neutral-600 dark:text-neutral-400 mt-2">
+            Join NovaHuman and start building
+          </p>
         </div>
 
         <!-- Signup Form -->
-        <form (ngSubmit)="onSubmit()" class="bg-white dark:bg-neutral-900 rounded-xl shadow-lg p-8 space-y-6">
+        <form
+          (ngSubmit)="onSubmit()"
+          class="bg-white dark:bg-neutral-900 rounded-xl shadow-lg p-8 space-y-6"
+        >
           <!-- Name Input -->
           <div>
-            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+            <label
+              class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
+            >
               Full Name
             </label>
             <input
@@ -39,7 +52,9 @@ import { AuthStore } from '../../../core/store/auth.store';
 
           <!-- Email Input -->
           <div>
-            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+            <label
+              class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
+            >
               Email Address
             </label>
             <input
@@ -54,7 +69,9 @@ import { AuthStore } from '../../../core/store/auth.store';
 
           <!-- Password Input -->
           <div>
-            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+            <label
+              class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
+            >
               Password
             </label>
             <input
@@ -72,7 +89,9 @@ import { AuthStore } from '../../../core/store/auth.store';
 
           <!-- Confirm Password -->
           <div>
-            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+            <label
+              class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
+            >
               Confirm Password
             </label>
             <input
@@ -86,12 +105,18 @@ import { AuthStore } from '../../../core/store/auth.store';
           </div>
 
           <!-- Error Message -->
-          <div *ngIf="authStore.error()" class="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg text-sm dark:bg-danger-900/20 dark:border-danger-800 dark:text-danger-200">
+          <div
+            *ngIf="authStore.error()"
+            class="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg text-sm dark:bg-danger-900/20 dark:border-danger-800 dark:text-danger-200"
+          >
             {{ authStore.error() }}
           </div>
 
           <!-- Password validation message -->
-          <div *ngIf="passwordError()" class="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg text-sm dark:bg-danger-900/20 dark:border-danger-800 dark:text-danger-200">
+          <div
+            *ngIf="passwordError()"
+            class="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg text-sm dark:bg-danger-900/20 dark:border-danger-800 dark:text-danger-200"
+          >
             {{ passwordError() }}
           </div>
 
@@ -102,10 +127,30 @@ import { AuthStore } from '../../../core/store/auth.store';
             class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span *ngIf="!authStore.loading()">Create account</span>
-            <span *ngIf="authStore.loading()" class="flex items-center justify-center gap-2">
+            <span
+              *ngIf="authStore.loading()"
+              class="flex items-center justify-center gap-2"
+            >
               <svg class="animate-spin h-4 w-4" viewBox="0 0 50 50">
-                <circle class="opacity-30" cx="25" cy="25" r="20" stroke="currentColor" stroke-width="5" fill="none" />
-                <circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="5" fill="none" stroke-dasharray="100" stroke-dashoffset="75" />
+                <circle
+                  class="opacity-30"
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  stroke="currentColor"
+                  stroke-width="5"
+                  fill="none"
+                />
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  stroke="currentColor"
+                  stroke-width="5"
+                  fill="none"
+                  stroke-dasharray="100"
+                  stroke-dashoffset="75"
+                />
               </svg>
               Creating account...
             </span>
@@ -115,7 +160,10 @@ import { AuthStore } from '../../../core/store/auth.store';
         <!-- Login Link -->
         <p class="text-center text-neutral-600 dark:text-neutral-400 mt-6">
           Already have an account?
-          <a routerLink="/login" class="text-primary-600 hover:text-primary-700 font-semibold dark:text-primary-400">
+          <a
+            routerLink="/login"
+            class="text-primary-600 hover:text-primary-700 font-semibold dark:text-primary-400"
+          >
             Sign in
           </a>
         </p>

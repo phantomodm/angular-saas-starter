@@ -1,10 +1,11 @@
 # Authentication Setup Guide
 
-This guide explains how to set up and use each authentication provider with the Fusion SaaS starter.
+This guide explains how to set up and use each authentication provider with the NovaHuman SaaS starter.
 
 ## Overview
 
 The app uses an **AuthAdapter interface** that allows you to plug in different authentication providers:
+
 - ✅ **Mock Auth** (default - for testing)
 - 🔥 **Firebase**
 - 🔐 **AWS Cognito**
@@ -29,19 +30,19 @@ npm install firebase
 // src/environments/environment.ts
 export const environment = {
   firebase: {
-    apiKey: 'YOUR_API_KEY',
-    authDomain: 'YOUR_PROJECT.firebaseapp.com',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_PROJECT.appspot.com',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    appId: 'YOUR_APP_ID',
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
   },
 };
 
 // src/main.ts
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { environment } from './environments/environment';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { environment } from "./environments/environment";
 
 const firebaseApp = initializeApp(environment.firebase);
 const auth = getAuth(firebaseApp);
@@ -53,7 +54,7 @@ const auth = getAuth(firebaseApp);
 ### Enable in app.config.ts
 
 ```typescript
-import { FirebaseAuthService } from './core/auth/providers/firebase-auth.service';
+import { FirebaseAuthService } from "./core/auth/providers/firebase-auth.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -67,6 +68,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 ### Features
+
 - Email/Password authentication
 - Social login (Google, Facebook, GitHub, etc.)
 - Phone authentication
@@ -74,6 +76,7 @@ export const appConfig: ApplicationConfig = {
 - Multi-factor authentication (MFA)
 
 ### Firebase Console Setup
+
 1. Create project in [Firebase Console](https://console.firebase.google.com)
 2. Enable "Authentication" → "Sign-in method"
 3. Add email/password provider
@@ -96,16 +99,16 @@ npm install aws-amplify @aws-amplify/auth
 // src/environments/environment.ts
 export const environment = {
   aws: {
-    region: 'us-east-1',
-    userPoolId: 'us-east-1_XXXXXXXXX',
-    userPoolClientId: 'XXXXXXXXXXX',
-    identityPoolId: 'us-east-1:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
+    region: "us-east-1",
+    userPoolId: "us-east-1_XXXXXXXXX",
+    userPoolClientId: "XXXXXXXXXXX",
+    identityPoolId: "us-east-1:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
   },
 };
 
 // src/main.ts
-import { Amplify } from 'aws-amplify';
-import { environment } from './environments/environment';
+import { Amplify } from "aws-amplify";
+import { environment } from "./environments/environment";
 
 Amplify.configure({
   Auth: {
@@ -121,7 +124,7 @@ Amplify.configure({
 ### Enable in app.config.ts
 
 ```typescript
-import { AwsCognitoAuthService } from './core/auth/providers/cognito-auth.service';
+import { AwsCognitoAuthService } from "./core/auth/providers/cognito-auth.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -135,6 +138,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 ### Features
+
 - User pools and identity pools
 - Email verification
 - Multi-factor authentication (MFA)
@@ -143,6 +147,7 @@ export const appConfig: ApplicationConfig = {
 - User groups for authorization
 
 ### AWS Console Setup
+
 1. Create User Pool in [AWS Cognito Console](https://console.aws.amazon.com/cognito)
 2. Configure sign-in experience
 3. Configure security requirements
@@ -166,16 +171,16 @@ npm install @azure/msal-browser @azure/msal-angular
 // src/environments/environment.ts
 export const environment = {
   azure: {
-    clientId: 'YOUR_CLIENT_ID',
-    authority: 'https://login.microsoftonline.com/YOUR_TENANT_ID',
+    clientId: "YOUR_CLIENT_ID",
+    authority: "https://login.microsoftonline.com/YOUR_TENANT_ID",
     redirectUri: window.location.origin,
-    scopes: ['User.Read'],
+    scopes: ["User.Read"],
   },
 };
 
 // src/main.ts
-import { PublicClientApplication } from '@azure/msal-browser';
-import { environment } from './environments/environment';
+import { PublicClientApplication } from "@azure/msal-browser";
+import { environment } from "./environments/environment";
 
 const msalConfig = {
   auth: {
@@ -184,7 +189,7 @@ const msalConfig = {
     redirectUri: environment.azure.redirectUri,
   },
   cache: {
-    cacheLocation: 'sessionStorage',
+    cacheLocation: "sessionStorage",
     storeAuthStateInCookie: false,
   },
 };
@@ -198,7 +203,7 @@ msalInstance.initialize();
 ### Enable in app.config.ts
 
 ```typescript
-import { AzureAdAuthService } from './core/auth/providers/azure-auth.service';
+import { AzureAdAuthService } from "./core/auth/providers/azure-auth.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -212,6 +217,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 ### Features
+
 - Enterprise-grade authentication
 - Multi-tenant support
 - Conditional access policies
@@ -220,6 +226,7 @@ export const appConfig: ApplicationConfig = {
 - SAML support
 
 ### Azure Portal Setup
+
 1. Go to [Azure Portal](https://portal.azure.com)
 2. Create "App registration"
 3. Add "Mobile and desktop applications" redirect URI
@@ -243,22 +250,19 @@ npm install @supabase/supabase-js
 // src/environments/environment.ts
 export const environment = {
   supabase: {
-    url: 'https://YOUR_PROJECT.supabase.co',
-    anonKey: 'YOUR_ANON_KEY',
+    url: "https://YOUR_PROJECT.supabase.co",
+    anonKey: "YOUR_ANON_KEY",
   },
 };
 
 // src/app/core/services/supabase.service.ts
-import { Injectable } from '@angular/core';
-import { createClient } from '@supabase/supabase-js';
-import { environment } from '../../../environments/environment';
+import { Injectable } from "@angular/core";
+import { createClient } from "@supabase/supabase-js";
+import { environment } from "../../../environments/environment";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class SupabaseService {
-  supabase = createClient(
-    environment.supabase.url,
-    environment.supabase.anonKey
-  );
+  supabase = createClient(environment.supabase.url, environment.supabase.anonKey);
 }
 
 // Then inject in your auth service or provide globally
@@ -267,7 +271,7 @@ export class SupabaseService {
 ### Enable in app.config.ts
 
 ```typescript
-import { SupabaseAuthService } from './core/auth/providers/supabase-auth.service';
+import { SupabaseAuthService } from "./core/auth/providers/supabase-auth.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -281,6 +285,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 ### Features
+
 - PostgreSQL database included
 - Real-time subscriptions
 - Row-level security (RLS)
@@ -289,12 +294,14 @@ export const appConfig: ApplicationConfig = {
 - JWT-based authentication
 
 ### Supabase Console Setup
+
 1. Create account at [Supabase](https://supabase.com)
 2. Create new project
 3. Wait for database initialization
 4. Get project URL and anon key from project settings
 5. Enable authentication providers in "Authentication" → "Providers"
 6. Create `users` table with appropriate schema:
+
    ```sql
    CREATE TABLE users (
      id UUID PRIMARY KEY REFERENCES auth.users(id),
@@ -306,7 +313,7 @@ export const appConfig: ApplicationConfig = {
      created_at TIMESTAMP DEFAULT NOW(),
      updated_at TIMESTAMP DEFAULT NOW()
    );
-   
+
    ALTER TABLE users ENABLE ROW LEVEL SECURITY;
    ```
 
@@ -351,21 +358,25 @@ The app will automatically use the new provider! All pages will work with minima
 Each provider stores user roles and permissions differently:
 
 ### Firebase
+
 - Store in Firestore custom claims or user document
 - Add to custom claims: `claims.roles = ['admin']`
 - Retrieve in `mapFirebaseUserToAppUser()`
 
 ### AWS Cognito
+
 - Store in custom attributes
 - Use Cognito groups for role-based access
 - Query via `user-groups` claim
 
 ### Azure AD
+
 - Use Azure AD app roles
 - Assign users to directory roles
 - Return in `appRoles` claim
 
 ### Supabase
+
 - Store in `users` table `roles` and `permissions` columns
 - Use RLS policies to control data access
 - Fetch with user profile query
@@ -396,20 +407,24 @@ Each provider stores user roles and permissions differently:
 ## Troubleshooting
 
 ### "Provider not initialized"
+
 - Check that you've called the initialization code in `main.ts`
 - Verify environment variables are correctly set
 - Check browser console for setup errors
 
 ### "Invalid credentials"
+
 - Verify email/password are correct
 - For social providers, check redirect URIs match
 - Ensure user exists in provider
 
 ### "CORS errors"
+
 - Add your domain to provider's allowed origins
 - Check that requests include proper headers
 
 ### "Token expiration"
+
 - Implement automatic token refresh
 - Call `refreshToken()` before making API requests
 - Redirect to login if refresh fails
@@ -426,6 +441,7 @@ Each provider stores user roles and permissions differently:
 6. Add custom claims/attributes for your app
 
 For more information, see individual provider documentation:
+
 - [Firebase Auth Docs](https://firebase.google.com/docs/auth)
 - [AWS Cognito Docs](https://docs.aws.amazon.com/cognito/)
 - [Azure AD Docs](https://docs.microsoft.com/en-us/azure/active-directory/)

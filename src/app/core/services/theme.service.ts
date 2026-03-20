@@ -8,7 +8,7 @@ export type Theme = 'light' | 'dark' | 'system';
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private readonly STORAGE_KEY = 'fusion-theme-preference';
+  private readonly STORAGE_KEY = 'novahuman-theme-preference';
   private readonly SYSTEM_DARK_QUERY = '(prefers-color-scheme: dark)';
 
   // Signals

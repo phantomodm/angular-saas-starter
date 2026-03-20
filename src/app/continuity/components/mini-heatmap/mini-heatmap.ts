@@ -1,4 +1,4 @@
-import { Component, Input, computed } from '@angular/core';
+import { Component, Input, computed, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ContinuityHeatmapPoint } from '../../../core/models/types';
@@ -9,53 +9,51 @@ import { ContinuityHeatmapPoint } from '../../../core/models/types';
   imports: [CommonModule, MatCardModule],
   templateUrl: './mini-heatmap.html',
   styles: `
-    .heatmap-card {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-    .category-block {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+.category {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-    .category-title {
-      font-size: 13px;
-      font-weight: 600;
-      opacity: 0.8;
-    }
+.category-label {
+  width: 120px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
 
-    .heatmap-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+.cells {
+  display: flex;
+  gap: 4px;
+}
 
-    .heatmap-tile {
-      width: 90px;
-      height: 50px;
-      border-radius: 8px;
-      padding: 6px;
-      display: flex;
-      align-items: flex-end;
-      color: #f9fafb;
-      font-size: 12px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    }
+.cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.cell:hover {
+  opacity: 0.7;
+}
   `,
 })
 export class MiniHeatmapComponent {
-  @Input() data: ContinuityHeatmapPoint[] = [];
-
+  data = input<ContinuityHeatmapPoint[]>([]);
   // Group by category
   grouped = computed(() => {
     const groups: Record<string, ContinuityHeatmapPoint[]> = {};
-
-    for (const p of this.data) {
-      const cat = p.category ?? 'Other';
+    console.log(this.data())
+    for (const p of this.data()) {
+      const cat = p.node ?? 'Other';
       if (!groups[cat]) groups[cat] = [];
       groups[cat].push(p);
     }
@@ -66,13 +64,17 @@ export class MiniHeatmapComponent {
         .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
         .slice(0, 10); // top 10 movers per category
     }
-
+    console.log(groups);
     return groups;
   });
 
   colorFor(v: number) {
-    if (v > 0) return `rgba(22,163,74,${Math.min(1, Math.abs(v) * 20)})`;
-    if (v < 0) return `rgba(220,38,38,${Math.min(1, Math.abs(v) * 20)})`;
+    const intensity = Math.min(1, Math.pow(Math.abs(v) * 500, 0.7));
+  if (v > 0) return `rgba(22,163,74,${intensity})`;
+  if (v < 0) return `rgba(220,38,38,${intensity})`;
+
+
+    
     return 'rgba(148,163,184,0.4)';
   }
 }

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fusion-angular-tailwind-starter": {
+    "NovaHuman-angular-tailwind-starter": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -14,9 +14,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -24,10 +22,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css",
-              "src/custom-theme.scss"
-            ]
+            "styles": ["src/styles.css", "src/custom-theme.scss"]
           },
           "configurations": {
             "production": {
@@ -35,7 +30,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "8MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -57,10 +52,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "fusion-angular-tailwind-starter:build:production"
+              "buildTarget": "NovaHuman-angular-tailwind-starter:build:production"
             },
             "development": {
-              "buildTarget": "fusion-angular-tailwind-starter:build:development"
+              "buildTarget": "NovaHuman-angular-tailwind-starter:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,10 +66,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
@@ -82,9 +74,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ]
+            "styles": ["src/styles.css"]
           }
         }
       }

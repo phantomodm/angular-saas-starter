@@ -50,7 +50,7 @@ interface NavItem {
   //           F
   //         </div>
   //         <span class="text-xl font-bold text-neutral-900 dark:text-neutral-50"
-  //           >Fusion</span
+  //           >NovaHuman</span
   //         >
   //       </div>
 
@@ -322,9 +322,8 @@ export class AppShellComponent {
   showMobileMenu = signal(false);
 
   isMobile() {
-  return window.innerWidth < 768;
+    return window.innerWidth < 768;
   }
-
 
   toggleUserMenu() {
     this.showUserMenu.update((v) => !v);

@@ -1,0 +1,20 @@
+<mat-card class="p-4">
+  <h2 class="text-lg font-semibold mb-4">Microstructure Charts</h2>
+
+  <apx-chart
+    [series]="priceSeries()"
+    [chart]="{ type: 'line', height: 250 }"
+    [xaxis]="{ type: 'datetime' }"
+  ></apx-chart>
+
+  <apx-chart
+    [series]="continuitySeries()"
+    [chart]="{ type: 'line', height: 250 }"
+    [xaxis]="{ type: 'datetime' }"
+  ></apx-chart>
+
+  <apx-chart
+    [series]="scheerSeries()"
+    [chart]="{ type: 'heatmap', height: 250 }"
+  ></apx-chart>
+</mat-card>

@@ -1,0 +1,6 @@
+<mat-card class="p-4 flex items-center space-x-3">
+  <mat-icon [ngClass]="color()">{{ icon() }}</mat-icon>
+  <span class="font-semibold" [ngClass]="color()">
+    {{ regime() | titlecase }}
+  </span>
+</mat-card>

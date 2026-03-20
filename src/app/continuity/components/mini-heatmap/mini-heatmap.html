@@ -1,1 +1,17 @@
-<p>mini-heatmap works!</p>
+<div class="heatmap-container">
+  @for (cat of grouped() | keyvalue; track cat.key) {
+    <div class="category">
+      <div class="category-label">{{ cat.key }}</div>
+
+      <div class="cells">
+        @for (p of cat.value; track p.timestamp) {
+          <div
+            class="cell"
+            [style.background]="colorFor(p.value)"
+            [title]="p.node + ': ' + p.value"
+          ></div>
+        }
+      </div>
+    </div>
+  }
+</div>

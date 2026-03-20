@@ -1,0 +1,18 @@
+<mat-card class="p-4">
+  <h2 class="text-lg font-semibold mb-4">Trade Tape</h2>
+
+  <div class="max-h-64 overflow-y-auto space-y-1">
+    @for(t of trades(); track t){
+<div  class="flex justify-between p-1"
+         [class]="{
+           'text-green-500': t.side === 'buy',
+           'text-red-500': t.side === 'sell'
+         }">
+      <span>{{ t.price }}</span>
+      <span>{{ t.qty }}</span>
+      <span>{{ t.side | uppercase }}</span>
+    </div>
+    }
+    
+  </div>
+</mat-card>

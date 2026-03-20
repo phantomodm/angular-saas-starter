@@ -56,7 +56,10 @@ export class TwoFactorAuthService {
     this.mock2FA.set(userId, twoFA);
 
     // Log 2FA setup initiated
-    this.logging.info('2FA setup initiated', 'SECURITY', { userId, method }, ['2fa', 'setup']);
+    this.logging.info('2FA setup initiated', 'SECURITY', { userId, method }, [
+      '2fa',
+      'setup',
+    ]);
 
     return of({
       secret,
@@ -80,9 +83,14 @@ export class TwoFactorAuthService {
       twoFA.verified = true;
       this.mock2FA.set(userId, twoFA);
 
-      this.logging.info('2FA enabled', 'SECURITY', { userId }, ['2fa', 'enabled']);
+      this.logging.info('2FA enabled', 'SECURITY', { userId }, [
+        '2fa',
+        'enabled',
+      ]);
 
-      return of({ success: true, message: '2FA enabled successfully' }).pipe(delay(300));
+      return of({ success: true, message: '2FA enabled successfully' }).pipe(
+        delay(300),
+      );
     } else {
       return throwError(() => new Error('Invalid code'));
     }
@@ -127,9 +135,14 @@ export class TwoFactorAuthService {
       twoFA.backupCodes = backupCodes;
       this.mock2FA.set(userId, twoFA);
 
-      this.logging.info('Backup code used', 'SECURITY', { userId }, ['2fa', 'backup-code']);
+      this.logging.info('Backup code used', 'SECURITY', { userId }, [
+        '2fa',
+        'backup-code',
+      ]);
 
-      return of({ success: true, codesRemaining: backupCodes.length }).pipe(delay(300));
+      return of({ success: true, codesRemaining: backupCodes.length }).pipe(
+        delay(300),
+      );
     } else {
       this.logging.warn('Invalid backup code attempt', 'SECURITY', { userId }, [
         '2fa',
@@ -168,7 +181,10 @@ export class TwoFactorAuthService {
     // In production, verify password before disabling
     this.mock2FA.delete(userId);
 
-    this.logging.warn('2FA disabled', 'SECURITY', { userId }, ['2fa', 'disabled']);
+    this.logging.warn('2FA disabled', 'SECURITY', { userId }, [
+      '2fa',
+      'disabled',
+    ]);
 
     return of({ success: true }).pipe(delay(300));
   }
@@ -179,7 +195,9 @@ export class TwoFactorAuthService {
   get2FAStatus(userId: string): any {
     const twoFA = this.mock2FA.get(userId);
     if (!twoFA) {
-      return of({ enabled: false, method: null, verified: false }).pipe(delay(200));
+      return of({ enabled: false, method: null, verified: false }).pipe(
+        delay(200),
+      );
     }
 
     return of({
@@ -211,7 +229,7 @@ export class TwoFactorAuthService {
   private generateQRCode(secret: string): string {
     // In production, use qrcode library
     // Return data URL for QR code
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/Fusion:user@example.com?secret=${secret}&issuer=Fusion`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/NovaHuman:user@example.com?secret=${secret}&issuer=NovaHuman`;
   }
 
   /**
@@ -242,10 +260,12 @@ export class TwoFactorAuthService {
     // In production, send actual SMS/email
     console.log(`2FA Code for ${userId} (${method}): ${code}`);
 
-    this.logging.info(`2FA code sent via ${method}`, 'SECURITY', { userId, method }, [
-      '2fa',
-      'code-sent',
-    ]);
+    this.logging.info(
+      `2FA code sent via ${method}`,
+      'SECURITY',
+      { userId, method },
+      ['2fa', 'code-sent'],
+    );
 
     return of({ success: true }).pipe(delay(500));
   }

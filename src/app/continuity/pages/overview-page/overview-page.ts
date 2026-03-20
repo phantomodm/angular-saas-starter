@@ -32,6 +32,7 @@ import { ExplanationPanelComponent } from '../../components/explanation-panel/ex
 import {
   AlertItem,
   ContinuityHeatmapPoint,
+  ForecastData,
   NodeState,
   RegimeSeriesPoint,
   SeriesPoint,
@@ -102,7 +103,8 @@ export class OverviewPage implements OnInit {
   });
 
   // OTHER DATA
-  heatmapData: any[] = [];
+  heatmapData = signal<ContinuityHeatmapPoint[]>([]);
+  forecastTableData = signal<ForecastData | undefined>(undefined);
   lastUpdated = signal<string>('N/A');
 
   // WINDOW FILTER
@@ -169,6 +171,12 @@ export class OverviewPage implements OnInit {
     } catch (e) {
       console.error('Error loading continuity data:', e);
     }
+
+    this.heatmapData.set(await this.continuity.getContinuityHeatmap());
+    console.log(this.heatmapData());
+    console.log(this.selectedSymbol());
+    this.forecastTableData.set(await this.continuity.getForecast(this.selectedSymbol()));
+    console.log(this.forecastTableData());
   }
 
   // -------------------------------------------------------
@@ -272,7 +280,6 @@ export class OverviewPage implements OnInit {
     this.trendSeries.set(this.applyWindow(trendDaily, window));
     this.accelerationSeries.set(this.applyWindow(accelDaily, window));
     //this.regimeSeries.set(this.applyWindow(regime, window));
-    console.log(this.regimeSeries());
     this.lastUpdated.set(new Date().toISOString());
   }
 

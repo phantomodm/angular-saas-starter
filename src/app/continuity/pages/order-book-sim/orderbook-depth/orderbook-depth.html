@@ -1,0 +1,42 @@
+
+<mat-card class="p-4">
+  <h2 class="text-lg font-semibold mb-4">Order Book Depth</h2>
+
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Bids -->
+    <div>
+      <h3 class="text-green-500 font-semibold mb-2">Bids</h3>
+      @for(b of bids(); track b){
+        <div
+
+        class="flex justify-between p-1"
+        [class]="{
+          'bg-green-100': b.price > lastBidPrice,
+          'bg-red-100': b.price < lastBidPrice,
+        }"
+      >
+        <span>{{ b.price }}</span>
+        <span class="font-semibold">{{ b.qty }}</span>
+      </div>
+      }
+      
+    </div>
+
+    <!-- Asks -->
+    <div>
+      <h3 class="text-red-500 font-semibold mb-2">Asks</h3>
+      @for (a of asks(); track a) {
+        <div
+          class="flex justify-between p-1"
+          [class]="{
+            'bg-green-100': a.price < lastAskPrice,
+            'bg-red-100': a.price > lastAskPrice,
+          }"
+        >
+          <span>{{ a.price }}</span>
+          <span class="font-semibold">{{ a.qty }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</mat-card>

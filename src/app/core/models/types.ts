@@ -258,7 +258,7 @@ export interface RegimeHeatmapPoint {
 
 export interface ContinuityHeatmapPoint {
   node: string;
-  category: string;
+  timestamp: string;
   value: number;
 }
 

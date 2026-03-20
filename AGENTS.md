@@ -1,4 +1,4 @@
-# Fusion Angular Tailwind Starter
+# NovaHuman Angular Tailwind Starter
 
 A production-ready Angular application template with TypeScript, TailwindCSS 3, and modern tooling.
 
@@ -50,7 +50,7 @@ The application uses Angular's modern standalone component architecture:
 // Example of TailwindCSS usage in Angular templates
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
   <div class="text-center">
-    <h1 class="text-2xl font-semibold text-slate-800">Welcome to Fusion</h1>
+    <h1 class="text-2xl font-semibold text-slate-800">Welcome to NovaHuman</h1>
   </div>
 </div>
 ```

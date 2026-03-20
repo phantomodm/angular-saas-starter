@@ -1,0 +1,58 @@
+<div class="p-4 grid grid-cols-12 gap-4">
+
+  <!-- Mode Toggle + Regime Indicator -->
+  <div class="col-span-12 flex items-center space-x-4 mb-4">
+    <mat-button-toggle-group
+      [value]="mode()"
+      (change)="setMode($event.value)"
+      appearance="legacy"
+    >
+      <mat-button-toggle value="simulator">Simulator</mat-button-toggle>
+      <mat-button-toggle value="replay">Replay</mat-button-toggle>
+      <mat-button-toggle value="live">Live</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <app-regime-indicator></app-regime-indicator>
+  </div>
+
+  <!-- Symbol Selector -->
+  <div class="col-span-12">
+    <app-symbol-selector></app-symbol-selector>
+  </div>
+
+  <!-- Momentum Overview -->
+  <div class="col-span-12 lg:col-span-4">
+    <app-momentum-overview></app-momentum-overview>
+  </div>
+
+  <!-- Order Book Depth -->
+  <div class="col-span-12 lg:col-span-4">
+    <app-orderbook-depth></app-orderbook-depth>
+  </div>
+
+  <!-- Scheer Intensity Heatmap -->
+  <div class="col-span-12 lg:col-span-4">
+    <app-scheer-heatmap></app-scheer-heatmap>
+  </div>
+
+  <!-- Microstructure Charts -->
+  <div class="col-span-12">
+    <app-microstructure-charts></app-microstructure-charts>
+  </div>
+
+  <!-- Trade Tape -->
+  <div class="col-span-12">
+    <app-trade-tape></app-trade-tape>
+  </div>
+
+  <!-- Volatility Heatmap v2 -->
+  <div class="col-span-12 lg:col-span-4">
+    <app-volatility-heatmap-v2></app-volatility-heatmap-v2>
+  </div>
+
+  <!-- Collapse Gauge v2 -->
+  <div class="col-span-12 lg:col-span-4">
+    <app-collapse-gauge></app-collapse-gauge>
+  </div>
+
+</div>
