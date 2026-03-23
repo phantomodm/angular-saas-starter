@@ -270,8 +270,22 @@ export class OrganizationService {
     return {
       id,
       name: patch?.name || data?.name || `Organization ${id}`,
+      company_name:
+        patch?.company_name ||
+        data?.company_name ||
+        patch?.name ||
+        data?.name ||
+        `Organization ${id}`,
+      email: patch?.email || data?.email || '',
+      roles: patch?.roles || data?.roles || [],
+      permissions: patch?.permissions || data?.permissions || [],
+      displayName:
+        patch?.displayName ||
+        data?.displayName ||
+        patch?.name ||
+        data?.name ||
+        `Organization ${id}`,
       slug: patch?.slug || data?.slug || id.toLowerCase(),
-      description: patch?.description,
       logo: patch?.logo,
       website: patch?.website,
       industry: patch?.industry,
@@ -282,6 +296,7 @@ export class OrganizationService {
       ownerId: patch?.ownerId || data?.user_uid || 'unknown',
       status: patch?.status || 'active',
       subscriptionTierId: patch?.subscriptionTierId,
+      photoUrl: patch?.photoUrl || data?.photoUrl || '',
     };
   }
 

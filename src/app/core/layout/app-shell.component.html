@@ -18,7 +18,7 @@
     </div>
     <mat-nav-list>
       <!-- Dashboard -->
-      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/workspace/{{workspaceId()}}/dashboard" routerLinkActive="active-link">
         Dashboard
       </a>
 
@@ -33,7 +33,7 @@
 
       <a
         mat-list-item
-        routerLink="/continuity/overview"
+        routerLink="/workspace/{{workspaceId()}}/continuity/overview"
         routerLinkActive="active-link"
       >
         Overview
@@ -41,7 +41,15 @@
 
       <a
         mat-list-item
-        routerLink="/continuity/nodes"
+        routerLink="/workspace/{{workspaceId()}}/continuity/order-book"
+        routerLinkActive="active-link"
+      >
+        OrderBook Continuity
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/workspace/{{workspaceId()}}/continuity/nodes"
         routerLinkActive="active-link"
       >
         Node Explorer
@@ -49,7 +57,7 @@
 
       <a
         mat-list-item
-        routerLink="/continuity/collapse"
+        routerLink="/workspace/{{workspaceId()}}/continuity/collapse"
         routerLinkActive="active-link"
       >
         Collapse Monitor
@@ -57,7 +65,7 @@
 
       <a
         mat-list-item
-        routerLink="/continuity/alerts"
+        routerLink="/workspace/{{workspaceId()}}/continuity/alerts"
         routerLinkActive="active-link"
       >
         Alerts
@@ -65,7 +73,7 @@
 
       <a
         mat-list-item
-        routerLink="/continuity/regimes"
+        routerLink="/workspace/{{workspaceId()}}/continuity/regimes"
         routerLinkActive="active-link"
       >
         Regime History
@@ -74,22 +82,22 @@
       <!-- Other App Sections -->
       <mat-divider class="my-2"></mat-divider>
 
-      <a mat-list-item routerLink="/billing" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/workspace/{{workspaceId()}}/billing" routerLinkActive="active-link">
         Billing
       </a>
 
-      <a mat-list-item routerLink="/projects" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/workspace/{{workspaceId()}}/projects" routerLinkActive="active-link">
         Projects
       </a>
 
-      <a mat-list-item routerLink="/analytics" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/workspace/{{workspaceId()}}/analytics" routerLinkActive="active-link">
         Analytics
       </a>
 
       <a
         mat-list-item
         *hasRole="'admin'"
-        routerLink="/admin"
+        routerLink="/workspace/{{workspaceId()}}/admin"
         routerLinkActive="active-link"
       >
         Admin
@@ -98,13 +106,13 @@
       <a
         mat-list-item
         *hasPermission="'developer.manage'"
-        routerLink="/developer"
+        routerLink="/workspace/{{workspaceId()}}/developer"
         routerLinkActive="active-link"
       >
         Developer
       </a>
 
-      <a mat-list-item routerLink="/help" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/workspace/{{workspaceId()}}/help" routerLinkActive="active-link">
         Help Center
       </a>
     </mat-nav-list>
@@ -157,7 +165,7 @@
           class="absolute top-16 right-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg w-48 py-2 z-50"
         >
           <a
-            routerLink="/account"
+            routerLink="/workspace/{{workspaceId()}}/account"
             (click)="closeAllMenus()"
             class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
           >
@@ -179,7 +187,7 @@
     >
       <nav class="flex gap-2 text-sm text-muted">
         <a
-          routerLink="/dashboard"
+          routerLink="/workspace/{{workspaceId()}}/dashboard"
           class="hover:text-neutral-700 dark:hover:text-neutral-300"
           >Dashboard</a
         >

@@ -1,63 +1,39 @@
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
-// ---------------------------------------------------------
-// 1. DEFINE MATERIAL THEMES
-// ---------------------------------------------------------
+// 1. Initialize core styles (only once per app)
+@include mat.core();
 
-// 1. DEFINE MATERIAL THEMES
-$light-theme: mat.define-theme((
+// 2. Define your custom theme using M3 palettes
+$my-custom-theme: mat.define-theme((
   color: (
-    theme-type: light,
-    primary: mat.$azure-palette, // Note: M3 uses specific palette names
+    primary: mat.$azure-palette, // Use built-in or custom palettes
     tertiary: mat.$blue-palette,
+    theme-type: color-scheme,    // Enables the light-dark() output
   ),
   typography: (
     brand-family: 'Roboto, sans-serif',
     plain-family: 'Roboto, sans-serif',
   ),
   density: (
-    scale: 0
+    scale: 0, // Default density (0), can be -1 for compact or +1 for comfortable
   )
 ));
 
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  )
-));
-
-// 2. CSS VARIABLES
-:root {
-  --ce-stable: #4caf50;
-  // ... rest of your custom variables
-}
-
-// 3. APPLY THEMES
+// 3. Apply the theme to the root element
 html {
-  // Apply light theme by default
-  @include mat.all-component-themes($light-theme);
-  color-scheme: light;
+  // Sets the default light/dark preference behavior
+  color-scheme: light dark; 
+  
+  // Applies the theme tokens (CSS variables)
+  @include mat.theme($my-custom-theme);
+
+  // Manual Overrides (Optional)
+  &.theme-light { color-scheme: light; }
+  &.theme-dark { color-scheme: dark; }
 }
 
-html.dark {
-  // Override with dark theme colors/styles
-  @include mat.all-component-colors($dark-theme);
-  color-scheme: dark;
-}
-
+// 4. Ensure the background updates correctly
 body {
-  // Use M3 System Variables for global styles
-  background-color: mat.get-theme-color($light-theme, surface);
-  color: mat.get-theme-color($light-theme, on-surface);
-  
-  // Update body colors when dark mode is active
-  html.dark & {
-    background-color: mat.get-theme-color($dark-theme, surface);
-    color: mat.get-theme-color($dark-theme, on-surface);
-  }
-  
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100%;
 }

@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, from, throwError, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { AuthAdapter } from '../auth.adapter';
-import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset } from '../../models/user.model';
+import { Organization } from '../../models/organization.model';
+import {
+  AuthCredentials,
+  SignUpData,
+  PasswordResetRequest,
+  PasswordReset,
+} from '../../models/user.model';
 
 /**
  * Supabase Authentication Service
@@ -29,7 +35,7 @@ import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset 
 @Injectable()
 export class SupabaseAuthService extends AuthAdapter {
   private supabase: any; // Supabase client instance
-  private currentUser: User | null = null;
+  private currentUser: Organization | null = null;
 
   constructor() {
     super();
@@ -49,13 +55,17 @@ export class SupabaseAuthService extends AuthAdapter {
       //   environment.supabaseAnonKey
       // );
 
-      console.warn('Supabase not initialized. Please set up Supabase client in your environment.');
+      console.warn(
+        'Supabase not initialized. Please set up Supabase client in your environment.',
+      );
     } catch (error) {
       console.error('Failed to initialize Supabase', error);
     }
   }
 
-  login(credentials: AuthCredentials): Observable<{ user: User; token: string }> {
+  login(
+    credentials: AuthCredentials,
+  ): Observable<{ user: Organization; token: string }> {
     if (!this.supabase) {
       return throwError(() => new Error('Supabase not initialized'));
     }
@@ -82,7 +92,7 @@ export class SupabaseAuthService extends AuthAdapter {
     return throwError(() => new Error('Supabase not initialized'));
   }
 
-  signup(data: SignUpData): Observable<{ user: User; token: string }> {
+  signup(data: SignUpData): Observable<{ user: Organization; token: string }> {
     if (!this.supabase) {
       return throwError(() => new Error('Supabase not initialized'));
     }
@@ -101,7 +111,7 @@ export class SupabaseAuthService extends AuthAdapter {
     //     if (response.error) {
     //       return throwError(() => new Error(response.error.message));
     //     }
-    //     // Create user profile in public.users table
+    //     // CreateOrganizationprofile in public.users table
     //     return from(this.supabase.from('users').insert({
     //       id: response.data.user?.id,
     //       email: data.email,
@@ -144,7 +154,7 @@ export class SupabaseAuthService extends AuthAdapter {
     return throwError(() => new Error('Supabase not initialized'));
   }
 
-  getCurrentUser(): Observable<User | null> {
+  getCurrentUser(): Observable<Organization | null> {
     if (!this.supabase) {
       return of(null);
     }
@@ -266,7 +276,7 @@ export class SupabaseAuthService extends AuthAdapter {
   }
 
   /**
-   * Fetch user profile from Supabase users table
+   * FetchOrganizationprofile from Supabase users table
    */
   private fetchUserProfile(userId: string): Observable<any> {
     if (!this.supabase) {
@@ -287,14 +297,34 @@ export class SupabaseAuthService extends AuthAdapter {
   }
 
   /**
-   * Helper method to map Supabase user to app User model
+   * Helper method to map SupabaseOrganizationto appOrganizationmodel
    */
-  private mapSupabaseUserToAppUser(supabaseUser: any, userProfile: any): User {
+  private mapSupabaseUserToAppUser(
+    supabaseUser: any,
+    userProfile: any,
+  ): Organization {
     return {
       id: supabaseUser.id,
+      name:
+        userProfile?.display_name ||
+        supabaseUser.user_metadata?.display_name ||
+        'User',
+      status: userProfile?.status || 'active',
       email: supabaseUser.email || '',
-      displayName: userProfile?.display_name || supabaseUser.user_metadata?.display_name || 'User',
-      photoUrl: userProfile?.avatar_url || supabaseUser.user_metadata?.avatar_url || undefined,
+      company_name:
+        userProfile?.company_name ||
+        supabaseUser.user_metadata?.company_name ||
+        (userProfile?.display_name ||
+          supabaseUser.user_metadata?.display_name ||
+          'User') + ' Company',
+      displayName:
+        userProfile?.display_name ||
+        supabaseUser.user_metadata?.display_name ||
+        'User',
+      photoUrl:
+        userProfile?.avatar_url ||
+        supabaseUser.user_metadata?.avatar_url ||
+        undefined,
       roles: userProfile?.roles || ['user'],
       permissions: userProfile?.permissions || [],
       createdAt: new Date(supabaseUser.created_at),

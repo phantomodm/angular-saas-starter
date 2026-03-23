@@ -2,12 +2,11 @@ import { Component, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-
 @Component({
   selector: 'ce-timeframe-filter',
   imports: [CommonModule, MatButtonToggleModule],
   templateUrl: './timeframe-filter.html',
-  styleUrl:'./timeframe-filter.css'
+  styleUrl: './timeframe-filter.scss',
 })
 export class TimeframeFilter {
   resolution = model<string>('15m');
@@ -42,6 +41,4 @@ export class TimeframeFilter {
   onWindowChange(w: string) {
     this.window.set(w);
   }
-
-
 }

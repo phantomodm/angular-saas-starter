@@ -7,7 +7,7 @@ import { CardComponent, CardBodyComponent, CardHeaderComponent } from '../../../
 @Component({
   selector: 'app-account-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, CardBodyComponent, CardHeaderComponent],
+  imports: [CommonModule, FormsModule, CardComponent],
   template: `
     <div class="space-y-8">
       <!-- Header -->

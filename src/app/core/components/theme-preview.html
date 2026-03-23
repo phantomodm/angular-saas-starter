@@ -1,0 +1,44 @@
+<div class="space-y-4 p-4 rounded-xl bg-surface-container text-on-surface">
+  <div class="flex items-center justify-between">
+    <div>
+      <div class="text-sm font-medium">
+        Theme: {{ theme.getCurrentThemeLabel() }}
+      </div>
+      <div class="text-xs opacity-70">
+        Dark active: {{ theme.isDark() }}
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <button class="btn-primary" (click)="toggleTheme()">
+        Toggle light/dark
+      </button>
+      <button class="btn-secondary text-xs" (click)="resetToSystem()">
+        System
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-5 gap-2 text-[10px] text-center">
+    <div>
+      <div class="h-10 rounded bg-primary"></div>
+      <div class="mt-1">primary</div>
+    </div>
+    <div>
+      <div class="h-10 rounded bg-on-primary"></div>
+      <div class="mt-1">on-primary</div>
+    </div>
+    <div>
+      <div class="h-10 rounded bg-surface"></div>
+      <div class="mt-1">surface</div>
+    </div>
+    <div>
+      <div class="h-10 rounded bg-surface-container"></div>
+      <div class="mt-1">surface-container</div>
+    </div>
+    <div>
+      <div class="h-10 rounded bg-surface-container-high"></div>
+      <div class="mt-1">surface-high</div>
+    </div>
+  </div>
+</div>

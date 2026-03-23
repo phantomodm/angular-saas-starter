@@ -9,61 +9,77 @@ export type Theme = 'light' | 'dark' | 'system';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly STORAGE_KEY = 'novahuman-theme-preference';
+  private readonly BRAND_KEY = 'novahuman-brand-color';
   private readonly SYSTEM_DARK_QUERY = '(prefers-color-scheme: dark)';
 
-  // Signals
   theme = signal<Theme>(this.getStoredTheme());
   isDark = signal(this.getInitialDarkMode());
+  brandColor = signal<string | null>(this.getStoredBrandColor());
 
   constructor() {
-    // Effect to update isDark when theme changes or system preference changes
+    // React to theme or brand changes
     effect(() => {
       const currentTheme = this.theme();
       const isDarkMode = this.resolveIsDark(currentTheme);
       this.isDark.set(isDarkMode);
       this.applyTheme(isDarkMode);
+
+      const brand = this.brandColor();
+      if (brand) {
+        this.applyBrandColor(brand);
+      }
     });
 
-    // Listen for system theme changes
     this.watchSystemTheme();
   }
 
-  /**
-   * Get initially stored theme or default to 'system'
-   */
+  // -------------------------------
+  // BRAND COLOR
+  // -------------------------------
+
+  private getStoredBrandColor(): string | null {
+    try {
+      return localStorage.getItem(this.BRAND_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  setBrandColor(hex: string) {
+    this.brandColor.set(hex);
+    try {
+      localStorage.setItem(this.BRAND_KEY, hex);
+    } catch {}
+  }
+
+  private applyBrandColor(hex: string) {
+    document.documentElement.style.setProperty('--brand-primary', hex);
+  }
+
+  // -------------------------------
+  // THEME (light/dark/system)
+  // -------------------------------
+
   private getStoredTheme(): Theme {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored === 'light' || stored === 'dark' || stored === 'system') {
         return stored;
       }
-    } catch {
-      // localStorage might not be available
-    }
+    } catch {}
     return 'system';
   }
 
-  /**
-   * Get initial dark mode state
-   */
   private getInitialDarkMode(): boolean {
-    const stored = this.getStoredTheme();
-    return this.resolveIsDark(stored);
+    return this.resolveIsDark(this.getStoredTheme());
   }
 
-  /**
-   * Resolve whether dark mode should be enabled
-   */
   private resolveIsDark(theme: Theme): boolean {
     if (theme === 'dark') return true;
     if (theme === 'light') return false;
-    // 'system' - check system preference
     return this.getSystemPrefersDark();
   }
 
-  /**
-   * Check if system prefers dark mode
-   */
   private getSystemPrefersDark(): boolean {
     try {
       return window.matchMedia(this.SYSTEM_DARK_QUERY).matches;
@@ -72,61 +88,35 @@ export class ThemeService {
     }
   }
 
-  /**
-   * Watch for system theme changes
-   */
   private watchSystemTheme() {
     try {
       const mediaQuery = window.matchMedia(this.SYSTEM_DARK_QUERY);
-      mediaQuery.addEventListener('change', (e: MediaQueryListEvent) => {
+      mediaQuery.addEventListener('change', (e) => {
         if (this.theme() === 'system') {
           this.isDark.set(e.matches);
         }
       });
-    } catch {
-      // matchMedia not supported
-    }
+    } catch {}
   }
 
-  /**
-   * Apply theme to DOM
-   */
   private applyTheme(isDark: boolean) {
     const html = document.documentElement;
-    if (isDark) {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
+    if (isDark) html.classList.add('dark');
+    else html.classList.remove('dark');
   }
 
-  /**
-   * Set theme preference
-   */
   setTheme(theme: Theme) {
     this.theme.set(theme);
     try {
       localStorage.setItem(this.STORAGE_KEY, theme);
-    } catch {
-      // localStorage might not be available
-    }
+    } catch {}
   }
 
-  /**
-   * Toggle between light and dark (ignores 'system')
-   */
   toggleTheme() {
     const current = this.theme();
-    if (current === 'dark') {
-      this.setTheme('light');
-    } else {
-      this.setTheme('dark');
-    }
+    this.setTheme(current === 'dark' ? 'light' : 'dark');
   }
 
-  /**
-   * Get current theme as readable string
-   */
   getCurrentThemeLabel(): string {
     const theme = this.theme();
     if (theme === 'system') {
@@ -135,9 +125,6 @@ export class ThemeService {
     return theme.charAt(0).toUpperCase() + theme.slice(1);
   }
 
-  /**
-   * Reset to system preference
-   */
   resetToSystem() {
     this.setTheme('system');
   }

@@ -1,1 +1,21 @@
-<p>collapse-alerts works!</p>
+<mat-card class="p-3 bg-gray-900 border border-gray-700 rounded-xl">
+  <h3 class="text-sm font-semibold text-red-400 mb-2">
+    Collapse Risk Alerts
+  </h3>
+
+  <div class="space-y-2 max-h-64 overflow-y-auto">
+    @for (evt of det.collapseEvents(); track evt.timestamp) {
+      <div
+        class="p-2 rounded bg-gray-800 text-xs text-gray-300 font-mono cursor-pointer hover:bg-gray-700 transition"
+        (click)="jumpTo(evt.timestamp)"
+      >
+        <div class="text-red-300 font-semibold">
+          {{ evt.timestamp }} — Collapse Risk ↑
+        </div>
+        <div class="mt-1">
+          {{ evt.message }}
+        </div>
+      </div>
+    }
+  </div>
+</mat-card>

@@ -5,9 +5,12 @@
       [value]="selectedSymbol()"
       (selectionChange)="onSelect($event.value)"
     >
-      <mat-option *ngFor="let s of symbols" [value]="s">
+      @for( s of symbols; track s){
+        <mat-option [value]="s">
         {{ s }}
       </mat-option>
+      }
+      
     </mat-select>
   </mat-form-field>
 </mat-card>

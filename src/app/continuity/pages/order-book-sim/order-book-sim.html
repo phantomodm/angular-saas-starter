@@ -1,5 +1,7 @@
+<div class="col-span-12">
+  <app-collapse-banner></app-collapse-banner>
+</div>
 <div class="p-4 grid grid-cols-12 gap-4">
-
   <!-- Mode Toggle + Regime Indicator -->
   <div class="col-span-12 flex items-center space-x-4 mb-4">
     <mat-button-toggle-group
@@ -15,24 +17,27 @@
     <app-regime-indicator></app-regime-indicator>
   </div>
 
-  <!-- Symbol Selector -->
-  <div class="col-span-12">
-    <app-symbol-selector></app-symbol-selector>
+  <div class="flex flex-col lg:flex-row col-span-12 gap-4 lg:items-center">
+    <!-- Symbol Selector + Momentum Overview (same row) -->
+    <div class="col-span-12 lg:col-span-4">
+      <app-symbol-selector></app-symbol-selector>
+    </div>
+    <div class="col-span-12 lg:col-span-4">
+      <app-momentum-overview></app-momentum-overview>
+    </div>
+    <div class="col-span-12 lg:col-span-4">
+      <app-collapse-gauge></app-collapse-gauge>
+    </div>
   </div>
 
-  <!-- Momentum Overview -->
-  <div class="col-span-12 lg:col-span-4">
-    <app-momentum-overview></app-momentum-overview>
+  <!-- Order Book Depth (6 columns) -->
+  <div class="col-span-12 lg:col-span-6">
+    <app-orderbook-depth2></app-orderbook-depth2>
   </div>
 
-  <!-- Order Book Depth -->
-  <div class="col-span-12 lg:col-span-4">
-    <app-orderbook-depth></app-orderbook-depth>
-  </div>
-
-  <!-- Scheer Intensity Heatmap -->
-  <div class="col-span-12 lg:col-span-4">
-    <app-scheer-heatmap></app-scheer-heatmap>
+  <!-- Scheer Heatmap (6 columns) -->
+  <div class="col-span-12 lg:col-span-6">
+    <app-scheer-depth-heatmap></app-scheer-depth-heatmap>
   </div>
 
   <!-- Microstructure Charts -->
@@ -40,19 +45,27 @@
     <app-microstructure-charts></app-microstructure-charts>
   </div>
 
-  <!-- Trade Tape -->
-  <div class="col-span-12">
+  <!-- Trade Tape (moved up) -->
+  <div class="col-span-12 lg:col-span-6">
     <app-trade-tape></app-trade-tape>
   </div>
 
-  <!-- Volatility Heatmap v2 -->
-  <div class="col-span-12 lg:col-span-4">
-    <app-volatility-heatmap-v2></app-volatility-heatmap-v2>
-  </div>
-
-  <!-- Collapse Gauge v2 -->
-  <div class="col-span-12 lg:col-span-4">
+  <!-- Collapse Gauge (moved up + centered) -->
+  <div class="col-span-12 lg:col-span-6">
     <app-collapse-gauge></app-collapse-gauge>
   </div>
 
+  <!-- Three-column gauge/heatmap layout -->
+  <div class="col-span-12 lg:col-span-4">
+    <app-volatility-heatmap></app-volatility-heatmap>
+  </div>
+
+  <div class="col-span-12 lg:col-span-4">
+    <app-scheer-heatmap></app-scheer-heatmap>
+    <app-scheer-depth-heatmap></app-scheer-depth-heatmap>
+  </div>
+
+  <div class="col-span-12 lg:col-span-4">
+    <app-collapse-gauge></app-collapse-gauge>
+  </div>
 </div>

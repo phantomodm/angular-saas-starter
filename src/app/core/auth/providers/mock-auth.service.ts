@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, delay, throwError } from 'rxjs';
-import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset } from '../../models/user.model';
+import {
+  AuthCredentials,
+  SignUpData,
+  PasswordResetRequest,
+  PasswordReset,
+} from '../../models/user.model';
+import { Organization } from '../../models/organization.model';
 import { AuthAdapter } from '../auth.adapter';
 
 /**
@@ -9,79 +15,91 @@ import { AuthAdapter } from '../auth.adapter';
  */
 @Injectable()
 export class MockAuthService implements AuthAdapter {
-  private mockUsers: Map<string, { user: User; password: string }> = new Map([
-    [
-      'admin@example.com',
-      {
-        user: {
-          id: '1',
-          email: 'admin@example.com',
-          displayName: 'Admin User',
-          roles: ['admin', 'user'],
-          permissions: [
-            'user.manage',
-            'role.assign',
-            'permission.assign',
-            'billing.manage',
-            'analytics.view',
-            'developer.manage',
-            'api-key.create',
-            'api-key.revoke',
-          ],
-          createdAt: new Date('2024-01-01'),
-          lastLogin: new Date(),
+  private mockUsers: Map<string, { user: Organization; password: string }> =
+    new Map([
+      [
+        'admin@example.com',
+        {
+          user: {
+            id: '1',
+            name: 'Admin User',
+            status: 'active',
+            email: 'admin@example.com',
+            company_name: 'Admin Company',
+            displayName: 'Admin User',
+            roles: ['admin', 'user'],
+            permissions: [
+              'user.manage',
+              'role.assign',
+              'permission.assign',
+              'billing.manage',
+              'analytics.view',
+              'developer.manage',
+              'api-key.create',
+              'api-key.revoke',
+            ],
+            createdAt: new Date('2024-01-01'),
+            lastLogin: new Date(),
+          },
+          password: 'admin123',
         },
-        password: 'admin123',
-      },
-    ],
-    [
-      'user@example.com',
-      {
-        user: {
-          id: '2',
-          email: 'user@example.com',
-          displayName: 'Regular User',
-          roles: ['user'],
-          permissions: [
-            'analytics.view',
-            'api-key.create',
-            'api-key.view',
-            'api-key.revoke',
-            'billing.view',
-          ],
-          createdAt: new Date('2024-02-15'),
-          lastLogin: new Date(),
+      ],
+      [
+        'user@example.com',
+        {
+          user: {
+            id: '2',
+            name: 'Regular User',
+            status: 'active',
+            email: 'user@example.com',
+            company_name: 'User Company',
+            displayName: 'Regular User',
+            roles: ['user'],
+            permissions: [
+              'analytics.view',
+              'api-key.create',
+              'api-key.view',
+              'api-key.revoke',
+              'billing.view',
+            ],
+            createdAt: new Date('2024-02-15'),
+            lastLogin: new Date(),
+          },
+          password: 'user123',
         },
-        password: 'user123',
-      },
-    ],
-    [
-      'developer@example.com',
-      {
-        user: {
-          id: '3',
-          email: 'developer@example.com',
-          displayName: 'Developer User',
-          roles: ['developer', 'user'],
-          permissions: [
-            'developer.manage',
-            'api-key.create',
-            'api-key.view',
-            'api-key.revoke',
-            'analytics.view',
-          ],
-          createdAt: new Date('2024-03-10'),
-          lastLogin: new Date(),
+      ],
+      [
+        'developer@example.com',
+        {
+          user: {
+            id: '3',
+            name: 'Developer User',
+            status: 'active',
+            email: 'developer@example.com',
+            company_name: 'Developer Company',
+            displayName: 'Developer User',
+            roles: ['developer', 'user'],
+            permissions: [
+              'developer.manage',
+              'api-key.create',
+              'api-key.view',
+              'api-key.revoke',
+              'analytics.view',
+            ],
+            createdAt: new Date('2024-03-10'),
+            lastLogin: new Date(),
+          },
+          password: 'dev123',
         },
-        password: 'dev123',
-      },
-    ],
-  ]);
+      ],
+    ]);
 
-  private currentUser: User | null = null;
+  private currentUser: Organization | null = null;
   private authToken: string | null = null;
 
-  login(credentials: AuthCredentials): Observable<{ user: User; token: string }> {
+  login(
+    credentials: AuthCredentials,
+  ): Observable<{ user: Organization; token: string }> {
     return of(null).pipe(
       delay(500), // Simulate network delay
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -94,11 +112,11 @@ export class MockAuthService implements AuthAdapter {
         this.currentUser = userData.user;
         this.authToken = this.generateMockToken();
         return of({ user: userData.user, token: this.authToken });
-      })
+      }),
     );
   }
 
-  signup(data: SignUpData): Observable<{ user: User; token: string }> {
+  signup(data: SignUpData): Observable<{ user: Organization; token: string }> {
     return of(null).pipe(
       delay(500),
       switchMap(() => {
@@ -106,21 +124,33 @@ export class MockAuthService implements AuthAdapter {
           return throwError(() => new Error('Email already registered'));
         }
 
-        const newUser: User = {
+        const newUser: Organization = {
           id: Math.random().toString(36).substr(2, 9),
           email: data.email,
+          company_name: data.displayName + ' Company',
           displayName: data.displayName,
           roles: ['user'],
-          permissions: ['analytics.view', 'api-key.create', 'api-key.view', 'billing.view'],
+          permissions: [
+            'analytics.view',
+            'api-key.create',
+            'api-key.view',
+            'billing.view',
+          ],
           createdAt: new Date(),
+          lastLogin: new Date(),
+          name: data.displayName,
+          status: 'active',
         };
 
-        this.mockUsers.set(data.email, { user: newUser, password: data.password });
+        this.mockUsers.set(data.email, {
+          user: newUser,
+          password: data.password,
+        });
         this.currentUser = newUser;
         this.authToken = this.generateMockToken();
 
         return of({ user: newUser, token: this.authToken });
-      })
+      }),
     );
   }
 
@@ -131,11 +161,11 @@ export class MockAuthService implements AuthAdapter {
       tap(() => {
         this.currentUser = null;
         this.authToken = null;
-      })
+      }),
     );
   }
 
-  getCurrentUser(): Observable<User | null> {
+  getCurrentUser(): Observable<Organization | null> {
     return of(this.currentUser).pipe(delay(100));
   }
 
@@ -144,7 +174,7 @@ export class MockAuthService implements AuthAdapter {
       delay(200),
       tap((token) => {
         this.authToken = token;
-      })
+      }),
     );
   }
 
@@ -157,7 +187,7 @@ export class MockAuthService implements AuthAdapter {
           return of(undefined);
         }
         return of(undefined);
-      })
+      }),
     );
   }
 
@@ -166,7 +196,7 @@ export class MockAuthService implements AuthAdapter {
       delay(500),
       tap(() => {
         // In real implementation, validate token
-      })
+      }),
     );
   }
 

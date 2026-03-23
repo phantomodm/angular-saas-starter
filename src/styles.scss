@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------
+   BASE LAYER — GLOBAL ELEMENT STYLES
+---------------------------------------------- */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    /* Use Material system colors, not Tailwind colors */
+    background-color: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    @apply transition-colors duration-200;
+  }
+
+  /* Smooth transitions for color mode changes */
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply transition-all duration-150;
+  }
+}
+
+/* ----------------------------------------------
+   COMPONENTS LAYER — YOUR CUSTOM DESIGN SYSTEM
+---------------------------------------------- */
+@layer components {
+  .btn-primary {
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg font-medium;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg font-medium;
+    background-color: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface);
+  }
+
+  .card {
+    background-color: var(--mat-sys-surface-container-low);
+    color: var(--mat-sys-on-surface);
+    @apply rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-800;
+  }
+
+  .badge-primary {
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+}
+
+/* ----------------------------------------------
+   UTILITIES LAYER
+---------------------------------------------- */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950;
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Toolbar uses primary */
+mat-toolbar {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+/* Sidenav uses surface container */
+mat-sidenav {
+  background-color: var(--mat-sys-surface-container);
+}
+
+/* Buttons hover using container */
+.mdc-button:hover {
+  background-color: var(--mat-sys-primary-container);
+}
+
+/* Tenant-specific override (if you add a class on body/html) */
+html.tenant-acme mat-toolbar {
+  background-color: var(--mat-sys-secondary);
+}
+

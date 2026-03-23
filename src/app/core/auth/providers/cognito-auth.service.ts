@@ -2,8 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, from, throwError, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { AuthAdapter } from '../auth.adapter';
-import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset } from '../../models/user.model';
-
+import {
+  AuthCredentials,
+  SignUpData,
+  PasswordResetRequest,
+  PasswordReset,
+} from '../../models/user.model';
+import { Organization } from '../../models/organization.model';
 /**
  * AWS Cognito Authentication Service
  *
@@ -34,7 +39,7 @@ import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset 
 @Injectable()
 export class AwsCognitoAuthService extends AuthAdapter {
   private Auth: any; // AWS Amplify Auth module
-  private currentUser: User | null = null;
+  private currentUser: Organization | null = null;
 
   constructor() {
     super();
@@ -50,13 +55,17 @@ export class AwsCognitoAuthService extends AuthAdapter {
       // import { Auth } from 'aws-amplify';
       // This will be available after Amplify.configure() is called in main
       // this.Auth = Auth;
-      console.warn('AWS Amplify not initialized. Please configure Amplify in your main.ts');
+      console.warn(
+        'AWS Amplify not initialized. Please configure Amplify in your main.ts',
+      );
     } catch (error) {
       console.error('Failed to initialize AWS Amplify', error);
     }
   }
 
-  login(credentials: AuthCredentials): Observable<{ user: User; token: string }> {
+  login(
+    credentials: AuthCredentials,
+  ): Observable<{ user: Organization; token: string }> {
     if (!this.Auth) {
       return throwError(() => new Error('AWS Amplify not initialized'));
     }
@@ -82,7 +91,7 @@ export class AwsCognitoAuthService extends AuthAdapter {
     return throwError(() => new Error('AWS Amplify not initialized'));
   }
 
-  signup(data: SignUpData): Observable<{ user: User; token: string }> {
+  signup(data: SignUpData): Observable<{ user: Organization; token: string }> {
     if (!this.Auth) {
       return throwError(() => new Error('AWS Amplify not initialized'));
     }
@@ -134,7 +143,7 @@ export class AwsCognitoAuthService extends AuthAdapter {
     return throwError(() => new Error('AWS Amplify not initialized'));
   }
 
-  getCurrentUser(): Observable<User | null> {
+  getCurrentUser(): Observable<Organization | null> {
     if (!this.Auth) {
       return of(null);
     }
@@ -241,18 +250,27 @@ export class AwsCognitoAuthService extends AuthAdapter {
   }
 
   /**
-   * Helper method to map Cognito user to app User model
+   * Helper method to map Cognito user to app Organization model
    */
-  private mapCognitoUserToAppUser(cognitoUser: any, session: any): User {
+  private mapCognitoUserToAppUser(
+    cognitoUser: any,
+    session: any,
+  ): Organization {
     return {
       id: cognitoUser.userId || cognitoUser.sub,
-      email: cognitoUser.signInDetails?.loginId || cognitoUser.attributes?.email || '',
+      email:
+        cognitoUser.signInDetails?.loginId ||
+        cognitoUser.attributes?.email ||
+        '',
       displayName: cognitoUser.attributes?.name || 'User',
       photoUrl: cognitoUser.attributes?.picture || undefined,
       roles: ['user'], // Fetch from Cognito custom attributes
       permissions: [], // Fetch from Cognito groups or custom attributes
       createdAt: new Date(cognitoUser.userCreateDate || Date.now()),
       lastLogin: new Date(cognitoUser.userLastModifiedDate || Date.now()),
+      name: '',
+      status: 'active',
+      company_name: '',
     };
   }
 }

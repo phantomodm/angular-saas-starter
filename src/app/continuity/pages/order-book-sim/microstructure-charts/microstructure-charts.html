@@ -5,12 +5,14 @@
     [series]="priceSeries()"
     [chart]="{ type: 'line', height: 250 }"
     [xaxis]="{ type: 'datetime' }"
+    (chartInit)="onPriceChartInit($event)"
   ></apx-chart>
 
   <apx-chart
     [series]="continuitySeries()"
     [chart]="{ type: 'line', height: 250 }"
     [xaxis]="{ type: 'datetime' }"
+    (chartInit)="onContinuityChartInit($event)"
   ></apx-chart>
 
   <apx-chart

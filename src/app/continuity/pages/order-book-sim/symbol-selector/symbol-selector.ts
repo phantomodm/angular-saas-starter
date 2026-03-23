@@ -6,13 +6,9 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-symbol-selector',
-  imports: [
-    MatSelectModule,
-    MatCardModule,
-    MatFormFieldModule
-  ],
+  imports: [MatSelectModule, MatCardModule, MatFormFieldModule],
   templateUrl: './symbol-selector.html',
-  styleUrls: ['./symbol-selector.css'],
+  styleUrls: ['./symbol-selector.scss'],
 })
 export class SymbolSelector {
   private momentum = inject(SimulatorService);

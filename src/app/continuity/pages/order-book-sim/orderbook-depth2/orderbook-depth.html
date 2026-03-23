@@ -1,0 +1,301 @@
+<mat-card class="p-4 rounded-xl shadow-lg bg-gray-900 border border-gray-700">
+
+  <!-- DESKTOP L1 (Option C) -->
+  <div class="hidden lg:flex flex-col gap-3 mb-4">
+    <div class="grid grid-cols-3 gap-4 items-center">
+      <div class="flex flex-col">
+        <span class="text-xs text-gray-400 font-mono">Best Bid</span>
+        <span class="text-lg font-semibold text-green-400">
+          <ng-container *ngIf="bids().length; else noBid">
+            {{ bids()[0].price | number: '1.2-2' }}
+          </ng-container>
+          <ng-template #noBid>--</ng-template>
+        </span>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <span class="text-xs text-gray-400 font-mono">Mid Price</span>
+        <span class="text-lg font-semibold text-gray-800">
+          <ng-container *ngIf="bids().length && asks().length; else noMid">
+            {{
+              ((bids()[0].price + asks()[0].price) / 2)
+                | number: '1.2-2'
+            }}
+          </ng-container>
+        </span>
+      </div>
+
+      <div class="flex flex-col items-end">
+        <span class="text-xs text-gray-400 font-mono">Best Ask</span>
+        <span class="text-lg font-semibold text-red-400">
+          <ng-container *ngIf="asks().length; else noAsk">
+            {{ asks()[0].price | number: '1.2-2' }}
+          </ng-container>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between text-xs text-gray-400 font-mono">
+      <div>
+        Spread:
+        <span *ngIf="bids().length && asks().length; else noSpread">
+          {{ (asks()[0].price - bids()[0].price) | number: '1.2-2' }}
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span>Imbalance:</span>
+        <span class="font-semibold" [style.color]="getImbalanceColor()">
+          {{ bidImbalance | number: '1.2-2' }}
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span>Grouping:</span>
+        <button
+          class="px-2 py-0.5 rounded border border-gray-700 text-[11px]"
+          [class.bg-gray-700]="ladderStep() === 1"
+          (click)="setLadder(1)"
+        >
+          1
+        </button>
+        <button
+          class="px-2 py-0.5 rounded border border-gray-700 text-[11px]"
+          [class.bg-gray-700]="ladderStep() === 5"
+          (click)="setLadder(5)"
+        >
+          5
+        </button>
+        <button
+          class="px-2 py-0.5 rounded border border-gray-700 text-[11px]"
+          [class.bg-gray-700]="ladderStep() === 10"
+          (click)="setLadder(10)"
+        >
+          10
+        </button>
+      </div>
+    </div>
+
+    <div class="w-full h-2 rounded-full bg-gray-800 overflow-hidden">
+      <div
+        class="h-full transition-all"
+        [style.width.%]="(bidImbalance + 1) * 50"
+        [style.background]="getImbalanceColor()"
+      ></div>
+    </div>
+  </div>
+
+  <!-- MOBILE L1 (Option B) -->
+  <div class="block lg:hidden mb-4 space-y-2">
+    <div class="grid grid-cols-2 gap-3 text-sm">
+      <div class="flex flex-col">
+        <span class="text-[11px] text-gray-400 font-mono">Best Bid</span>
+        <span class="text-base font-semibold text-green-400">
+          <ng-container *ngIf="bids().length; else noBidM">
+            {{ bids()[0].price | number: '1.2-2' }}
+          </ng-container>
+        </span>
+      </div>
+      <div class="flex flex-col items-end">
+        <span class="text-[11px] text-gray-400 font-mono">Spread</span>
+        <span class="text-base font-semibold text-gray-100">
+          <ng-container *ngIf="bids().length && asks().length; else noSpreadM">
+            {{ (asks()[0].price - bids()[0].price) | number: '1.2-2' }}
+          </ng-container>
+        </span>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[11px] text-gray-400 font-mono">Best Ask</span>
+        <span class="text-base font-semibold text-red-400">
+          <ng-container *ngIf="asks().length; else noAskM">
+            {{ asks()[0].price | number: '1.2-2' }}
+          </ng-container>
+        </span>
+      </div>
+      <div class="flex flex-col items-end">
+        <span class="text-[11px] text-gray-400 font-mono">Mid Price</span>
+        <span class="text-base font-semibold text-gray-100">
+          <ng-container *ngIf="bids().length && asks().length; else noMidM">
+            {{
+              ((bids()[0].price + asks()[0].price) / 2)
+                | number: '1.2-2'
+            }}
+          </ng-container>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between text-[11px] text-gray-400 font-mono mt-1">
+      <div class="flex items-center gap-1">
+        <span>Imb:</span>
+        <span class="font-semibold" [style.color]="getImbalanceColor()">
+          {{ bidImbalance | number: '1.2-2' }}
+        </span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span>Grp:</span>
+        <button
+          class="px-1.5 py-0.5 rounded border border-gray-700 text-[10px]"
+          [class.bg-gray-700]="ladderStep() === 1"
+          (click)="setLadder(1)"
+        >
+          1
+        </button>
+        <button
+          class="px-1.5 py-0.5 rounded border border-gray-700 text-[10px]"
+          [class.bg-gray-700]="ladderStep() === 5"
+          (click)="setLadder(5)"
+        >
+          5
+        </button>
+        <button
+          class="px-1.5 py-0.5 rounded border border-gray-700 text-[10px]"
+          [class.bg-gray-700]="ladderStep() === 10"
+          (click)="setLadder(10)"
+        >
+          10
+        </button>
+      </div>
+    </div>
+
+    <div class="w-full h-2 rounded-full bg-gray-800 overflow-hidden mt-1">
+      <div
+        class="h-full transition-all"
+        [style.width.%]="(bidImbalance + 1) * 50"
+        [style.background]="getImbalanceColor()"
+      ></div>
+    </div>
+  </div>
+
+  <!-- L2 DEPTH -->
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Bids -->
+    <div>
+      <h3 class="text-green-400 font-semibold mb-2 text-sm">Bids</h3>
+
+      @for (b of bids(); track b) {
+        <div class="relative mb-1.5">
+          <!-- cumulative depth -->
+          <div
+            class="absolute inset-y-0 left-0 bg-green-500/10 rounded-md"
+            [style.width.%]="getCumulativeDepthPercent(b.cumQty, totalBidQty)"
+          ></div>
+
+          <!-- level depth -->
+          <div
+            class="absolute inset-y-0 left-0 rounded-md"
+            [style.width.%]="getDepthPercent(b.qty, maxBidQty)"
+            [style.background]="getHeatColor(b.qty, maxBidQty)"
+            style="opacity:0.35"
+          ></div>
+
+          <!-- row -->
+          <div
+            class="relative flex justify-between items-center px-3 py-1.5 rounded-md font-mono text-[13px]
+                   border border-gray-800 transition-colors hover:bg-gray-800"
+            [ngClass]="{
+              'ring-1 ring-green-400/70':
+                bids().length && b.price === bids()[0].price,
+              'animate-pulse bg-green-700/30':
+                lastBidPrice && b.price > lastBidPrice,
+              'animate-pulse bg-red-700/30':
+                lastBidPrice && b.price < lastBidPrice
+            }"
+          >
+            <div class="flex flex-col gap-0.5">
+              <span class="text-white drop-shadow">
+                {{ b.price | number: '1.2-2' }}
+              </span>
+              <span class="text-[11px] text-gray-400">
+                Cum: {{ b.cumQty | number: '1.4-4' }}
+              </span>
+            </div>
+
+            <div class="flex flex-col items-end gap-0.5">
+              <span class="font-semibold text-white drop-shadow">
+                {{ b.qty | number: '1.4-4' }}
+              </span>
+              <span class="text-[11px] text-gray-500">
+                {{ (b.qty / (totalBidQty || 1)) | number: '1.2-2' }}
+              </span>
+            </div>
+
+            <div
+              class="absolute top-0 bottom-0 right-0 w-1.5 rounded-r-md"
+              [style.background]="getHeatColor(b.qty, maxBidQty)"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Asks -->
+    <div>
+      <h3 class="text-red-400 font-semibold mb-2 text-sm">Asks</h3>
+
+      @for (a of asks(); track a) {
+        <div class="relative mb-1.5">
+          <!-- cumulative depth -->
+          <div
+            class="absolute inset-y-0 right-0 bg-red-500/10 rounded-md"
+            [style.width.%]="getCumulativeDepthPercent(a.cumQty, totalAskQty)"
+          ></div>
+
+          <!-- level depth -->
+          <div
+            class="absolute inset-y-0 right-0 rounded-md"
+            [style.width.%]="getDepthPercent(a.qty, maxAskQty)"
+            [style.background]="getHeatColor(a.qty, maxAskQty)"
+            style="opacity:0.35"
+          ></div>
+
+          <!-- row -->
+          <div
+            class="relative flex justify-between items-center px-3 py-1.5 rounded-md font-mono text-[13px]
+                   border border-gray-800 transition-colors hover:bg-gray-800"
+            [ngClass]="{
+              'ring-1 ring-red-400/70':
+                asks().length && a.price === asks()[0].price,
+              'animate-pulse bg-green-700/30':
+                lastAskPrice && a.price < lastAskPrice,
+              'animate-pulse bg-red-700/30':
+                lastAskPrice && a.price > lastAskPrice
+            }"
+          >
+            <div class="flex flex-col gap-0.5">
+              <span class="text-white drop-shadow">
+                {{ a.price | number: '1.2-2' }}
+              </span>
+              <span class="text-[11px] text-gray-400">
+                Cum: {{ a.cumQty | number: '1.4-4' }}
+              </span>
+            </div>
+
+            <div class="flex flex-col items-end gap-0.5">
+              <span class="font-semibold text-white drop-shadow">
+                {{ a.qty | number: '1.4-4' }}
+              </span>
+              <span class="text-[11px] text-gray-500">
+                {{ (a.qty / (totalAskQty || 1)) | number: '1.2-2' }}
+              </span>
+            </div>
+
+            <div
+              class="absolute top-0 bottom-0 left-0 w-1.5 rounded-l-md"
+              [style.background]="getHeatColor(a.qty, maxAskQty)"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- fallbacks -->
+  <ng-template #noSpread>0.00</ng-template>
+  <ng-template #noMid>0.00</ng-template>
+  <ng-template #noBid>--</ng-template>
+  <ng-template #noAsk>--</ng-template>
+  <ng-template #noSpreadM>0.00</ng-template>
+  <ng-template #noMidM>0.00</ng-template>
+  <ng-template #noBidM>--</ng-template>
+  <ng-template #noAskM>--</ng-template>
+
+</mat-card>

@@ -1,23 +1,40 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SimulatorService } from '../../../core/services/simulator.service';
-import { TradeTape } from "./trade-tape/trade-tape";
-import { MicrostructureCharts } from "./microstructure-charts/microstructure-charts";
-import { OrderbookDepth } from "./orderbook-depth/orderbook-depth";
-import { SymbolSelector } from "./symbol-selector/symbol-selector";
-import { MomentumOverview } from "./momentum-overview/momentum-overview";
-import { ScheerHeatmap } from "./scheer-heatmap/scheer-heatmap";
-import { VolatilityHeatmap } from "./volitility-heatmap/volitility-heatmap";
-import { CollapseGaugeComponent } from "./collapse-gauge/collapse-gauge";
-import { RegimeIndicator } from "./regime-indicator/regime-indicator";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { TradeTape } from './trade-tape/trade-tape';
+import { MicrostructureCharts } from './microstructure-charts/microstructure-charts';
+import { OrderbookDepth } from './orderbook-depth/orderbook-depth';
+import { SymbolSelector } from './symbol-selector/symbol-selector';
+import { MomentumOverview } from './momentum-overview/momentum-overview';
+import { ScheerHeatmap } from './scheer-heatmap/scheer-heatmap';
+import { VolatilityHeatmap } from './volitility-heatmap/volitility-heatmap';
+import { CollapseGaugeComponent } from './collapse-gauge/collapse-gauge';
+import { RegimeIndicator } from './regime-indicator/regime-indicator';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { OrderbookDepth2 } from './orderbook-depth2/orderbook-depth';
+import { ScheerDepthHeatmap } from './scheer-heatmap/scheer-depth-heatmap';
+import { CollapseBanner } from "../../components/collapse-banner/collapse-banner";
 
 @Component({
   selector: 'app-order-book-sim',
-  imports: [TradeTape, MicrostructureCharts, OrderbookDepth, SymbolSelector, MomentumOverview, ScheerHeatmap, VolatilityHeatmap, CollapseGaugeComponent, RegimeIndicator, MatButtonToggleModule],
+  imports: [
+    TradeTape,
+    MicrostructureCharts,
+    OrderbookDepth,
+    OrderbookDepth2,
+    SymbolSelector,
+    MomentumOverview,
+    ScheerHeatmap,
+    ScheerDepthHeatmap,
+    VolatilityHeatmap,
+    CollapseGaugeComponent,
+    RegimeIndicator,
+    MatButtonToggleModule,
+    CollapseBanner
+],
   templateUrl: './order-book-sim.html',
-  styleUrl: './order-book-sim.css',
+  styleUrl: './order-book-sim.scss',
 })
-export class OrderBookSim implements  OnDestroy {
+export class OrderBookSim implements OnDestroy {
   private momentumService = inject(SimulatorService);
   momentum = this.momentumService.momentum;
   direction = this.momentumService.direction;
@@ -27,10 +44,7 @@ export class OrderBookSim implements  OnDestroy {
   mode = this.momentumService.mode;
   symbol = this.momentumService.selectedSymbol;
 
-
-  constructor() {   
-
-  }
+  constructor() {}
 
   setMode(mode: 'simulator' | 'replay' | 'live') {
     this.mode.set(mode);
@@ -40,7 +54,6 @@ export class OrderBookSim implements  OnDestroy {
     this.symbol.set(symbol);
   }
 
-
   selectSymbol(symbol: string) {
     this.momentumService.selectedSymbol.set(symbol);
   }
@@ -48,6 +61,4 @@ export class OrderBookSim implements  OnDestroy {
   ngOnDestroy(): void {
     this.momentumService.disconnect();
   }
-
-
 }

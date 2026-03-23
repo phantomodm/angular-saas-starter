@@ -1,6 +1,9 @@
 export interface User {
   id: string;
+  administrator?: string;
   email: string;
+  company_name: string;
+  logoUrl?: string;
   displayName: string;
   photoUrl?: string;
   roles: string[];
@@ -31,3 +34,5 @@ export interface PasswordReset {
 }
 
 export type AuthProvider = 'firebase' | 'cognito' | 'azure' | 'supabase';
+
+

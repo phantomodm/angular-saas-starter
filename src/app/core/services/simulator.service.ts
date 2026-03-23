@@ -15,6 +15,7 @@ export interface MomentumState {
     bids: [number, number][];
     asks: [number, number][];
   };
+  collapse_probability: number;
 
   // Trade tape
   trades: {
@@ -42,6 +43,7 @@ export interface MomentumState {
 
   // Engine metadata
   engine_id: string;
+  regime?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -59,7 +61,7 @@ export class SimulatorService {
 
   // --- Signals ---
   selectedSymbol = signal<string>('BTCUSDT');
-  mode = signal<'replay' | 'live' | 'simulator'>('replay');
+  mode = signal<'replay' | 'live' | 'simulator'>('simulator');
 
   momentum = signal<MomentumState | null>(null);
   history = signal<MomentumState[]>([]);
@@ -91,7 +93,7 @@ export class SimulatorService {
       this.ws = undefined;
     }
 
-    const url = `ws://localhost:8000/ws/momentum?symbol=${symbol}&mode=${mode}`;
+    const url = `ws://localhost:8000/momentum/ws/momentum?symbol=${symbol}&mode=${mode}`;
     this.ws = new WebSocket(url);
 
     this.ws.onmessage = (event) => {

@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-symbol-selector',
   imports: [],
   templateUrl: './symbol-selector.html',
-  styleUrl: './symbol-selector.css',
+  styleUrl: './symbol-selector.scss',
 })
-export class SymbolSelector {
-
-}
+export class SymbolSelector {}

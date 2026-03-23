@@ -1,22 +1,35 @@
+
 /**
  * Organization/Company
  */
 export interface Organization {
   id: string;
-  name: string;
-  slug: string;
+  administrator?: string;
   description?: string;
+  name: string;
+  email: string;
   logo?: string;
   website?: string;
   industry?: string;
   size?: 'solo' | 'small' | 'medium' | 'large' | 'enterprise';
+  company_name: string;
   country?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  ownerId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  createdBy?: string;
+  ownerId?: string;
   status: 'active' | 'suspended' | 'deleted';
   subscriptionTierId?: string;
+  theme?: TenantTheme;
+  slug?: string;
+  roles: string[];
+  permissions: string[];
+  displayName: string;
+  photoUrl?: string;
+  lastLogin?: Date;
+  organizationId?: string;
 }
+ // Alias for clarity in multi-tenant context
 
 /**
  * Team/Department within organization
@@ -456,3 +469,14 @@ export interface SupportReply {
   attachments?: string[];
   createdAt: Date;
 }
+
+export interface TenantTheme {
+  brandColor: string;      // e.g. "#ff5722"
+  themePreference: 'light' | 'dark' | 'system';
+}
+
+// export interface Tenant {
+//   id: string;
+//   name: string;
+//   theme: TenantTheme;
+// }

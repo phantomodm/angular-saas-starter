@@ -54,15 +54,24 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
 
+  // Workspace-based routes (new)
   // Protected routes with app shell
   {
-    path: '',
+    path: 'workspace/:workspaceId',
     component: AppShellComponent,
     //canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
         component: DashboardComponent,
+      },
+      
+      {
+        path: 'ecosystems',
+        loadComponent: () =>
+          import('./pages/ecosystems/ecosystems-material').then(
+            (m) => m.EcosystemsMaterial,
+          ),
       },
       {
         path: '',
@@ -71,7 +80,10 @@ export const routes: Routes = [
       },
       {
         path: 'continuity',
-        loadChildren: () => import('./continuity/continuity.routes').then((m) => m.CONTINUITY_ROUTES),
+        loadChildren: () =>
+          import('./continuity/continuity.routes').then(
+            (m) => m.CONTINUITY_ROUTES,
+          ),
       },
       // Billing domain
       {
@@ -183,10 +195,9 @@ export const routes: Routes = [
       },
     ],
   },
-
   // Wildcard route for 404
   {
     path: '**',
-    redirectTo: '/dashboard',
+    redirectTo: '/workspace/default/dashboard',
   },
 ];

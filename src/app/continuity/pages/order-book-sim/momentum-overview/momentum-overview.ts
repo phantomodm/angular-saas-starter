@@ -1,15 +1,15 @@
 import { Component, computed, inject } from '@angular/core';
 import { SimulatorService } from '../../../../core/services/simulator.service';
-import { MatCardModule } from "@angular/material/card";
+import { MatCardModule } from '@angular/material/card';
 
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-momentum-overview',
   imports: [MatCardModule, MatProgressBarModule, CommonModule],
   templateUrl: './momentum-overview.html',
-  styleUrl: './momentum-overview.css',
+  styleUrl: './momentum-overview.scss',
 })
 export class MomentumOverview {
   momentumService = inject(SimulatorService);
@@ -22,6 +22,4 @@ export class MomentumOverview {
   trend = computed(() => this.momentum()?.trend ?? 0);
   acceleration = computed(() => this.momentum()?.acceleration ?? 0);
   scheerIntensity = computed(() => this.momentum()?.scheer_intensity ?? 0);
-
-
 }

@@ -6,9 +6,9 @@ import { SimulatorService } from '../../../../core/services/simulator.service';
 
 @Component({
   selector: 'app-trade-tape',
-  imports: [MatCardModule, MatFormFieldModule,UpperCasePipe],
+  imports: [MatCardModule, MatFormFieldModule, UpperCasePipe],
   templateUrl: './trade-tape.html',
-  styleUrl: './trade-tape.css',
+  styleUrl: './trade-tape.scss',
 })
 export class TradeTape {
   private momentumService = inject(SimulatorService);
@@ -17,6 +17,4 @@ export class TradeTape {
     const m = this.momentumService.momentum();
     return m?.trades ?? [];
   });
-
-
 }

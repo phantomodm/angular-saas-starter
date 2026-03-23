@@ -2,8 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, from, throwError, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { AuthAdapter } from '../auth.adapter';
-import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset } from '../../models/user.model';
-
+import {
+  AuthCredentials,
+  SignUpData,
+  PasswordResetRequest,
+  PasswordReset,
+} from '../../models/user.model';
+import { Organization } from '../../models/organization.model';
 /**
  * Azure Active Directory Authentication Service
  *
@@ -61,13 +66,17 @@ export class AzureAdAuthService extends AuthAdapter {
       // this.msalInstance = new PublicClientApplication(msalConfig);
       // await this.msalInstance.initialize();
 
-      console.warn('MSAL not initialized. Please configure MSAL in your environment.');
+      console.warn(
+        'MSAL not initialized. Please configure MSAL in your environment.',
+      );
     } catch (error) {
       console.error('Failed to initialize MSAL', error);
     }
   }
 
-  login(credentials: AuthCredentials): Observable<{ user: User; token: string }> {
+  login(
+    credentials: AuthCredentials,
+  ): Observable<{ user: Organization; token: string }> {
     if (!this.msalInstance) {
       return throwError(() => new Error('MSAL not initialized'));
     }
@@ -96,7 +105,7 @@ export class AzureAdAuthService extends AuthAdapter {
     return throwError(() => new Error('MSAL not initialized'));
   }
 
-  signup(data: SignUpData): Observable<{ user: User; token: string }> {
+  signup(data: SignUpData): Observable<{ user: Organization; token: string }> {
     if (!this.msalInstance) {
       return throwError(() => new Error('MSAL not initialized'));
     }
@@ -145,7 +154,7 @@ export class AzureAdAuthService extends AuthAdapter {
     return throwError(() => new Error('MSAL not initialized'));
   }
 
-  getCurrentUser(): Observable<User | null> {
+  getCurrentUser(): Observable<Organization | null> {
     if (!this.msalInstance) {
       return of(null);
     }
@@ -205,7 +214,9 @@ export class AzureAdAuthService extends AuthAdapter {
 
   resetPassword(data: PasswordReset): Observable<void> {
     // Similar to above - Azure AD password reset is typically handled outside the app
-    return throwError(() => new Error('Password reset not supported in Azure AD flow'));
+    return throwError(
+      () => new Error('Password reset not supported in Azure AD flow'),
+    );
   }
 
   verifyEmail(token: string): Observable<void> {
@@ -230,11 +241,13 @@ export class AzureAdAuthService extends AuthAdapter {
   }
 
   /**
-   * Helper method to map Azure AD user to app User model
+   * Helper method to map Azure AD user to app Organization model
    */
-  private mapAzureUserToAppUser(azureAccount: any): User {
+  private mapAzureUserToAppUser(azureAccount: any): Organization {
     return {
       id: azureAccount.homeAccountId || azureAccount.localAccountId,
+      name: azureAccount.name || 'User',
+      status: 'active',
       email: azureAccount.username || azureAccount.mail || '',
       displayName: azureAccount.name || 'User',
       photoUrl: undefined, // Would need to fetch from Microsoft Graph
@@ -242,6 +255,7 @@ export class AzureAdAuthService extends AuthAdapter {
       permissions: [], // Fetch from Azure AD group memberships or custom claims
       createdAt: new Date(),
       lastLogin: new Date(),
+      company_name: azureAccount.name || 'User',
     };
   }
 }

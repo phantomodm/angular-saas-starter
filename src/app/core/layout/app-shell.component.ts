@@ -321,6 +321,8 @@ export class AppShellComponent {
   showUserMenu = signal(false);
   showMobileMenu = signal(false);
 
+  workspaceId = this.authStore.workspaceId;
+
   isMobile() {
     return window.innerWidth < 768;
   }

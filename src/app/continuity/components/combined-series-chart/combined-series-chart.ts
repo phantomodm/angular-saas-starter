@@ -8,7 +8,7 @@ import { NgChartsModule } from 'ng2-charts';
   selector: 'ce-combined-series-chart',
   imports: [MatCardModule, NgChartsModule],
   templateUrl: './combined-series-chart.html',
-  styleUrl: './combined-series-chart.css',
+  styleUrl: './combined-series-chart.scss',
 })
 export class CombinedSeriesChart implements OnChanges {
   continuity = input<SeriesPoint[]>([]);
@@ -35,8 +35,8 @@ export class CombinedSeriesChart implements OnChanges {
   };
 
   ngOnChanges() {
-    const labels = this.continuity().map(p =>
-      new Date(p.timestamp).toLocaleString()
+    const labels = this.continuity().map((p) =>
+      new Date(p.timestamp).toLocaleString(),
     );
 
     this.chartData.set({
@@ -44,7 +44,7 @@ export class CombinedSeriesChart implements OnChanges {
       datasets: [
         {
           label: 'Continuity',
-          data: this.continuity().map(p => p.value),
+          data: this.continuity().map((p) => p.value),
           borderColor: '#16a34a',
           backgroundColor: 'rgba(22,163,74,0.2)',
           tension: 0.25,
@@ -52,7 +52,7 @@ export class CombinedSeriesChart implements OnChanges {
         },
         {
           label: 'Trend',
-          data: this.trend().map(p => p.value),
+          data: this.trend().map((p) => p.value),
           borderColor: '#3b82f6',
           backgroundColor: 'rgba(59,130,246,0.2)',
           tension: 0.25,
@@ -60,7 +60,7 @@ export class CombinedSeriesChart implements OnChanges {
         },
         {
           label: 'Acceleration',
-          data: this.acceleration().map(p => p.value),
+          data: this.acceleration().map((p) => p.value),
           borderColor: '#dc2626',
           backgroundColor: 'rgba(220,38,38,0.2)',
           tension: 0.25,
@@ -69,5 +69,4 @@ export class CombinedSeriesChart implements OnChanges {
       ],
     });
   }
-
 }

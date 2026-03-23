@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User, AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset } from '../models/user.model';
-
+import { AuthCredentials, SignUpData, PasswordResetRequest, PasswordReset } from '../models/user.model';
+import { Organization } from '../models/organization.model';
 /**
  * AuthAdapter defines the contract that all authentication providers must implement.
  * This allows for pluggable authentication backends (Firebase, AWS Cognito, Azure AD, Supabase, etc.)
@@ -10,12 +10,12 @@ export abstract class AuthAdapter {
   /**
    * Authenticate user with email and password
    */
-  abstract login(credentials: AuthCredentials): Observable<{ user: User; token: string }>;
+  abstract login(credentials: AuthCredentials): Observable<{ user: Organization; token: string }>;
 
   /**
    * Register a new user
    */
-  abstract signup(data: SignUpData): Observable<{ user: User; token: string }>;
+  abstract signup(data: SignUpData): Observable<{ user: Organization; token: string }>;
 
   /**
    * Sign out current user
@@ -25,7 +25,7 @@ export abstract class AuthAdapter {
   /**
    * Get currently authenticated user
    */
-  abstract getCurrentUser(): Observable<User | null>;
+  abstract getCurrentUser(): Observable<Organization | null>;
 
   /**
    * Refresh authentication token

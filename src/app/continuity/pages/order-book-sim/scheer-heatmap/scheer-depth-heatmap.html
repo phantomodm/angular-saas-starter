@@ -1,0 +1,61 @@
+<mat-card class="p-4 rounded-xl shadow-lg bg-gray-900 border border-gray-700">
+  <div class="flex items-center justify-between mb-3">
+    <div>
+      <h2 class="text-sm font-semibold text-gray-200">
+        Scheer Intensity Depth Heatmap
+      </h2>
+      <div class="text-xs text-gray-400 font-mono mt-1">
+        Scheer Intensity:
+        <span class="font-semibold text-amber-300">
+          {{ scheerIntensity() | number: '1.2-2' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-end text-[10px] text-gray-500 font-mono">
+      <div class="flex items-center gap-1">
+        <span class="inline-block w-3 h-3 rounded-sm bg-green-500"></span>
+        <span>Bid depth × intensity</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="inline-block w-3 h-3 rounded-sm bg-red-500"></span>
+        <span>Ask depth × intensity</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 text-[11px] text-gray-400 font-mono mb-1">
+    <div class="text-left">Bid</div>
+    <div class="text-center">Price</div>
+    <div class="text-right">Ask</div>
+  </div>
+
+  <div class="space-y-0.5 max-h-80 overflow-y-auto">
+    @for (row of depthRows(); track row.price) {
+      <div class="grid grid-cols-3 items-center gap-1">
+        <!-- Bid heat cell -->
+        <div class="flex justify-start">
+          <div
+            class="h-4 rounded-sm"
+            [style.width.%]="row.bidNorm * 100"
+            [style.background]="getBidColor(row.bidNorm)"
+          ></div>
+        </div>
+
+        <!-- Price -->
+        <div class="text-center text-[11px] text-gray-300">
+          {{ row.price | number: '1.2-2' }}
+        </div>
+
+        <!-- Ask heat cell -->
+        <div class="flex justify-end">
+          <div
+            class="h-4 rounded-sm"
+            [style.width.%]="row.askNorm * 100"
+            [style.background]="getAskColor(row.askNorm)"
+          ></div>
+        </div>
+      </div>
+    }
+  </div>
+</mat-card>

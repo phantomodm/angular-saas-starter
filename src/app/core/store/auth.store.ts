@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { User } from '../models/user.model';
+import { Organization } from '../models/organization.model';
 import { AuthAdapter, AUTH_ADAPTER } from '../auth/auth.adapter';
 
 /**
@@ -11,7 +11,8 @@ export class AuthStore {
   private authAdapter = inject(AuthAdapter, { optional: false });
 
   // State signals
-  currentUser = signal<User | null>(null);
+  workspaceId = signal<string | null>('default');
+  currentUser = signal<Organization | null>(null);
   isAuthenticated = signal(false);
   loading = signal(false);
   error = signal<string | null>(null);
@@ -42,7 +43,7 @@ export class AuthStore {
     this.loading.set(true);
 
     this.authAdapter.getCurrentUser().subscribe({
-      next: (user: User | null) => {
+      next: (user: Organization | null) => {
         if (user) {
           this.currentUser.set(user);
           this.isAuthenticated.set(true);
@@ -65,7 +66,7 @@ export class AuthStore {
     this.error.set(null);
 
     this.authAdapter.login({ email, password }).subscribe({
-      next: ({ user, token }: { user: User; token: string }) => {
+      next: ({ user, token }: { user: Organization; token: string }) => {
         this.currentUser.set(user);
         this.authToken.set(token);
         this.isAuthenticated.set(true);
@@ -86,7 +87,7 @@ export class AuthStore {
     this.error.set(null);
 
     this.authAdapter.signup({ email, password, displayName }).subscribe({
-      next: ({ user, token }: { user: User; token: string }) => {
+      next: ({ user, token }: { user: Organization; token: string }) => {
         this.currentUser.set(user);
         this.authToken.set(token);
         this.isAuthenticated.set(true);

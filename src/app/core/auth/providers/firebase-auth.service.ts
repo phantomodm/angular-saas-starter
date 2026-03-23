@@ -14,7 +14,6 @@ import {
 } from 'rxjs';
 import { AuthAdapter } from '../auth.adapter';
 import {
-  User,
   AuthCredentials,
   SignUpData,
   PasswordResetRequest,
@@ -34,6 +33,7 @@ import {
   updateProfile,
   User as FirebaseUser,
 } from 'firebase/auth';
+import { Organization } from '../../models/organization.model';
 
 /**
  * Production-Ready Firebase Authentication Service
@@ -62,7 +62,7 @@ import {
 export class FirebaseAuthService extends AuthAdapter {
   private auth!: Auth;
   private firebaseApp!: FirebaseApp;
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private currentUserSubject = new BehaviorSubject<Organization | null>(null);
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
@@ -196,7 +196,7 @@ export class FirebaseAuthService extends AuthAdapter {
    */
   login(
     credentials: AuthCredentials,
-  ): Observable<{ user: User; token: string }> {
+  ): Observable<{ user: Organization; token: string }> {
     if (!this.authInitialized) {
       return throwError(() => new Error('Firebase not initialized'));
     }
@@ -237,7 +237,7 @@ export class FirebaseAuthService extends AuthAdapter {
   /**
    * Sign up with email, password, and optional display name
    */
-  signup(data: SignUpData): Observable<{ user: User; token: string }> {
+  signup(data: SignUpData): Observable<{ user: Organization; token: string }> {
     if (!this.authInitialized) {
       return throwError(() => new Error('Firebase not initialized'));
     }
@@ -319,7 +319,7 @@ export class FirebaseAuthService extends AuthAdapter {
    * Get currently authenticated user
    * Returns the cached user from the BehaviorSubject
    */
-  getCurrentUser(): Observable<User | null> {
+  getCurrentUser(): Observable<Organization | null> {
     return this.currentUserSubject.asObservable();
   }
 
@@ -512,7 +512,7 @@ export class FirebaseAuthService extends AuthAdapter {
   private mapFirebaseUserToAppUser(
     firebaseUser: FirebaseUser,
     customClaims?: any,
-  ): User {
+  ): Organization {
     // Extract roles and permissions from custom claims
     // Custom claims are set by the backend via Firebase Admin SDK
     const roles = customClaims?.roles || ['user'];
@@ -533,6 +533,9 @@ export class FirebaseAuthService extends AuthAdapter {
         ? new Date(firebaseUser.metadata.lastSignInTime)
         : new Date(),
       organizationId,
+      name: '',
+      status: 'active',
+      company_name: '',
     };
   }
 
