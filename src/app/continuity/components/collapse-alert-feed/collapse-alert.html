@@ -1,13 +1,22 @@
 <mat-card class="p-3 bg-gray-900 border border-gray-700 rounded-xl">
-  <h3 class="text-sm font-semibold text-red-400 mb-2">
-    Collapse Risk Alerts
-  </h3>
+  <h3 class="text-sm font-semibold text-red-400 mb-2">Collapse Risk Alerts</h3>
 
   <div class="space-y-2 max-h-64 overflow-y-auto">
-    @for (evt of collapseEvents(); track evt.timestamp) {
-      <div class="p-2 rounded bg-gray-800 text-xs text-gray-300 font-mono">
-        <div class="text-red-300 font-semibold">
-          {{ evt.timestamp }} — Collapse Risk ↑
+    @for (evt of det.collapseEvents(); track evt.timestamp) {
+      <div
+        class="p-2 rounded text-xs font-mono cursor-pointer hover:bg-gray-700 transition"
+        [ngClass]="{
+          'bg-yellow-900/40 border border-yellow-600 text-yellow-300':
+            evt.severity === 'yellow',
+          'bg-orange-900/40 border border-orange-600 text-orange-300':
+            evt.severity === 'orange',
+          'bg-red-900/40 border border-red-600 text-red-300':
+            evt.severity === 'red',
+        }"
+        (click)="jumpTo(evt.timestamp)"
+      >
+        <div class="font-semibold">
+          {{ evt.timestamp }} — {{ evt.severity | uppercase }} Collapse Risk
         </div>
         <div class="mt-1">
           {{ evt.message }}

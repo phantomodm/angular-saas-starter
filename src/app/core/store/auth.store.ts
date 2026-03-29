@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Organization } from '../models/organization.model';
 import { AuthAdapter, AUTH_ADAPTER } from '../auth/auth.adapter';
+import { Router } from '@angular/router';
 
 /**
  * AuthStore manages authentication state using Angular signals.
@@ -9,6 +10,7 @@ import { AuthAdapter, AUTH_ADAPTER } from '../auth/auth.adapter';
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private authAdapter = inject(AuthAdapter, { optional: false });
+  private router = inject(Router);
 
   // State signals
   workspaceId = signal<string | null>('default');
@@ -68,6 +70,7 @@ export class AuthStore {
     this.authAdapter.login({ email, password }).subscribe({
       next: ({ user, token }: { user: Organization; token: string }) => {
         this.currentUser.set(user);
+        this.workspaceId.set(user.organizationId || 'default');
         this.authToken.set(token);
         this.isAuthenticated.set(true);
         this.loading.set(false);
@@ -89,6 +92,7 @@ export class AuthStore {
     this.authAdapter.signup({ email, password, displayName }).subscribe({
       next: ({ user, token }: { user: Organization; token: string }) => {
         this.currentUser.set(user);
+        this.workspaceId.set(user.organizationId || 'default');
         this.authToken.set(token);
         this.isAuthenticated.set(true);
         this.loading.set(false);
@@ -109,9 +113,11 @@ export class AuthStore {
       next: () => {
         this.currentUser.set(null);
         this.authToken.set(null);
+        this.workspaceId.set('default');
         this.isAuthenticated.set(false);
         this.error.set(null);
         this.loading.set(false);
+        this.router.navigate(['/login']);
       },
       error: (err: Error) => {
         this.error.set(err.message || 'Logout failed');

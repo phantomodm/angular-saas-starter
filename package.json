@@ -1,5 +1,5 @@
 {
-  "name": "NovaHuman-angular-tailwind-starter",
+  "name": "novahuman-angular-tailwind-starter",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -34,6 +34,7 @@
     "apexcharts": "^5.10.4",
     "chart.js": "^4.5.1",
     "firebase": "^10.7.1",
+    "lightweight-charts": "^5.1.0",
     "ng-apexcharts": "^2.3.0",
     "ng2-charts": "^4.1.1",
     "postcss": "^8.5.6",

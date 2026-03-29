@@ -1,4 +1,7 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
+import { MomentumMetrics, EngineState, BotState } from '../models/sim';
+import { Observable } from 'rxjs';
+
 
 export interface MomentumState {
   timestamp: string;
@@ -44,11 +47,12 @@ export interface MomentumState {
   // Engine metadata
   engine_id: string;
   regime?: string;
+  bot_state?: BotState;
 }
-
+const SOCKET_ENDPOINT = 'ws://api.novahuman.ai/ws/momentum';
 @Injectable({ providedIn: 'root' })
 export class SimulatorService {
-  private apiUrl = 'ws://localhost:8000/ws/momentum';
+  private apiUrl = SOCKET_ENDPOINT;
   // --- Default symbol list ---
   readonly symbols = [
     'BTCUSDT',
@@ -66,6 +70,8 @@ export class SimulatorService {
   momentum = signal<MomentumState | null>(null);
   history = signal<MomentumState[]>([]);
   private ws?: WebSocket;
+  private momentumWsUrl = SOCKET_ENDPOINT;
+  private momentumWs: WebSocket | null = null;
 
   // Derived signal: last direction
   direction = computed(() => this.momentum()?.direction ?? 'neutral');
@@ -87,13 +93,54 @@ export class SimulatorService {
 
   }
 
+  /**
+   * Connects to the Momentum Engine WebSocket and returns a continuous Observable stream.
+   */
+  connectMomentum(mode: string = 'simulator', symbol: string = 'BTCUSDT'): Observable<EngineState> {
+    return new Observable<EngineState>((observer) => {
+      // Build the URL with query params
+      const url = `${this.momentumWsUrl}?mode=${mode}&symbol=${symbol}`;
+      this.momentumWs = new WebSocket(url);
+
+      this.momentumWs.onopen = () => {
+        console.log(`[TradingService] Connected to Momentum WS (${mode})`);
+      };
+
+      this.momentumWs.onmessage = (event) => {
+        try {
+          const data: EngineState = JSON.parse(event.data);
+          observer.next(data);
+        } catch (err) {
+          console.error('[TradingService] Failed to parse momentum message', err);
+        }
+      };
+
+      this.momentumWs.onerror = (error) => {
+        console.error('[TradingService] WebSocket Error:', error);
+        observer.error(error);
+      };
+
+      this.momentumWs.onclose = () => {
+        console.log('[TradingService] Momentum WS Disconnected');
+        observer.complete();
+      };
+
+      // Cleanup logic when the Angular component destroys the subscription
+      return () => {
+        if (this.momentumWs && this.momentumWs.readyState === WebSocket.OPEN) {
+          this.momentumWs.close();
+        }
+      };
+    });
+  }
+
   connect(symbol: string, mode: 'replay' | 'live' | 'simulator' = 'replay') {
     if (this.ws) {
       this.ws.close();
       this.ws = undefined;
     }
 
-    const url = `ws://localhost:8000/momentum/ws/momentum?symbol=${symbol}&mode=${mode}`;
+    const url = `${SOCKET_ENDPOINT}?symbol=${symbol}&mode=${mode}`;
     this.ws = new WebSocket(url);
 
     this.ws.onmessage = (event) => {

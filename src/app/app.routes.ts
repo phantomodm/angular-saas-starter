@@ -21,33 +21,51 @@ import { PlaceholderComponent } from './domains/shared/pages/placeholder.compone
 import { WebhooksManagementComponent } from './domains/integration/pages/webhooks-management.component';
 import { RateLimitingDashboardComponent } from './domains/integration/pages/rate-limiting-dashboard.component';
 import { HelpCenterComponent } from './domains/support/pages/help-center.component';
+import { LandingPage } from './pages/landing-page/landing-page';
 
 export const routes: Routes = [
   // Public auth routes
+  { 
+    path: '', 
+    component: LandingPage,
+    title: 'NHFC | Structural Context. Earlier Signals.'
+  },
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () =>
+      import('./domains/auth/pages/login.component').then((m) => m.LoginComponent),
+    data: {
+      title: 'Login',
+      description: 'Sign in to your account',
+    }
   },
   {
     path: 'signup',
-    component: SignupComponent,
-  },
-  {
-    path: 'forgot-password',
-    component: PlaceholderComponent,
+    loadComponent: () =>
+      import('./domains/auth/pages/signup.component').then((m) => m.SignupComponent),
     data: {
-      title: 'Forgot Password',
-      description: 'Reset your password',
-    },
+      title: 'Sign Up',
+      description: 'Create a new account',
+    }
   },
-  {
-    path: 'reset-password',
-    component: PlaceholderComponent,
-    data: {
-      title: 'Reset Password',
-      description: 'Enter your new password',
-    },
-  },
+  // {
+  //   path: 'forgot-password',
+  //   loadComponent: () =>
+  //     import('./domains/auth/pages/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+  //   data: {
+  //     title: 'Forgot Password',
+  //     description: 'Reset your password',
+  //   },
+  // },
+  // {
+  //   path: 'reset-password',
+  //   loadComponent: () =>
+  //     import('./domains/auth/pages/reset-password.component').then((m) => m.ResetPasswordComponent),
+  //   data: {
+  //     title: 'Reset Password',
+  //     description: 'Enter your new password',
+  //   },
+  // }
   {
     path: 'onboarding',
     component: OnboardingComponent,

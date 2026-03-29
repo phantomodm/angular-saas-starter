@@ -13,11 +13,21 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { IngestionService, ContinuityIndex } from '../../core/services/new/ingestion';
-import { ContinuityCoreService, ResilienceMetric } from '../../core/services/new/continuity-core'
+import {
+  IngestionService,
+  ContinuityIndex,
+} from '../../core/services/new/ingestion';
+import {
+  ContinuityCoreService,
+  ResilienceMetric,
+} from '../../core/services/new/continuity-core';
 import { EcosystemStore } from '../../core/store/ecosystem.store';
 import { AlertService } from '../../core/services/new/alert';
-import { EcosystemInstance, EcosystemService } from '../../core/services/ecosystem.service';
+import {
+  EcosystemInstance,
+  EcosystemLibraryService,
+} from '../../core/services/ecosystem-library';
+import { EcosystemEngineService } from '../../core/services/ecosystem-engine';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,7 +45,7 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
     MatBadgeModule,
     MatListModule,
     MatDividerModule,
-    MatChipsModule
+    MatChipsModule,
   ],
   template: `
     <div class="p-4 md:p-6">
@@ -43,7 +53,9 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
         <!-- Header -->
         <div class="mb-6 md:mb-8">
           <h1 class="text-3xl font-bold">Continuity Dashboard</h1>
-          <p class="text-gray-600 dark:text-gray-400 mt-2">Real-time monitoring of financial ecosystem resilience</p>
+          <p class="text-gray-600 dark:text-gray-400 mt-2">
+            Real-time monitoring of financial ecosystem resilience
+          </p>
         </div>
 
         <!-- Ecosystem Selector Card -->
@@ -66,17 +78,25 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                   }
                 </mat-select>
               </mat-form-field>
-              
+
               @if (selectedEcosystem()) {
                 <div class="flex items-center gap-2">
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Status:</span>
-                  <mat-chip [ngClass]="getStatusChipClass(selectedEcosystem()!.status)">
+                  <span class="text-sm text-gray-600 dark:text-gray-400"
+                    >Status:</span
+                  >
+                  <mat-chip
+                    [ngClass]="getStatusChipClass(selectedEcosystem()!.status)"
+                  >
                     {{ selectedEcosystem()!.status | uppercase }}
                   </mat-chip>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Entities:</span>
-                  <span class="font-bold">{{ selectedEcosystem()!.monitoredEntities }}</span>
+                  <span class="text-sm text-gray-600 dark:text-gray-400"
+                    >Entities:</span
+                  >
+                  <span class="font-bold">{{
+                    selectedEcosystem()!.monitoredEntities
+                  }}</span>
                 </div>
               }
             </div>
@@ -84,7 +104,9 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
         </mat-card>
 
         <!-- Continuity Index & Resilience -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
+        >
           <!-- Continuity Index Card -->
           <mat-card>
             <mat-card-header>
@@ -93,7 +115,10 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
             <mat-card-content>
               <div class="flex items-center justify-between mb-6">
                 <div>
-                  <div [ngClass]="'text-' + getIndexColorClass()" class="text-5xl font-bold">
+                  <div
+                    [ngClass]="'text-' + getIndexColorClass()"
+                    class="text-5xl font-bold"
+                  >
                     {{ index().score }}
                   </div>
                   <p [ngClass]="'text-' + getIndexColorClass() + ' mt-2'">
@@ -102,12 +127,46 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                 </div>
                 <div class="w-28 h-28 flex items-center justify-center">
                   <svg viewBox="0 0 120 120" class="w-full h-full">
-                    <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-300 dark:text-gray-700"/>
-                    <path d="M60 10 A50 50 0 0 1 109.24 29.39" fill="none" stroke="currentColor" stroke-width="4" class="text-red-500"/>
-                    <path d="M109.24 29.39 A50 50 0 0 1 98.48 87.94" fill="none" stroke="currentColor" stroke-width="4" class="text-amber-500"/>
-                    <path d="M98.48 87.94 A50 50 0 0 1 60 110" fill="none" stroke="currentColor" stroke-width="4" class="text-green-500"/>
-                    <line [attr.x1]="60" [attr.y1]="60" [attr.x2]="60 + 40 * Math.cos(getNeedleAngle())" [attr.y2]="60 + 40 * Math.sin(getNeedleAngle())" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="60" cy="60" r="4" fill="white"/>
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      class="text-gray-300 dark:text-gray-700"
+                    />
+                    <path
+                      d="M60 10 A50 50 0 0 1 109.24 29.39"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      class="text-red-500"
+                    />
+                    <path
+                      d="M109.24 29.39 A50 50 0 0 1 98.48 87.94"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      class="text-amber-500"
+                    />
+                    <path
+                      d="M98.48 87.94 A50 50 0 0 1 60 110"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      class="text-green-500"
+                    />
+                    <line
+                      [attr.x1]="60"
+                      [attr.y1]="60"
+                      [attr.x2]="60 + 40 * Math.cos(getNeedleAngle())"
+                      [attr.y2]="60 + 40 * Math.sin(getNeedleAngle())"
+                      stroke="white"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                    />
+                    <circle cx="60" cy="60" r="4" fill="white" />
                   </svg>
                 </div>
               </div>
@@ -128,7 +187,9 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                 <div>
                   <div class="flex justify-between mb-2">
                     <span class="text-sm font-medium">Resilience Score</span>
-                    <span class="font-bold">{{ resilience().resilience | number: '1.0-1' }}/100</span>
+                    <span class="font-bold"
+                      >{{ resilience().resilience | number: '1.0-1' }}/100</span
+                    >
                   </div>
                   <mat-progress-bar
                     mode="determinate"
@@ -141,7 +202,11 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                 <div>
                   <div class="flex justify-between mb-2">
                     <span class="text-sm font-medium">Confidence Level</span>
-                    <span class="font-bold">{{ resilience().confidence * 100 | number: '1.0-1' }}%</span>
+                    <span class="font-bold"
+                      >{{
+                        resilience().confidence * 100 | number: '1.0-1'
+                      }}%</span
+                    >
                   </div>
                   <mat-progress-bar
                     mode="determinate"
@@ -154,8 +219,11 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                 <div>
                   <div class="flex justify-between mb-2">
                     <span class="text-sm font-medium">Snap Probability</span>
-                    <span [ngClass]="getSnapProbabilityColor()" class="font-bold">
-                      {{ (snapProbability() * 100) | number: '1.0-1' }}%
+                    <span
+                      [ngClass]="getSnapProbabilityColor()"
+                      class="font-bold"
+                    >
+                      {{ snapProbability() * 100 | number: '1.0-1' }}%
                     </span>
                   </div>
                   <mat-progress-bar
@@ -168,9 +236,15 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                 <mat-divider></mat-divider>
 
                 <div>
-                  <p class="text-xs text-gray-600 dark:text-gray-400">Forecast Horizon: {{ resilience().timeHorizon | number: '1.0' }} hours</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">
+                    Forecast Horizon:
+                    {{ resilience().timeHorizon | number: '1.0' }} hours
+                  </p>
                   <p class="text-sm mt-2" [ngClass]="getTrendColor()">
-                    Trend: <span class="font-bold">{{ index().forecastedTrend | uppercase }}</span>
+                    Trend:
+                    <span class="font-bold">{{
+                      index().forecastedTrend | uppercase
+                    }}</span>
                   </p>
                 </div>
               </div>
@@ -187,13 +261,17 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
             <div class="space-y-4 overflow-x-auto">
               @for (point of forecast; let i = $index; track i) {
                 <div class="flex items-center gap-4">
-                  <div class="w-20 flex-shrink-0 text-xs text-gray-600 dark:text-gray-400">
+                  <div
+                    class="w-20 flex-shrink-0 text-xs text-gray-600 dark:text-gray-400"
+                  >
                     {{ point.timestamp | date: 'MMM d' }}
                   </div>
                   <div class="flex-1">
                     <div class="flex justify-between mb-1 text-xs">
                       <span>Predicted</span>
-                      <span class="font-medium">{{ point.resilience | number: '1.0-1' }}</span>
+                      <span class="font-medium">{{
+                        point.resilience | number: '1.0-1'
+                      }}</span>
                     </div>
                     <mat-progress-bar
                       mode="determinate"
@@ -201,8 +279,17 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                       [ngClass]="getResilienceBarColor(point.resilience)"
                     ></mat-progress-bar>
                   </div>
-                  <div class="w-8 text-right flex-shrink-0 text-lg font-bold" [ngClass]="getResilienceStatusColor(point.resilience)">
-                    {{ point.resilience > 75 ? '✓' : point.resilience > 50 ? '⚠' : '✗' }}
+                  <div
+                    class="w-8 text-right flex-shrink-0 text-lg font-bold"
+                    [ngClass]="getResilienceStatusColor(point.resilience)"
+                  >
+                    {{
+                      point.resilience > 75
+                        ? '✓'
+                        : point.resilience > 50
+                          ? '⚠'
+                          : '✗'
+                    }}
                   </div>
                 </div>
               }
@@ -221,20 +308,35 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
               @if (recentAlerts().length > 0) {
                 <mat-list>
                   @for (alert of recentAlerts().slice(0, 5); track alert.id) {
-                    <mat-list-item class="mb-3 p-3 rounded-lg" [ngClass]="getAlertBgClass(alert.level)">
-                      <mat-icon matListItemIcon [ngClass]="getAlertIconColor(alert.level)">
+                    <mat-list-item
+                      class="mb-3 p-3 rounded-lg"
+                      [ngClass]="getAlertBgClass(alert.level)"
+                    >
+                      <mat-icon
+                        matListItemIcon
+                        [ngClass]="getAlertIconColor(alert.level)"
+                      >
                         {{ getAlertIcon(alert.level) }}
                       </mat-icon>
-                      <div matListItemTitle class="text-sm font-medium">{{ alert.title }}</div>
-                      <div matListItemLine class="text-xs text-gray-600 dark:text-gray-400">
+                      <div matListItemTitle class="text-sm font-medium">
+                        {{ alert.title }}
+                      </div>
+                      <div
+                        matListItemLine
+                        class="text-xs text-gray-600 dark:text-gray-400"
+                      >
                         {{ alert.message }}
                       </div>
-                      <div matListItemMeta class="text-xs">{{ alert.timestamp | date: 'short' }}</div>
+                      <div matListItemMeta class="text-xs">
+                        {{ alert.timestamp | date: 'short' }}
+                      </div>
                     </mat-list-item>
                   }
                 </mat-list>
               } @else {
-                <p class="text-center text-gray-600 dark:text-gray-400 py-8">No alerts</p>
+                <p class="text-center text-gray-600 dark:text-gray-400 py-8">
+                  No alerts
+                </p>
               }
             </mat-card-content>
           </mat-card>
@@ -251,11 +353,17 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
                     <div class="w-full">
                       <div class="flex justify-between items-center mb-2">
                         <span class="font-bold">{{ data.ticker }}</span>
-                        <span class="text-sm">{{ data.price | number: '1.0-2' }}</span>
+                        <span class="text-sm">{{
+                          data.price | number: '1.0-2'
+                        }}</span>
                       </div>
-                      <div class="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-400">
+                      <div
+                        class="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-400"
+                      >
                         <div>Spread: {{ data.spread | number: '1.0-2' }}</div>
-                        <div>Rate: {{ data.interestRate | number: '1.0-2' }}%</div>
+                        <div>
+                          Rate: {{ data.interestRate | number: '1.0-2' }}%
+                        </div>
                         <div>Vol: {{ data.volatility | number: '1.0-1' }}%</div>
                       </div>
                     </div>
@@ -268,35 +376,36 @@ import { EcosystemInstance, EcosystemService } from '../../core/services/ecosyst
       </div>
     </div>
   `,
-  styles: [`
-    ::ng-deep .resilience-bar-healthy .mdc-linear-progress__bar {
-      background-color: #4caf50;
-    }
+  styles: [
+    `
+      ::ng-deep .resilience-bar-healthy .mdc-linear-progress__bar {
+        background-color: #4caf50;
+      }
 
-    ::ng-deep .resilience-bar-moderate .mdc-linear-progress__bar {
-      background-color: #ff9800;
-    }
+      ::ng-deep .resilience-bar-moderate .mdc-linear-progress__bar {
+        background-color: #ff9800;
+      }
 
-    ::ng-deep .resilience-bar-low .mdc-linear-progress__bar {
-      background-color: #f44336;
-    }
+      ::ng-deep .resilience-bar-low .mdc-linear-progress__bar {
+        background-color: #f44336;
+      }
 
-    mat-card {
-      background-color: var(--surface-container);
-      border-radius: 12px;
-    }
+      mat-card {
+        background-color: var(--surface-container);
+        border-radius: 12px;
+      }
 
-    ::ng-deep .mat-mdc-form-field {
-      width: 100%;
-    }
-  `]
+      ::ng-deep .mat-mdc-form-field {
+        width: 100%;
+      }
+    `,
+  ],
 })
 export class DashboardMaterial implements OnInit {
-
   private ingestionService = inject(IngestionService);
   private coreService = inject(ContinuityCoreService);
   private alertService = inject(AlertService);
-  private ecosystemService = inject(EcosystemService);
+  private ecosystemService = inject(EcosystemLibraryService);
   ecosystemStore = inject(EcosystemStore);
 
   Math = Math;
@@ -304,25 +413,27 @@ export class DashboardMaterial implements OnInit {
   index = computed(() => this.ingestionService.continuityIndexSignal());
   resilience = computed(() => this.coreService.getResilienceMetric());
   snapProbability = computed(() => this.coreService.getSnapProbability());
-  selectedEcosystem = computed(() => this.ecosystemService.selectedEcosystemSignal());
-  recentAlerts = computed(() => this.alertService.allAlertsSignal().slice(0, 5));
+  selectedEcosystem = computed(() =>
+    this.ecosystemService.selectedEcosystemSignal(),
+  );
+  recentAlerts = computed(() =>
+    this.alertService.allAlertsSignal().slice(0, 5),
+  );
 
   forecast: { timestamp: Date; resilience: number }[] = [];
   marketData: () => any[] = () => [];
   ecosystems: () => EcosystemInstance[] = () => [];
 
-  constructor(
-    
-  ) {
+  constructor() {
     this.forecast = this.coreService.generateForecast(12);
   }
 
   ngOnInit(): void {
-    this.ecosystemService.getInstances().subscribe(data => {
+    this.ecosystemService.getInstances().subscribe((data) => {
       this.ecosystems = () => data;
     });
 
-    this.ingestionService.getMarketData().subscribe(data => {
+    this.ingestionService.getMarketData().subscribe((data) => {
       this.marketData = () => data;
     });
   }
@@ -334,9 +445,9 @@ export class DashboardMaterial implements OnInit {
 
   getStatusLabel(status: 'healthy' | 'drift' | 'critical'): string {
     const labels: Record<string, string> = {
-      'healthy': 'System Healthy',
-      'drift': 'Observable Drift',
-      'critical': 'Critical State'
+      healthy: 'System Healthy',
+      drift: 'Observable Drift',
+      critical: 'Critical State',
     };
     return labels[status] || status;
   }
@@ -344,9 +455,9 @@ export class DashboardMaterial implements OnInit {
   getIndexColorClass(): string {
     const status = this.index().status;
     const colors: Record<string, string> = {
-      'healthy': 'text-green-600',
-      'drift': 'text-amber-600',
-      'critical': 'text-red-600'
+      healthy: 'text-green-600',
+      drift: 'text-amber-600',
+      critical: 'text-red-600',
     };
     return colors[status] || 'text-blue-600';
   }
@@ -388,36 +499,43 @@ export class DashboardMaterial implements OnInit {
 
   getStatusChipClass(status: string): string {
     const classes: Record<string, string> = {
-      'active': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-      'paused': 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100',
-      'archived': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
+      active:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
+      paused:
+        'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100',
+      archived: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
     };
-    return classes[status] || 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
+    return (
+      classes[status] ||
+      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+    );
   }
 
   getAlertBgClass(level: string): string {
     const classes: Record<string, string> = {
-      'critical': 'bg-red-50 dark:bg-red-900 dark:bg-opacity-20 border border-red-200 dark:border-red-700',
-      'warning': 'bg-amber-50 dark:bg-amber-900 dark:bg-opacity-20 border border-amber-200 dark:border-amber-700',
-      'info': 'bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border border-blue-200 dark:border-blue-700'
+      critical:
+        'bg-red-50 dark:bg-red-900 dark:bg-opacity-20 border border-red-200 dark:border-red-700',
+      warning:
+        'bg-amber-50 dark:bg-amber-900 dark:bg-opacity-20 border border-amber-200 dark:border-amber-700',
+      info: 'bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border border-blue-200 dark:border-blue-700',
     };
     return classes[level] || '';
   }
 
   getAlertIcon(level: string): string {
     const icons: Record<string, string> = {
-      'critical': 'error',
-      'warning': 'warning',
-      'info': 'info'
+      critical: 'error',
+      warning: 'warning',
+      info: 'info',
     };
     return icons[level] || 'notifications';
   }
 
   getAlertIconColor(level: string): string {
     const colors: Record<string, string> = {
-      'critical': 'text-red-600',
-      'warning': 'text-amber-600',
-      'info': 'text-blue-600'
+      critical: 'text-red-600',
+      warning: 'text-amber-600',
+      info: 'text-blue-600',
     };
     return colors[level] || 'text-gray-600';
   }

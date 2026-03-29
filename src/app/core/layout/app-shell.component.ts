@@ -1,6 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthStore } from '../store/auth.store';
 import { ThemeService } from '../services/theme.service';
 import { HasRoleDirective } from '../../shared/directives/has-role.directive';
@@ -10,6 +10,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
+import { filter, map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface NavItem {
   label: string;
@@ -316,10 +318,18 @@ interface NavItem {
   // `,
 })
 export class AppShellComponent {
+  private router = inject(Router);
   authStore = inject(AuthStore);
   themeService = inject(ThemeService);
   showUserMenu = signal(false);
   showMobileMenu = signal(false);
+  isLandingPage = signal(true);
+  // isLandingPage = toSignal(
+  //   this.router.events.pipe(
+  //     filter((event) => event instanceof NavigationEnd),
+  //     map(() => this.router.url === '/landing')
+  //   ),{ initialValue: false}
+  // )
 
   workspaceId = this.authStore.workspaceId;
 

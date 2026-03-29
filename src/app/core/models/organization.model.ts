@@ -28,6 +28,7 @@ export interface Organization {
   photoUrl?: string;
   lastLogin?: Date;
   organizationId?: string;
+  workspaceId?: string; // Alias for backward compatibility
 }
  // Alias for clarity in multi-tenant context
 

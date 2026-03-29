@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  background-color: #050507;
+}
+
+// The "Glass" effect for containers
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+// Glow effect for the main Continuity Index
+.text-glow-emerald {
+  text-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
+}
+
+.text-glow-amber {
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+}
+
+// The Hero Bezel container
+.hero-bezel-container {
+  mask-image: radial-gradient(circle, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle, black 50%, transparent 100%);
+}
+
+// Predictive Timeline specific styles
+.predictive-container {
+  .confidence-band-95 {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  }
+  
+  .confidence-band-80 {
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+  }
+}

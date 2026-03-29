@@ -1,0 +1,62 @@
+:host {
+  display: block;
+  padding: 2rem 0;
+}
+
+// The Glass Container
+.glass {
+  background: rgba(10, 10, 12, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  
+  // Create the subtle internal glow
+  &::before {
+    content: '';
+    absolute: inset-0;
+    background: radial-gradient(
+      800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      rgba(59, 130, 246, 0.06), 
+      transparent 40%
+    );
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    
+    &::before {
+      opacity: 1;
+    }
+
+    .vertical-icon {
+      color: rgba(59, 130, 246, 0.4);
+      transform: scale(1.1) rotate(-5deg);
+    }
+  }
+}
+
+// Icon styling for the background element
+.vertical-icon {
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+
+// Specific Status Chip variants for the landing page [cite: 14]
+.chip-healthy {
+  background: rgba(52, 211, 153, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+// Typography refinements for institutional feel
+h3 {
+  background: linear-gradient(to bottom right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

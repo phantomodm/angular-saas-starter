@@ -6,9 +6,13 @@ export interface EcosystemTemplate {
   id: string;
   name: string;
   description: string;
-  category: 'financial_system' | 'market' | 'credit' | 'crypto' | 'custom';
+  //category: 'financial_system' | 'market' | 'credit' | 'crypto' | 'custom';
+  category:string;
+  
   setupTime: number; // minutes
-  complexity: 'simple' | 'intermediate' | 'advanced';
+  //complexity: 'simple' | 'intermediate' | 'advanced';
+  complexity: string;
+
   dataPoints: number;
   region?: string;
   tags: string[];
@@ -28,7 +32,7 @@ export interface EcosystemInstance {
 @Injectable({
   providedIn: 'root'
 })
-export class EcosystemService {
+export class EcosystemLibraryService {
   // Predefined ecosystem templates
   private templates: EcosystemTemplate[] = [
     {

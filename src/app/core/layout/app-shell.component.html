@@ -1,4 +1,9 @@
-<mat-sidenav-container class="h-screen">
+@if(isLandingPage()){
+  <div class="h-screen bg-[#050507] overflow-y-auto">
+    <router-outlet></router-outlet>
+  </div>
+} @else {
+  <mat-sidenav-container class="h-screen">
   <!-- SIDENAV (Desktop + Mobile) -->
   <mat-sidenav
     #drawer
@@ -202,3 +207,5 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+}
+

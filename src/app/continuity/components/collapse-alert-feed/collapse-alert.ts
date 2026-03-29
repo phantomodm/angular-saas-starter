@@ -15,19 +15,36 @@ import { CollapseDetectorService } from '../../../core/services/collapse-detecto
 
       <div class="space-y-2 max-h-64 overflow-y-auto">
         @for (evt of det.collapseEvents(); track evt.timestamp) {
-          <div class="p-2 rounded bg-gray-800 text-xs text-gray-300 font-mono">
-            <div class="text-red-300 font-semibold">
-              {{ evt.timestamp }} — Collapse Risk ↑
-            </div>
-            <div class="mt-1">
-              {{ evt.message }}
-            </div>
-          </div>
-        }
+      <div
+        class="p-2 rounded text-xs font-mono cursor-pointer hover:bg-gray-700 transition"
+        [ngClass]="{
+          'bg-yellow-900/40 border border-yellow-600 text-yellow-300':
+            evt.severity === 'yellow',
+          'bg-orange-900/40 border border-orange-600 text-orange-300':
+            evt.severity === 'orange',
+          'bg-red-900/40 border border-red-600 text-red-300':
+            evt.severity === 'red',
+        }"
+        (click)="jumpTo(evt.timestamp)"
+      >
+        <div class="font-semibold">
+          {{ evt.timestamp }} — {{ evt.severity | uppercase }} Collapse Risk
+        </div>
+        <div class="mt-1">
+          {{ evt.message }}
+        </div>
+      </div>
+    }
       </div>
     </mat-card>
   `
 })
 export class CollapseAlertFeed {
-  det = inject(CollapseDetectorService);
+  det = inject(CollapseDetectorService);  jumpTo(ts: string) {
+    const event = new CustomEvent('collapse-jump', {
+      detail: { timestamp: ts },
+    });
+    window.dispatchEvent(event);
+  }
+
 }

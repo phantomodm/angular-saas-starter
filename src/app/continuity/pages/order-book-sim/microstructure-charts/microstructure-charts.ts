@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { SimulatorService } from '../../../../core/services/simulator.service';
 import { MatCardModule } from '@angular/material/card';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -12,11 +12,15 @@ import { CollapseDetectorService } from '../../../../core/services/collapse-dete
 })
 export class MicrostructureCharts {
   momentum = inject(SimulatorService);
-  history = this.momentum.history;
   det = inject(CollapseDetectorService);
+  replayIndex = signal(0);
+  isReplaying = signal(false);
+  
+  history = this.momentum.history;
   priceChart: any = null;
   continuityChart: any = null;
   scheerChart: any = null;
+  
 
   onPriceChartInit(chart: any) {
     this.priceChart = chart;
@@ -83,11 +87,25 @@ export class MicrostructureCharts {
       this.continuityChart.addXaxisAnnotation(annotation);
     if (this.scheerChart) this.scheerChart.addXaxisAnnotation(annotation);
   }
+  collapseProbabilitySeries = computed(() => [
+    {
+      name: 'Collapse Probability',
+      type: 'line',
+      data: this.history().map((h) => [
+        new Date(h.timestamp).getTime(),
+        h.collapse_probability,
+      ]),
+      stroke: { width: 2, dashArray: 4 },
+      color: '#ff0000',
+    },
+  ]);
+
   priceSeries = computed(() => [
     {
       name: 'Mid Price',
       data: this.history().map((h) => [new Date(h.timestamp).getTime(), h.mid]),
     },
+    ...this.collapseProbabilitySeries(),
   ]);
 
   continuitySeries = computed(() => [
@@ -113,6 +131,30 @@ export class MicrostructureCharts {
       ]),
     },
   ]);
+
+  startReplay() {
+    this.isReplaying.set(true);
+    this.replayIndex.set(0);
+
+    const interval = setInterval(() => {
+      if (!this.isReplaying()) return clearInterval(interval);
+
+      const idx = this.replayIndex();
+      const h = this.history()[idx];
+
+      if (!h) return clearInterval(interval);
+
+      const sliced = this.history()
+        .slice(0, idx)
+        .map((p) => [new Date(p.timestamp).getTime(), p.mid]);
+
+      if (this.priceChart) {
+        this.priceChart.updateSeries([{ data: sliced }], false);
+      }
+
+      this.replayIndex.set(idx + 1);
+    }, 100);
+  }
 
   scheerSeries = computed(() => [
     {

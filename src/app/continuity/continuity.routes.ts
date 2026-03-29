@@ -19,6 +19,14 @@ export const CONTINUITY_ROUTES: Routes = [
           ),
       },
       {
+        path: 'ecosystem-overview/:id',
+        loadComponent: () =>
+          import('./pages/ecosystem-overview/ecosystem-overview').then(
+            (m) => m.EcosystemOverviewComponent,
+          ),
+        resolve: { }
+      },
+      {
         path: 'order-book',
         loadComponent: () =>
           import('./pages/order-book-sim/order-book-sim').then(

@@ -1,5 +1,5 @@
 // EcosystemsMaterialComponent - migrated from ecosystems.txt
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -17,10 +17,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import {
-  EcosystemService,
+  EcosystemLibraryService,
   EcosystemTemplate,
   EcosystemInstance,
-} from '../../core/services/ecosystem.service';
+} from '../../core/services/ecosystem-library';
 
 @Component({
   selector: 'app-ecosystems',
@@ -47,14 +47,13 @@ import {
   styles: [],
 })
 export class EcosystemsMaterial implements OnInit {
+  ecosystemService = inject(EcosystemLibraryService);
   showTemplates = signal(false);
   searchQuery = signal('');
   selectedCategory = signal('');
 
   activeInstances: EcosystemInstance[] = [];
   filteredTemplates: EcosystemTemplate[] = [];
-
-  constructor(private ecosystemService: EcosystemService) {}
 
   ngOnInit(): void {
     this.loadInstances();

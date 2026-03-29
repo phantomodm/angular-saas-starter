@@ -13,6 +13,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { OrderbookDepth2 } from './orderbook-depth2/orderbook-depth';
 import { ScheerDepthHeatmap } from './scheer-heatmap/scheer-depth-heatmap';
 import { CollapseBanner } from "../../components/collapse-banner/collapse-banner";
+import { CollapseAlerts } from "../collapse-alerts/collapse-alerts";
+import { BotPanelComponent} from "../../components/bot-panel/bot-panel";
 
 @Component({
   selector: 'app-order-book-sim',
@@ -29,7 +31,9 @@ import { CollapseBanner } from "../../components/collapse-banner/collapse-banner
     CollapseGaugeComponent,
     RegimeIndicator,
     MatButtonToggleModule,
-    CollapseBanner
+    CollapseBanner,
+    CollapseAlerts,
+    BotPanelComponent
 ],
   templateUrl: './order-book-sim.html',
   styleUrl: './order-book-sim.scss',
