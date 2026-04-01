@@ -116,7 +116,6 @@ export class VerticalGrid implements OnInit {
         background: radial-gradient(circle at top right, #111, #050507);
       }
 
-      // Custom Dark Field Overrides
       ::ng-deep .custom-dark-field {
         .mat-mdc-text-field-wrapper {
           background-color: rgba(255, 255, 255, 0.03) !important;
