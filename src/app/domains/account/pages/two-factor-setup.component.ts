@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TwoFactorAuthService } from '../../../core/services/two-factor-auth';
 import { signal } from '@angular/core';
@@ -8,7 +8,7 @@ import { CardComponent, CardBodyComponent, CardHeaderComponent } from '../../../
 @Component({
   selector: 'app-two-factor-setup',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, CardBodyComponent, CardHeaderComponent],
+  imports: [FormsModule, CardComponent, CardBodyComponent, CardHeaderComponent],
   template: `
     <div class="space-y-6">
       <!-- Header -->

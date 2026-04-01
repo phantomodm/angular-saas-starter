@@ -1,27 +1,30 @@
 <mat-card class="p-4 rounded-xl shadow-lg bg-gray-900 border border-gray-700">
-
   <!-- DESKTOP L1 (Option C) -->
   <div class="hidden lg:flex flex-col gap-3 mb-4">
     <div class="grid grid-cols-3 gap-4 items-center">
       <div class="flex flex-col">
         <span class="text-xs text-gray-400 font-mono">Best Bid</span>
         <span class="text-lg font-semibold text-green-400">
-          <ng-container *ngIf="bids().length; else noBid">
-            {{ bids()[0].price | number: '1.2-2' }}
-          </ng-container>
-          <ng-template #noBid>--</ng-template>
+          @if (bids().length) {
+            <ng-container>
+              {{ bids()[0].price | number: "1.2-2" }}
+            </ng-container>
+          } @else {
+            --
+          }
         </span>
       </div>
 
       <div class="flex flex-col items-center">
         <span class="text-xs text-gray-400 font-mono">Mid Price</span>
         <span class="text-lg font-semibold text-gray-800">
-          <ng-container *ngIf="bids().length && asks().length; else noMid">
-            {{
-              ((bids()[0].price + asks()[0].price) / 2)
-                | number: '1.2-2'
-            }}
-          </ng-container>
+          @if (bids().length && asks().length) {
+            <ng-container>
+              {{ (bids()[0].price + asks()[0].price) / 2 | number: "1.2-2" }}
+            </ng-container>
+          } @else {
+            0.00
+          }
         </span>
       </div>
 
@@ -29,23 +32,25 @@
         <span class="text-xs text-gray-400 font-mono">Best Ask</span>
         <span class="text-lg font-semibold text-red-400">
           <ng-container *ngIf="asks().length; else noAsk">
-            {{ asks()[0].price | number: '1.2-2' }}
+            {{ asks()[0].price | number: "1.2-2" }}
           </ng-container>
         </span>
       </div>
     </div>
 
-    <div class="flex items-center justify-between text-xs text-gray-400 font-mono">
+    <div
+      class="flex items-center justify-between text-xs text-gray-400 font-mono"
+    >
       <div>
         Spread:
         <span *ngIf="bids().length && asks().length; else noSpread">
-          {{ (asks()[0].price - bids()[0].price) | number: '1.2-2' }}
+          {{ asks()[0].price - bids()[0].price | number: "1.2-2" }}
         </span>
       </div>
       <div class="flex items-center gap-2">
         <span>Imbalance:</span>
         <span class="font-semibold" [style.color]="getImbalanceColor()">
-          {{ bidImbalance | number: '1.2-2' }}
+          {{ bidImbalance | number: "1.2-2" }}
         </span>
       </div>
       <div class="flex items-center gap-2">
@@ -90,7 +95,7 @@
         <span class="text-[11px] text-gray-400 font-mono">Best Bid</span>
         <span class="text-base font-semibold text-green-400">
           <ng-container *ngIf="bids().length; else noBidM">
-            {{ bids()[0].price | number: '1.2-2' }}
+            {{ bids()[0].price | number: "1.2-2" }}
           </ng-container>
         </span>
       </div>
@@ -98,7 +103,7 @@
         <span class="text-[11px] text-gray-400 font-mono">Spread</span>
         <span class="text-base font-semibold text-gray-100">
           <ng-container *ngIf="bids().length && asks().length; else noSpreadM">
-            {{ (asks()[0].price - bids()[0].price) | number: '1.2-2' }}
+            {{ asks()[0].price - bids()[0].price | number: "1.2-2" }}
           </ng-container>
         </span>
       </div>
@@ -106,7 +111,7 @@
         <span class="text-[11px] text-gray-400 font-mono">Best Ask</span>
         <span class="text-base font-semibold text-red-400">
           <ng-container *ngIf="asks().length; else noAskM">
-            {{ asks()[0].price | number: '1.2-2' }}
+            {{ asks()[0].price | number: "1.2-2" }}
           </ng-container>
         </span>
       </div>
@@ -114,20 +119,19 @@
         <span class="text-[11px] text-gray-400 font-mono">Mid Price</span>
         <span class="text-base font-semibold text-gray-100">
           <ng-container *ngIf="bids().length && asks().length; else noMidM">
-            {{
-              ((bids()[0].price + asks()[0].price) / 2)
-                | number: '1.2-2'
-            }}
+            {{ (bids()[0].price + asks()[0].price) / 2 | number: "1.2-2" }}
           </ng-container>
         </span>
       </div>
     </div>
 
-    <div class="flex items-center justify-between text-[11px] text-gray-400 font-mono mt-1">
+    <div
+      class="flex items-center justify-between text-[11px] text-gray-400 font-mono mt-1"
+    >
       <div class="flex items-center gap-1">
         <span>Imb:</span>
         <span class="font-semibold" [style.color]="getImbalanceColor()">
-          {{ bidImbalance | number: '1.2-2' }}
+          {{ bidImbalance | number: "1.2-2" }}
         </span>
       </div>
       <div class="flex items-center gap-1">
@@ -184,37 +188,36 @@
             class="absolute inset-y-0 left-0 rounded-md"
             [style.width.%]="getDepthPercent(b.qty, maxBidQty)"
             [style.background]="getHeatColor(b.qty, maxBidQty)"
-            style="opacity:0.35"
+            style="opacity: 0.35"
           ></div>
 
           <!-- row -->
           <div
-            class="relative flex justify-between items-center px-3 py-1.5 rounded-md font-mono text-[13px]
-                   border border-gray-800 transition-colors hover:bg-gray-800"
+            class="relative flex justify-between items-center px-3 py-1.5 rounded-md font-mono text-[13px] border border-gray-800 transition-colors hover:bg-gray-800"
             [ngClass]="{
               'ring-1 ring-green-400/70':
                 bids().length && b.price === bids()[0].price,
               'animate-pulse bg-green-700/30':
                 lastBidPrice && b.price > lastBidPrice,
               'animate-pulse bg-red-700/30':
-                lastBidPrice && b.price < lastBidPrice
+                lastBidPrice && b.price < lastBidPrice,
             }"
           >
             <div class="flex flex-col gap-0.5">
               <span class="text-white drop-shadow">
-                {{ b.price | number: '1.2-2' }}
+                {{ b.price | number: "1.2-2" }}
               </span>
               <span class="text-[11px] text-gray-400">
-                Cum: {{ b.cumQty | number: '1.4-4' }}
+                Cum: {{ b.cumQty | number: "1.4-4" }}
               </span>
             </div>
 
             <div class="flex flex-col items-end gap-0.5">
               <span class="font-semibold text-white drop-shadow">
-                {{ b.qty | number: '1.4-4' }}
+                {{ b.qty | number: "1.4-4" }}
               </span>
               <span class="text-[11px] text-gray-500">
-                {{ (b.qty / (totalBidQty || 1)) | number: '1.2-2' }}
+                {{ b.qty / (totalBidQty || 1) | number: "1.2-2" }}
               </span>
             </div>
 
@@ -244,37 +247,36 @@
             class="absolute inset-y-0 right-0 rounded-md"
             [style.width.%]="getDepthPercent(a.qty, maxAskQty)"
             [style.background]="getHeatColor(a.qty, maxAskQty)"
-            style="opacity:0.35"
+            style="opacity: 0.35"
           ></div>
 
           <!-- row -->
           <div
-            class="relative flex justify-between items-center px-3 py-1.5 rounded-md font-mono text-[13px]
-                   border border-gray-800 transition-colors hover:bg-gray-800"
+            class="relative flex justify-between items-center px-3 py-1.5 rounded-md font-mono text-[13px] border border-gray-800 transition-colors hover:bg-gray-800"
             [ngClass]="{
               'ring-1 ring-red-400/70':
                 asks().length && a.price === asks()[0].price,
               'animate-pulse bg-green-700/30':
                 lastAskPrice && a.price < lastAskPrice,
               'animate-pulse bg-red-700/30':
-                lastAskPrice && a.price > lastAskPrice
+                lastAskPrice && a.price > lastAskPrice,
             }"
           >
             <div class="flex flex-col gap-0.5">
               <span class="text-white drop-shadow">
-                {{ a.price | number: '1.2-2' }}
+                {{ a.price | number: "1.2-2" }}
               </span>
               <span class="text-[11px] text-gray-400">
-                Cum: {{ a.cumQty | number: '1.4-4' }}
+                Cum: {{ a.cumQty | number: "1.4-4" }}
               </span>
             </div>
 
             <div class="flex flex-col items-end gap-0.5">
               <span class="font-semibold text-white drop-shadow">
-                {{ a.qty | number: '1.4-4' }}
+                {{ a.qty | number: "1.4-4" }}
               </span>
               <span class="text-[11px] text-gray-500">
-                {{ (a.qty / (totalAskQty || 1)) | number: '1.2-2' }}
+                {{ a.qty / (totalAskQty || 1) | number: "1.2-2" }}
               </span>
             </div>
 
@@ -297,5 +299,4 @@
   <ng-template #noMidM>0.00</ng-template>
   <ng-template #noBidM>--</ng-template>
   <ng-template #noAskM>--</ng-template>
-
 </mat-card>

@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { LoggingService } from '../../../core/services/logging.service';
 import { LogEntry, LogSeverity, LogSource } from '../../../core/models/logging.model';
@@ -10,12 +10,11 @@ import { CardComponent, CardBodyComponent, CardHeaderComponent } from '../../../
   selector: 'app-logs-viewer',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     CardComponent,
     CardBodyComponent,
-    CardHeaderComponent,
-  ],
+    CardHeaderComponent
+],
   template: `
     <div class="space-y-6">
       <!-- Header -->

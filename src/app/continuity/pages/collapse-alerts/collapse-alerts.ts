@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from "@angular/material/card";
 import { CollapseDetectorService } from '../../../core/services/collapse-detector.service';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-collapse-alerts',
-  imports: [CommonModule, MatCardModule],
+  imports: [MatCardModule],
   templateUrl: './collapse-alerts.html',
   styles: ``,
 })

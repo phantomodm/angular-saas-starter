@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
@@ -8,7 +8,7 @@ import { SeriesPoint } from '../../../core/models/types';
 @Component({
   selector: 'time-series-chart',
   standalone: true,
-  imports: [CommonModule, MatCardModule, NgChartsModule],
+  imports: [MatCardModule, NgChartsModule],
   templateUrl: './time-series-chart.html',
   styleUrls: ['./time-series-chart.scss'],
 })

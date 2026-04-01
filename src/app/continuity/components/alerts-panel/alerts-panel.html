@@ -2,24 +2,27 @@
   <h3 class="section-title">Alerts</h3>
 
   <!-- No alerts -->
-  <div *ngIf="sorted().length === 0" class="empty">
-    <mat-icon>notifications_none</mat-icon>
-    <span>No alerts for {{ symbol || 'this symbol' }}.</span>
-  </div>
+  @if (sorted().length === 0) {
+    <div class="empty">
+      <mat-icon>notifications_none</mat-icon>
+      <span>No alerts for {{ symbol || 'this symbol' }}.</span>
+    </div>
+  }
 
   <!-- Alerts list -->
-   @for(a of sorted(); track a.id) {
-    <div *ngFor="let a of sorted()" class="alert-item">
-    <div class="alert-header">
-      <mat-icon [style.color]="colorFor(a.severity)">warning</mat-icon>
-      <span class="alert-title">{{ a.title }}</span>
-    </div>
+  @for(a of sorted(); track a.id) {
+    @for (a of sorted(); track a) {
+      <div class="alert-item">
+        <div class="alert-header">
+          <mat-icon [style.color]="colorFor(a.severity)">warning</mat-icon>
+          <span class="alert-title">{{ a.title }}</span>
+        </div>
+        <div class="alert-body">
+          <p>{{ a.description }}</p>
+          <small>{{ a.timestamp | date:'short' }}</small>
+        </div>
+      </div>
+    }
+  }
 
-    <div class="alert-body">
-      <p>{{ a.description }}</p>
-      <small>{{ a.timestamp | date:'short' }}</small>
-    </div>
-  </div>
-   }
-  
 </mat-card>

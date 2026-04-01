@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { CardComponent, CardBodyComponent, CardHeaderComponent, KpiCardComponent } from '../../../shared/ui/card.component';
 
 interface ChartData {
@@ -17,7 +17,7 @@ interface ChartData {
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, CardComponent, CardBodyComponent, CardHeaderComponent, KpiCardComponent],
+  imports: [CardComponent, CardBodyComponent, CardHeaderComponent, KpiCardComponent],
   template: `
     <div class="space-y-8">
       <!-- Header -->

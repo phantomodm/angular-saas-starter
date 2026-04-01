@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../../core/store/auth.store';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
@@ -10,12 +10,11 @@ import { KpiCardComponent } from '../../../shared/ui/card.component';
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    CommonModule,
     RouterLink,
     HasRoleDirective,
     HasPermissionDirective,
-    KpiCardComponent,
-  ],
+    KpiCardComponent
+],
   template: `
     <div class="space-y-8">
       <!-- Header -->

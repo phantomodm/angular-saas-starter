@@ -31,7 +31,7 @@ interface Plan {
         <h1 class="section-header">Billing & Subscriptions</h1>
         <p class="section-subheader mt-2">Manage your subscription, payment methods, and invoices</p>
       </div>
-
+    
       <!-- Current Subscription -->
       <app-card class="border-2 border-primary-200 dark:border-primary-800">
         <div class="bg-primary-50 dark:bg-primary-950 px-6 py-4 border-b border-primary-200 dark:border-primary-800">
@@ -54,7 +54,7 @@ interface Plan {
               </button>
             </div>
           </div>
-
+    
           <!-- Usage Metrics -->
           <div class="grid grid-cols-3 gap-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
             <div>
@@ -81,7 +81,7 @@ interface Plan {
           </div>
         </app-card-body>
       </app-card>
-
+    
       <!-- Payment Method -->
       <app-card>
         <div class="card-header flex items-center justify-between">
@@ -103,45 +103,47 @@ interface Plan {
           </div>
         </app-card-body>
       </app-card>
-
+    
       <!-- Plans -->
       <div>
         <h2 class="section-header mb-6">Available Plans</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div *ngFor="let plan of plans()" [ngClass]="plan.isCurrent ? 'ring-2 ring-primary-600' : ''" class="card rounded-xl overflow-hidden transition-all hover:shadow-lg">
-            <div [ngClass]="plan.isCurrent ? 'bg-primary-600 text-white' : 'bg-neutral-50 dark:bg-neutral-800'" class="card-header">
-              <h3 class="font-bold text-lg">{{ plan.name }}</h3>
-              <p [ngClass]="plan.isCurrent ? 'text-primary-100' : 'text-muted'" class="text-sm mt-1">
-                {{ plan.description }}
-              </p>
-            </div>
-            <div class="card-body">
-              <div class="text-3xl font-bold mb-2" [ngClass]="plan.isCurrent ? 'text-primary-600 dark:text-primary-400' : 'text-neutral-900 dark:text-neutral-50'">
-                <span>\${{ plan.price }}</span>
+          @for (plan of plans(); track plan) {
+            <div [ngClass]="plan.isCurrent ? 'ring-2 ring-primary-600' : ''" class="card rounded-xl overflow-hidden transition-all hover:shadow-lg">
+              <div [ngClass]="plan.isCurrent ? 'bg-primary-600 text-white' : 'bg-neutral-50 dark:bg-neutral-800'" class="card-header">
+                <h3 class="font-bold text-lg">{{ plan.name }}</h3>
+                <p [ngClass]="plan.isCurrent ? 'text-primary-100' : 'text-muted'" class="text-sm mt-1">
+                  {{ plan.description }}
+                </p>
               </div>
-              <p [ngClass]="plan.isCurrent ? 'text-white dark:text-white' : 'text-muted'" class="text-sm mb-6">per month</p>
-
-              <!-- Features -->
-              <ul class="space-y-3 mb-6">
-                <li *ngFor="let feature of plan.features" class="flex items-start gap-2 text-sm">
-                  <svg class="w-5 h-5 text-success-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span [ngClass]="plan.isCurrent ? 'text-white dark:text-white' : 'text-neutral-700 dark:text-neutral-300'">
-                    {{ feature }}
-                  </span>
-                </li>
-              </ul>
-
-              <!-- CTA Button -->
-              <button [ngClass]="plan.isCurrent ? 'btn-ghost' : 'btn-primary'" class="w-full">
-                {{ plan.ctaLabel }}
-              </button>
+              <div class="card-body">
+                <div class="text-3xl font-bold mb-2" [ngClass]="plan.isCurrent ? 'text-primary-600 dark:text-primary-400' : 'text-neutral-900 dark:text-neutral-50'">
+                  <span>\${{ plan.price }}</span>
+                </div>
+                <p [ngClass]="plan.isCurrent ? 'text-white dark:text-white' : 'text-muted'" class="text-sm mb-6">per month</p>
+                <!-- Features -->
+                <ul class="space-y-3 mb-6">
+                  @for (feature of plan.features; track feature) {
+                    <li class="flex items-start gap-2 text-sm">
+                      <svg class="w-5 h-5 text-success-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                      <span [ngClass]="plan.isCurrent ? 'text-white dark:text-white' : 'text-neutral-700 dark:text-neutral-300'">
+                        {{ feature }}
+                      </span>
+                    </li>
+                  }
+                </ul>
+                <!-- CTA Button -->
+                <button [ngClass]="plan.isCurrent ? 'btn-ghost' : 'btn-primary'" class="w-full">
+                  {{ plan.ctaLabel }}
+                </button>
+              </div>
             </div>
-          </div>
+          }
         </div>
       </div>
-
+    
       <!-- Invoices -->
       <app-card>
         <div class="card-header flex items-center justify-between">
@@ -162,30 +164,32 @@ interface Plan {
               </tr>
             </thead>
             <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-              <tr *ngFor="let invoice of invoices()" class="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                <td class="table-cell font-medium">{{ invoice.description }}</td>
-                <td class="table-cell">{{ invoice.date | date: 'MMM d, yyyy' }}</td>
-                <td class="table-cell font-semibold">\${{ invoice.amount }}</td>
-                <td class="table-cell">
+              @for (invoice of invoices(); track invoice) {
+                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                  <td class="table-cell font-medium">{{ invoice.description }}</td>
+                  <td class="table-cell">{{ invoice.date | date: 'MMM d, yyyy' }}</td>
+                  <td class="table-cell font-semibold">\${{ invoice.amount }}</td>
+                  <td class="table-cell">
                   <span [ngClass]="{
                     'badge-success': invoice.status === 'paid',
                     'badge-warning': invoice.status === 'pending',
                     'badge-danger': invoice.status === 'failed'
                   }" class="badge">
-                    {{ invoice.status | uppercase }}
-                  </span>
-                </td>
-                <td class="table-cell">
-                  <a [href]="invoice.downloadUrl" class="text-primary-600 hover:text-primary-700 text-sm font-medium dark:text-primary-400">
-                    Download
-                  </a>
-                </td>
-              </tr>
+                      {{ invoice.status | uppercase }}
+                    </span>
+                  </td>
+                  <td class="table-cell">
+                    <a [href]="invoice.downloadUrl" class="text-primary-600 hover:text-primary-700 text-sm font-medium dark:text-primary-400">
+                      Download
+                    </a>
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
       </app-card>
-
+    
       <!-- Billing Email -->
       <app-card>
         <div class="card-header">
@@ -210,7 +214,7 @@ interface Plan {
         </app-card-body>
       </app-card>
     </div>
-  `,
+    `,
 })
 export class BillingComponent {
   currentPlan = 'Pro';

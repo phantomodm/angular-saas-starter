@@ -18,6 +18,7 @@ import { FirebaseAuthService } from './core/auth/providers/firebase-auth.service
 import { AuthInterceptor } from './core/http/auth.interceptor';
 import { ErrorInterceptor } from './core/http/error.interceptor';
 import { MockAuthService } from './core/auth/providers/mock-auth.service';
+//import { GlobalErrorHandler } from './core/services/global-error-handler.service';
 
 Chart.register(...registerables);
 

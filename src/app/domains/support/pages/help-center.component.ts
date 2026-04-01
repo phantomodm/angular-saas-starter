@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { signal } from '@angular/core';
 import { SupportCategory, SupportArticle } from '../../../core/models/organization.model';
@@ -8,7 +8,7 @@ import { LoggingService } from '../../../core/services/logging.service';
 @Component({
   selector: 'app-help-center',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   template: `
     <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-neutral-900 dark:to-neutral-800">
       <!-- Hero Section -->

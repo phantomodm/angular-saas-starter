@@ -22,6 +22,7 @@ import { WebhooksManagementComponent } from './domains/integration/pages/webhook
 import { RateLimitingDashboardComponent } from './domains/integration/pages/rate-limiting-dashboard.component';
 import { HelpCenterComponent } from './domains/support/pages/help-center.component';
 import { LandingPage } from './pages/landing-page/landing-page';
+import { DashboardMaterial } from './pages/dashboard/dashboard-material';
 
 export const routes: Routes = [
   // Public auth routes
@@ -81,7 +82,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        component: DashboardMaterial,
       },
       
       {

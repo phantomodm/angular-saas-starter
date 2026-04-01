@@ -1,6 +1,6 @@
 // EcosystemsMaterialComponent - migrated from ecosystems.txt
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +26,6 @@ import {
   selector: 'app-ecosystems',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatButtonModule,
@@ -41,8 +40,8 @@ import {
     MatProgressBarModule,
     MatDialogModule,
     MatListModule,
-    MatDividerModule,
-  ],
+    MatDividerModule
+],
   template: ` ...existing code from ecosystems.txt template... `,
   styles: [],
 })

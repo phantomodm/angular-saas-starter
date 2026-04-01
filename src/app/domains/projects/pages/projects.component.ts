@@ -33,7 +33,7 @@ interface Project {
           New Project
         </button>
       </div>
-
+    
       <!-- Search and Filter -->
       <app-card>
         <app-card-body class="space-y-4">
@@ -47,122 +47,124 @@ interface Project {
                 [(ngModel)]="searchQuery"
                 placeholder="Search by name or description..."
                 class="input-field"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Status
-              </label>
-              <select [(ngModel)]="selectedStatus" class="input-field">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="paused">Paused</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Sort By
-              </label>
-              <select [(ngModel)]="sortBy" class="input-field">
-                <option value="recent">Recently Created</option>
-                <option value="name">Name (A-Z)</option>
-                <option value="activity">Most Active</option>
-              </select>
-            </div>
-          </div>
-        </app-card-body>
-      </app-card>
-
-      <!-- Projects Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let project of filteredProjects()" class="card hover:shadow-lg transition-shadow cursor-pointer group">
-          <app-card-body class="space-y-4">
-            <!-- Header -->
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <h3 class="font-semibold text-lg text-neutral-900 dark:text-neutral-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                  {{ project.name }}
-                </h3>
-                <p class="text-sm text-muted mt-1 line-clamp-2">{{ project.description }}</p>
+                />
               </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Status
+                </label>
+                <select [(ngModel)]="selectedStatus" class="input-field">
+                  <option value="">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="paused">Paused</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Sort By
+                </label>
+                <select [(ngModel)]="sortBy" class="input-field">
+                  <option value="recent">Recently Created</option>
+                  <option value="name">Name (A-Z)</option>
+                  <option value="activity">Most Active</option>
+                </select>
+              </div>
+            </div>
+          </app-card-body>
+        </app-card>
+    
+        <!-- Projects Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (project of filteredProjects(); track project) {
+            <div class="card hover:shadow-lg transition-shadow cursor-pointer group">
+              <app-card-body class="space-y-4">
+                <!-- Header -->
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-lg text-neutral-900 dark:text-neutral-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      {{ project.name }}
+                    </h3>
+                    <p class="text-sm text-muted mt-1 line-clamp-2">{{ project.description }}</p>
+                  </div>
               <span [ngClass]="{
                 'badge-success': project.status === 'active',
                 'badge-warning': project.status === 'paused',
                 'badge-danger': project.status === 'archived'
               }" class="badge ml-2 flex-shrink-0">
-                {{ project.status }}
-              </span>
+                    {{ project.status }}
+                  </span>
+                </div>
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-3 py-4 border-y border-neutral-200 dark:border-neutral-700">
+                  <div>
+                    <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400">Members</p>
+                    <p class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">{{ project.members }}</p>
+                  </div>
+                  <div>
+                    <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400">API Calls</p>
+                    <p class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">{{ formatNumber(project.apiCalls) }}</p>
+                  </div>
+                  <div>
+                    <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400">Storage</p>
+                    <p class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">{{ project.storage }}GB</p>
+                  </div>
+                </div>
+                <!-- Footer -->
+                <div class="flex items-center justify-between pt-2">
+                  <p class="text-xs text-muted">Created {{ formatDate(project.createdAt) }}</p>
+                  <button class="text-primary-600 hover:text-primary-700 text-sm font-medium dark:text-primary-400">
+                    View →
+                  </button>
+                </div>
+              </app-card-body>
             </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-3 py-4 border-y border-neutral-200 dark:border-neutral-700">
-              <div>
-                <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400">Members</p>
-                <p class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">{{ project.members }}</p>
-              </div>
-              <div>
-                <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400">API Calls</p>
-                <p class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">{{ formatNumber(project.apiCalls) }}</p>
-              </div>
-              <div>
-                <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400">Storage</p>
-                <p class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">{{ project.storage }}GB</p>
-              </div>
+          }
+        </div>
+    
+        <!-- Empty State -->
+        @if (filteredProjects().length === 0) {
+          <div class="card text-center py-16">
+            <div class="mb-6">
+              <svg class="w-16 h-16 text-neutral-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8-4m-8 4v10l8-4m0-10l-8-4" />
+              </svg>
             </div>
-
-            <!-- Footer -->
-            <div class="flex items-center justify-between pt-2">
-              <p class="text-xs text-muted">Created {{ formatDate(project.createdAt) }}</p>
-              <button class="text-primary-600 hover:text-primary-700 text-sm font-medium dark:text-primary-400">
-                View →
-              </button>
-            </div>
-          </app-card-body>
+            <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-2">No projects found</h3>
+            <p class="text-muted mb-6">Try adjusting your filters or create a new project to get started</p>
+            <button class="btn-primary mx-auto">
+              Create First Project
+            </button>
+          </div>
+        }
+    
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <app-card>
+            <app-card-body>
+              <p class="text-muted text-sm mb-2">Total Projects</p>
+              <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">{{ getTotalProjects() }}</p>
+            </app-card-body>
+          </app-card>
+          <app-card>
+            <app-card-body>
+              <p class="text-muted text-sm mb-2">Active Projects</p>
+              <p class="text-3xl font-bold text-success-600 dark:text-success-400">
+                {{ getActiveProjectsCount() }}
+              </p>
+            </app-card-body>
+          </app-card>
+          <app-card>
+            <app-card-body>
+              <p class="text-muted text-sm mb-2">Total API Calls</p>
+              <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">
+                {{ getTotalApiCalls() }}
+              </p>
+            </app-card-body>
+          </app-card>
         </div>
       </div>
-
-      <!-- Empty State -->
-      <div *ngIf="filteredProjects().length === 0" class="card text-center py-16">
-        <div class="mb-6">
-          <svg class="w-16 h-16 text-neutral-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8-4m-8 4v10l8-4m0-10l-8-4" />
-          </svg>
-        </div>
-        <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-2">No projects found</h3>
-        <p class="text-muted mb-6">Try adjusting your filters or create a new project to get started</p>
-        <button class="btn-primary mx-auto">
-          Create First Project
-        </button>
-      </div>
-
-      <!-- Quick Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <app-card>
-          <app-card-body>
-            <p class="text-muted text-sm mb-2">Total Projects</p>
-            <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">{{ getTotalProjects() }}</p>
-          </app-card-body>
-        </app-card>
-        <app-card>
-          <app-card-body>
-            <p class="text-muted text-sm mb-2">Active Projects</p>
-            <p class="text-3xl font-bold text-success-600 dark:text-success-400">
-              {{ getActiveProjectsCount() }}
-            </p>
-          </app-card-body>
-        </app-card>
-        <app-card>
-          <app-card-body>
-            <p class="text-muted text-sm mb-2">Total API Calls</p>
-            <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">
-              {{ getTotalApiCalls() }}
-            </p>
-          </app-card-body>
-        </app-card>
-      </div>
-    </div>
-  `,
+    `,
 })
 export class ProjectsComponent {
   searchQuery = signal('');

@@ -1,5 +1,5 @@
 import { Component, effect, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,12 +9,11 @@ import { MatChipsModule } from '@angular/material/chips';
   selector: 'ce-header',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatSelectModule,
     MatIconModule,
     MatChipsModule
-  ],
+],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
 })

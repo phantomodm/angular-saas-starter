@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { CommonModule } from '@angular/common';
+
 import { NgChartsModule } from 'ng2-charts';
 //import { ChartConfiguration, ChartType } from 'chart.js';
 import { Header } from '../header/header';
@@ -43,7 +43,6 @@ import { MarketDataPoller } from '../../../core/services/marketdata-poller.servi
 @Component({
   selector: 'app-overview-page',
   imports: [
-    CommonModule,
     MatCardModule,
     MatChipsModule,
     MatIconModule,
@@ -59,8 +58,8 @@ import { MarketDataPoller } from '../../../core/services/marketdata-poller.servi
     MiniHeatmapComponent,
     RegimeTimeline,
     ForecastTable,
-    ExplanationPanelComponent,
-  ],
+    ExplanationPanelComponent
+],
   templateUrl: './overview-page.html',
   styleUrls: ['./overview-page.scss'],
 })

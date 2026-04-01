@@ -12,7 +12,7 @@
             'text-red-400': bidImbalance < -0.05,
             'text-yellow-400': Math.abs(bidImbalance) <= 0.05
           }"
-        >
+          >
           {{ bidImbalance | number: '1.2-2' }}
         </span>
       </div>
@@ -21,12 +21,15 @@
     <div class="flex flex-col items-end gap-1">
       <div class="px-3 py-1 rounded-md bg-gray-800 text-gray-300 text-sm font-mono">
         Spread:
-        <span *ngIf="asks().length && bids().length && asks()[0] && bids()[0]; else noSpread">
-          {{
+        @if (asks().length && bids().length && asks()[0] && bids()[0]) {
+          <span>
+            {{
             (asks()[0].price - bids()[0].price) | number: '1.2-2'
-          }}
-        </span>
-        <ng-template #noSpread>0.00</ng-template>
+            }}
+          </span>
+        } @else {
+          0.00
+        }
       </div>
 
       <div class="w-40 h-2 rounded-full bg-gray-800 overflow-hidden">
@@ -42,19 +45,19 @@
   </div>
 
   <div class="grid grid-cols-2 gap-6">
-    
+
     <div>
       <h3 class="text-green-400 font-semibold mb-2">Bids</h3>
 
       @for (b of bids(); track b) {
         <div class="relative mb-1">
-          
+
           <div
             class="absolute inset-y-0 left-0 bg-green-600/20 rounded-md"
             [style.width.%]="getDepthPercent(b.qty, maxBidQty)"
           ></div>
 
-         
+
           <div
             class="relative flex justify-between items-center px-2 py-1 rounded-md font-mono text-sm
                    border border-gray-800 transition-colors hover:bg-gray-800"
@@ -66,7 +69,7 @@
               'animate-pulse bg-red-700/30':
                 lastBidPrice && b.price < lastBidPrice
             }"
-          >
+            >
             <span class="text-white drop-shadow-sm">
               {{ b.price | number: '1.2-2' }}
             </span>
@@ -78,19 +81,19 @@
       }
     </div>
 
-    
+
     <div>
       <h3 class="text-red-400 font-semibold mb-2">Asks</h3>
 
       @for (a of asks(); track a) {
         <div class="relative mb-1">
-          
+
           <div
             class="absolute inset-y-0 right-0 bg-red-600/20 rounded-md"
             [style.width.%]="getDepthPercent(a.qty, maxAskQty)"
           ></div>
 
-          
+
           <div
             class="relative flex justify-between items-center px-2 py-1 rounded-md font-mono text-sm
                    border border-gray-800 transition-colors hover:bg-gray-800"
@@ -102,7 +105,7 @@
               'animate-pulse bg-red-700/30':
                 lastAskPrice && a.price > lastAskPrice
             }"
-          >
+            >
             <span class="text-white drop-shadow-sm">
               {{ a.price | number: '1.2-2' }}
             </span>
@@ -115,15 +118,18 @@
     </div>
   </div>
 
-  
+
   <div class="mt-4 text-center text-gray-400 font-mono text-sm">
     Mid Price:
-    <span *ngIf="bids().length && asks().length && bids()[0] && asks()[0]; else noMid">
-      {{
+    @if (bids().length && asks().length && bids()[0] && asks()[0]) {
+      <span>
+        {{
         ((bids()[0].price + asks()[0].price) / 2) | number: '1.2-2'
-      }}
-    </span>
-    <ng-template #noMid>0.00</ng-template>
+        }}
+      </span>
+    } @else {
+      0.00
+    }
   </div>
 </mat-card>
 

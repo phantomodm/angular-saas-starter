@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'ce-explanation-panel',
   standalone: true,
-  imports: [CommonModule, MatExpansionModule],
+  imports: [MatExpansionModule],
   templateUrl: './explanation-panel.html',
   styles: `
     .explanation-accordion {

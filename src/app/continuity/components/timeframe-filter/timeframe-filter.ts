@@ -1,10 +1,10 @@
 import { Component, input, model, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'ce-timeframe-filter',
-  imports: [CommonModule, MatButtonToggleModule],
+  imports: [MatButtonToggleModule],
   templateUrl: './timeframe-filter.html',
   styleUrl: './timeframe-filter.scss',
 })
