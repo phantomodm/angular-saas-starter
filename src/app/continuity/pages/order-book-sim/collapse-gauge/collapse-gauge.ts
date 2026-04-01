@@ -92,8 +92,6 @@ export class CollapseGaugeComponent {
     Math.round((1 - (this.momentum()?.collapse_probability ?? 0)) * 100)
   );
 
-  regime = computed(() => this.momentum()?.regime ?? 'neutral');
-
   chartOptions: GaugeOptions = {
     series: [0],
     chart: {

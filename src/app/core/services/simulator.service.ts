@@ -15,6 +15,7 @@ export interface MomentumState {
     bids: [number, number][];
     asks: [number, number][];
   };
+  collapse_probability: number;
 
   // Trade tape
   trades: {
@@ -42,6 +43,7 @@ export interface MomentumState {
 
   // Engine metadata
   engine_id: string;
+  regime?: string;
 }
 
 @Injectable({ providedIn: 'root' })
