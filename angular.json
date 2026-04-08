@@ -78,7 +78,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss","@angular/material/prebuilt-themes/azure-blue.css"]
           }
         }
       }

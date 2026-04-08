@@ -73,6 +73,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
 
+
   // Workspace-based routes (new)
   // Protected routes with app shell
   {
