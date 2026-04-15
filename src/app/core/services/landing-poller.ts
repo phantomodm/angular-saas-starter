@@ -1,6 +1,6 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
 import { Subscription, interval, switchMap, tap } from 'rxjs';
-import { EcosystemEngineService } from './ecosystem-engine';
+import { EcosystemEngineService } from '../../pages/ecosystems/ecosystem-engine';
 
 @Injectable({
   providedIn: 'root',

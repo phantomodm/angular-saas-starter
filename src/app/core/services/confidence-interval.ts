@@ -1,5 +1,5 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { EcosystemEngineService } from './ecosystem-engine';
+import { EcosystemEngineService } from '../../pages/ecosystems/ecosystem-engine';
 
 @Injectable({
   providedIn: 'root',

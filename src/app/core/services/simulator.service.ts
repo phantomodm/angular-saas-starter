@@ -1,6 +1,7 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { MomentumMetrics, EngineState, BotState } from '../models/sim';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 
 export interface MomentumState {
@@ -49,10 +50,16 @@ export interface MomentumState {
   regime?: string;
   bot_state?: BotState;
 }
+const API_BASE_URL = 'https://continuityengine-910896594298.us-central1.run.app';
+
 const SOCKET_ENDPOINT = 'ws://api.novahuman.ai/ws/momentum';
+
 @Injectable({ providedIn: 'root' })
 export class SimulatorService {
   private apiUrl = SOCKET_ENDPOINT;
+  private http = inject(HttpClient);
+
+  
   // --- Default symbol list ---
   readonly symbols = [
     'BTCUSDT',
@@ -160,6 +167,22 @@ export class SimulatorService {
       console.error('Momentum WS error:', error);
     };
   }
+
+  reloadSimulator(body:any): void {
+    // Implement the logic to reload the simulator with the provided body
+    this.http.post(`${API_BASE_URL}/reload-simulator`, body).subscribe({
+      next: (response) => {
+        console.log('Simulator reloaded successfully:', response);
+      },
+      error: (error) => {
+        console.error('Failed to reload simulator:', error);
+      }
+    });
+
+
+    console.log('Reloading simulator with body:', body);
+  }
+
   disconnect() {
     if (this.ws) {
       this.ws.close();

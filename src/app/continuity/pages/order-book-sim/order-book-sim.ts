@@ -15,6 +15,7 @@ import { ScheerDepthHeatmap } from './scheer-heatmap/scheer-depth-heatmap';
 import { CollapseBanner } from "../../components/collapse-banner/collapse-banner";
 import { CollapseAlerts } from "../collapse-alerts/collapse-alerts";
 import { BotPanelComponent} from "../../components/bot-panel/bot-panel";
+import { FibonacciAnalyticsComponent } from '../../components/fib-panel/fibonacci-analytics';
 
 @Component({
   selector: 'app-order-book-sim',
@@ -33,7 +34,8 @@ import { BotPanelComponent} from "../../components/bot-panel/bot-panel";
     MatButtonToggleModule,
     CollapseBanner,
     CollapseAlerts,
-    BotPanelComponent
+    BotPanelComponent,
+    FibonacciAnalyticsComponent
 ],
   templateUrl: './order-book-sim.html',
   styleUrl: './order-book-sim.scss',
@@ -47,6 +49,8 @@ export class OrderBookSim implements OnDestroy {
 
   mode = this.momentumService.mode;
   symbol = this.momentumService.selectedSymbol;
+
+
 
   constructor() {}
 

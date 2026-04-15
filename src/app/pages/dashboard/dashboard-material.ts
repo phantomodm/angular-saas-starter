@@ -26,8 +26,8 @@ import { AlertService } from '../../core/services/new/alert';
 import {
   EcosystemInstance,
   EcosystemLibraryService,
-} from '../../core/services/ecosystem-library';
-import { EcosystemEngineService } from '../../core/services/ecosystem-engine';
+} from '../ecosystems/ecosystem-library';
+import { EcosystemEngineService } from '../ecosystems/ecosystem-engine';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { EcosystemEngineService } from '../../../core/services/ecosystem-engine';
+import { EcosystemEngineService } from '../../../pages/ecosystems/ecosystem-engine';
 
 @Component({
   selector: 'app-predictive-timeline',

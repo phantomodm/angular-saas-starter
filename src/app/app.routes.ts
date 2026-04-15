@@ -87,10 +87,17 @@ export const routes: Routes = [
       },
       
       {
-        path: 'ecosystems',
+        path: 'ecosystem',
         loadComponent: () =>
           import('./pages/ecosystems/ecosystems-material').then(
             (m) => m.EcosystemsMaterial,
+          ),
+      },
+      {
+        path: 'ecosystem2',
+        loadComponent: () =>
+          import('./pages/ecosystems2/ecosystem2-dashboard').then(
+            (m) => m.EcosystemsMaterial2,
           ),
       },
       {

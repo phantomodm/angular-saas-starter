@@ -1,5 +1,5 @@
 import { ResolveFn } from '@angular/router';
-import { EcosystemEngineService } from '../ecosystem-engine';
+import { EcosystemEngineService } from '../../../pages/ecosystems/ecosystem-engine';
 import { inject } from '@angular/core';
 import { forkJoin, from, switchMap } from 'rxjs';
 import { Continuity } from '../continuity';

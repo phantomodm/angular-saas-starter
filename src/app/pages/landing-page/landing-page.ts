@@ -3,8 +3,9 @@ import { PredictiveTimeline } from '../../continuity/components/predictive-timel
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LiveHero } from '../../core/pages/live-hero/live-hero';
-import { EcosystemEngineService } from '../../core/services/ecosystem-engine';
+import { EcosystemEngineService } from '../ecosystems/ecosystem-engine';
 import { LandingPoller } from '../../core/services/landing-poller';
+import { EcosystemLibraryService } from '../ecosystems/ecosystem-library';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -22,6 +23,10 @@ import { DatePipe } from '@angular/common';
 export class LandingPage implements OnInit, OnDestroy {
   private engine = inject(EcosystemEngineService);
   private poller = inject(LandingPoller);
+  private library = inject(EcosystemLibraryService);
+
+templates = this.library.templatesSignal;
+
 
   loading = signal(false);
   //loading = this.engine.loading;

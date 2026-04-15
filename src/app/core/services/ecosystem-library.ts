@@ -1,6 +1,16 @@
-// EcosystemService - migrated from ecosystems.txt
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  doc,
+  docData,
+  setDoc,
+  deleteDoc,
+  updateDoc
+} from '@angular/fire/firestore';
+import { EcosystemInstrument } from './ecosystem-engine';
 
 export interface EcosystemTemplate {
   id: string;
@@ -23,8 +33,8 @@ export interface EcosystemInstance {
   name: string;
   templateId: string;
   status: 'active' | 'paused' | 'archived';
-  createdAt: Date;
-  lastModified: Date;
+  createdAt: Date | string;
+  lastModified: Date | string;
   monitoredEntities: number;
   alertsTriggered: number;
 }
@@ -33,6 +43,7 @@ export interface EcosystemInstance {
   providedIn: 'root'
 })
 export class EcosystemLibraryService {
+  private firestore = inject(Firestore);
   // Predefined ecosystem templates
   private templates: EcosystemTemplate[] = [
     {
@@ -108,8 +119,8 @@ export class EcosystemLibraryService {
       name: 'Global Banking System',
       templateId: 'template-001',
       status: 'active',
-      createdAt: new Date('2024-01-15'),
-      lastModified: new Date(),
+      createdAt: new Date('2024-01-15').toISOString(),
+      lastModified: new Date().toISOString(),
       monitoredEntities: 347,
       alertsTriggered: 12
     },
@@ -118,8 +129,8 @@ export class EcosystemLibraryService {
       name: 'US Credit - Quarterly Review',
       templateId: 'template-002',
       status: 'active',
-      createdAt: new Date('2024-02-01'),
-      lastModified: new Date(),
+      createdAt: new Date('2024-02-01').toISOString(),
+      lastModified: new Date().toISOString(),
       monitoredEntities: 218,
       alertsTriggered: 5
     }
@@ -131,6 +142,16 @@ export class EcosystemLibraryService {
   // Signal for templates (searchable)
   templatesSignal = signal<EcosystemTemplate[]>(this.templates);
 
+
+  /* -------------------------------------------------------
+     REACTIVE STATE (Workspace UI)
+  ------------------------------------------------------- */
+
+  selectedEcosystem = signal<EcosystemInstance | null>(null);
+  workspaceTemplates = signal<EcosystemTemplate[]>([]);
+  workspaceInstances = signal<EcosystemInstance[]>([]);
+  workspaceInstruments = signal<Record<string, EcosystemInstrument[]>>({});
+
   constructor() {
     this.instances$.subscribe(instances => {
       if (!this.selectedEcosystemSignal() && instances.length > 0) {
@@ -139,101 +160,181 @@ export class EcosystemLibraryService {
     });
   }
 
-  /**
-   * Get all available templates
-   */
-  getTemplates(): Observable<EcosystemTemplate[]> {
-    return new BehaviorSubject(this.templates).asObservable();
+
+  /* -------------------------------------------------------
+     WORKSPACE TEMPLATE OPERATIONS
+  ------------------------------------------------------- */
+
+  /** Get all templates in a workspace */
+  loadWorkspaceTemplates(workspaceId: string) {
+    const ref = collection(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_templates`
+    );
+
+    return collectionData(ref, { idField: 'id' }).subscribe(templates => {
+      this.workspaceTemplates.set(templates as EcosystemTemplate[]);
+    });
   }
 
-  /**
-   * Search templates by query
-   */
-  searchTemplates(query: string): EcosystemTemplate[] {
-    const lowerQuery = query.toLowerCase();
-    return this.templates.filter(t =>
-      t.name.toLowerCase().includes(lowerQuery) ||
-      t.description.toLowerCase().includes(lowerQuery) ||
-      t.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+  /** Get a single workspace template */
+  getTemplate(workspaceId: string, templateId: string) {
+    const ref = doc(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_templates/${templateId}`
+    );
+    return docData(ref, { idField: 'id' }) as any;
+  }
+
+  /** Get instruments for a workspace template */
+  loadTemplateInstruments(workspaceId: string, templateId: string) {
+    const ref = collection(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_templates/${templateId}/instruments`
+    );
+
+    return collectionData(ref, { idField: 'symbol' }).subscribe(instruments => {
+      this.workspaceInstruments.update(prev => ({
+        ...prev,
+        [templateId]: instruments as EcosystemInstrument[]
+      }));
+    });
+  }
+
+  /** Add a template from the global library into the workspace */
+  addTemplateToWorkspace(workspaceId: string, template: EcosystemTemplate) {
+    const ref = doc(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_templates/${template.id}`
+    );
+    return setDoc(ref, template);
+  }
+
+  /** Remove a workspace template */
+  removeTemplate(workspaceId: string, templateId: string) {
+    return deleteDoc(
+      doc(
+        this.firestore,
+        `workspaces/${workspaceId}/ecosystem_templates/${templateId}`
+      )
     );
   }
 
-  /**
-   * Filter templates by category
-   */
-  filterByCategory(category: string): EcosystemTemplate[] {
-    return this.templates.filter(t => t.category === category);
+  /** Add an instrument to a workspace template */
+  addTemplateInstrument(
+    workspaceId: string,
+    templateId: string,
+    symbol: string,
+    weight = 1
+  ) {
+    const ref = doc(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_templates/${templateId}/instruments/${symbol}`
+    );
+    return setDoc(ref, { symbol, weight });
   }
 
-  /**
-   * Get user's ecosystem instances
-   */
-  getInstances(): Observable<EcosystemInstance[]> {
-    return this.instances$.asObservable();
+  /** Remove an instrument from a workspace template */
+  removeTemplateInstrument(
+    workspaceId: string,
+    templateId: string,
+    symbol: string
+  ) {
+    return deleteDoc(
+      doc(
+        this.firestore,
+        `workspaces/${workspaceId}/ecosystem_templates/${templateId}/instruments/${symbol}`
+      )
+    );
   }
 
-  /**
-   * Create new ecosystem from template
-   */
-  createFromTemplate(templateId: string, instanceName: string): EcosystemInstance {
-    const template = this.templates.find(t => t.id === templateId);
-    if (!template) throw new Error(`Template ${templateId} not found`);
+  /* -------------------------------------------------------
+     WORKSPACE ECOSYSTEM INSTANCES
+  ------------------------------------------------------- */
 
-    const newInstance: EcosystemInstance = {
-      id: `instance-${Date.now()}`,
-      name: instanceName || template.name,
+  /** Load all workspace ecosystem instances */
+  loadWorkspaceInstances(workspaceId: string) {
+    const ref = collection(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_instances`
+    );
+
+    return collectionData(ref, { idField: 'id' }).subscribe(instances => {
+      this.workspaceInstances.set(instances as EcosystemInstance[]);
+
+      // Auto-select first instance if none selected
+      if (!this.selectedEcosystem() && instances.length > 0) {
+        this.selectedEcosystem.set(instances[0] as EcosystemInstance);
+      }
+    });
+  }
+
+  /** Create a workspace ecosystem instance */
+  createWorkspaceInstance(
+    workspaceId: string,
+    templateId: string,
+    name: string
+  ) {
+    const id = `instance-${Date.now()}`;
+    const instance: EcosystemInstance = {
+      id,
+      name,
       templateId,
       status: 'active',
-      createdAt: new Date(),
-      lastModified: new Date(),
-      monitoredEntities: Math.floor(Math.random() * 300) + 100,
+      createdAt: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
+      monitoredEntities: 0,
       alertsTriggered: 0
     };
 
-    const current = this.instances$.value;
-    this.instances$.next([...current, newInstance]);
-    this.selectedEcosystemSignal.set(newInstance);
-
-    return newInstance;
-  }
-
-  /**
-   * Select an ecosystem as current
-   */
-  selectEcosystem(instanceId: string): void {
-    const instance = this.instances$.value.find(i => i.id === instanceId);
-    if (instance) {
-      this.selectedEcosystemSignal.set(instance);
-    }
-  }
-
-  /**
-   * Get selected ecosystem
-   */
-  getSelectedEcosystem(): EcosystemInstance | null {
-    return this.selectedEcosystemSignal();
-  }
-
-  /**
-   * Update ecosystem status
-   */
-  updateStatus(instanceId: string, status: 'active' | 'paused' | 'archived'): void {
-    const updated = this.instances$.value.map(i =>
-      i.id === instanceId ? { ...i, status, lastModified: new Date() } : i
+    const ref = doc(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_instances/${id}`
     );
-    this.instances$.next(updated);
+
+    return setDoc(ref, instance);
   }
 
-  /**
-   * Delete ecosystem
-   */
-  deleteInstance(instanceId: string): void {
-    const updated = this.instances$.value.filter(i => i.id !== instanceId);
-    this.instances$.next(updated);
-    
-    const current = this.selectedEcosystemSignal();
-    if (current?.id === instanceId) {
-      this.selectedEcosystemSignal.set(updated[0] || null);
-    }
+  /** Update instance status */
+  updateInstanceStatus(
+    workspaceId: string,
+    instanceId: string,
+    status: 'active' | 'paused' | 'archived'
+  ) {
+    const ref = doc(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_instances/${instanceId}`
+    );
+
+    return updateDoc(ref, {
+      status,
+      lastModified: new Date().toISOString()
+    });
+  }
+
+  /** Delete a workspace instance */
+  deleteWorkspaceInstance(workspaceId: string, instanceId: string) {
+    const ref = doc(
+      this.firestore,
+      `workspaces/${workspaceId}/ecosystem_instances/${instanceId}`
+    );
+
+    return deleteDoc(ref).then(() => {
+      const remaining = this.workspaceInstances()
+        .filter(i => i.id !== instanceId);
+
+      this.workspaceInstances.set(remaining);
+      if (this.selectedEcosystem()?.id === instanceId) {
+        this.selectedEcosystem.set(remaining[0] || null);
+      }
+    });
+  }
+
+  /* -------------------------------------------------------
+     SELECTION
+  ------------------------------------------------------- */
+
+  selectEcosystem(instance: EcosystemInstance) {
+    this.selectedEcosystem.set(instance);
   }
 }

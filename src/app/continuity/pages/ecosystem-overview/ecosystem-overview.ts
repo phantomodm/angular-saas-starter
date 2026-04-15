@@ -16,7 +16,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { Continuity } from '../../../core/services/continuity';
 import { MarketDataPoller } from '../../../core/services/marketdata-poller.service';
-import { EcosystemEngineService } from '../../../core/services/ecosystem-engine';
+import { EcosystemEngineService } from '../../../pages/ecosystems/ecosystem-engine';
 
 @Component({
   selector: 'app-ecosystem-overview',

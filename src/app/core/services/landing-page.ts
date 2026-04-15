@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { EcosystemEngineService, EcosystemState } from './ecosystem-engine';
-import { EcosystemTemplate } from './ecosystem-library';
+import { EcosystemEngineService, EcosystemState } from '../../pages/ecosystems/ecosystem-engine';
+import { EcosystemTemplate } from '../../pages/ecosystems/ecosystem-library';
 
 @Injectable({
   providedIn: 'root',

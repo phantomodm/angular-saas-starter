@@ -6,12 +6,12 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { EcosystemEngineService } from '../../../core/services/ecosystem-engine';
+import { EcosystemEngineService } from '../../../pages/ecosystems/ecosystem-engine';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthStore } from '../../../core/store/auth.store';
 import { Router } from '@angular/router';
-import { EcosystemTemplate } from '../../../core/services/ecosystem-library';
+import { EcosystemTemplate } from '../../../pages/ecosystems/ecosystem-library';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, Validators } from '@angular/forms';
 

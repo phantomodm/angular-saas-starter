@@ -20,7 +20,7 @@ import {
   EcosystemLibraryService,
   EcosystemTemplate,
   EcosystemInstance,
-} from '../../core/services/ecosystem-library';
+} from './ecosystem-library';
 
 @Component({
   selector: 'app-ecosystems',

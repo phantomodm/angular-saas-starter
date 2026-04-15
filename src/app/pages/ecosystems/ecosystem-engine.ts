@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 const API_BASE_URL = 'https://continuityengine-910896594298.us-central1.run.app';
 
@@ -32,17 +32,11 @@ export interface EcosystemInstrument {
 
 export interface EcosystemState {
   continuityIndex: number;
-  trendIndex: number | null;
-  accelerationIndex: number | null;
-  collapseRisk: number | null;
-  volatilityIndex: number | null;
-
   load: number;
   resilience: number;
   leadTimeDays: number;
-
-  status: 'healthy' | 'drift' | 'stressed' | 'critical' | 'collapse-onset';
-  timestamp: string; // ISO timestamp
+  status: 'healthy' | 'drift' | 'critical';
+  timestamp: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -61,54 +55,52 @@ export class EcosystemEngineService {
     this.instruments.set([]);
     this.instrumentStates.set({});
     this.loading.set(true);
-  } 
-/* -------------------------------------------------------
-     GLOBAL TEMPLATES (FastAPI)
-     GET /ecosystems/templates
+  }
+
+
+  /* -------------------------------------------------------
+     TEMPLATE ENDPOINTS
   ------------------------------------------------------- */
+
   getTemplates() {
-    return this.http.get<EcosystemTemplate[]>(
-      `${API_BASE_URL}/ecosystems/templates`
+    return this.http.get<EcosystemTemplate[]>(`${API_BASE_URL}/ecosystems/templates`);
+  }
+
+  getTemplate(id: string) {
+    return this.http.get<EcosystemTemplate>(`${API_BASE_URL}/ecosystems/templates/${id}`);
+  }
+
+  getTemplateInstruments(id: string) {
+    return this.http.get<EcosystemInstrument[]>(
+      `${API_BASE_URL}/ecosystems/templates/${id}/instruments`
     );
   }
 
   /* -------------------------------------------------------
-     INSTANCES (FastAPI)
+     INSTANCE ENDPOINTS
   ------------------------------------------------------- */
 
-  getInstances(userId: string) {
-    return this.http.get<EcosystemInstance[]>(
-      `${API_BASE_URL}/ecosystems/instances`,
-      { params: { user_id: userId } }
-    );
+  getInstances() {
+    return this.http.get<EcosystemInstance[]>(`${API_BASE_URL}/ecosystems/instances`);
   }
 
-  createInstance(templateId: string, name: string, userId: string) {
+  createInstance(templateId: string, name: string) {
     return this.http.post<EcosystemInstance>(
       `${API_BASE_URL}/ecosystems/instances`,
-      {
-        template_id: templateId,
-        name,
-        user_id: userId,
-      }
+      { templateId, name }
     );
   }
 
   deleteInstance(id: string) {
-    return this.http.delete(
-      `${API_BASE_URL}/ecosystems/instances/${id}`
-    );
+    return this.http.delete(`${API_BASE_URL}/ecosystems/instances/${id}`);
   }
 
   updateInstanceStatus(id: string, status: string) {
-    return this.http.patch(
-      `${API_BASE_URL}/ecosystems/instances/${id}/status`,
-      { status }
-    );
+    return this.http.patch(`${API_BASE_URL}/ecosystems/instances/${id}/status`, { status });
   }
 
   /* -------------------------------------------------------
-     INSTANCE INSTRUMENTS (FastAPI)
+     INSTANCE INSTRUMENTS
   ------------------------------------------------------- */
 
   getInstanceInstruments(id: string) {
@@ -131,55 +123,18 @@ export class EcosystemEngineService {
   }
 
   /* -------------------------------------------------------
-     ECOSYSTEM STATE (FastAPI)
+     ECOSYSTEM STATE (STRUCTURAL RESILIENCE)
   ------------------------------------------------------- */
 
-  getLatestState(id: string): Observable<EcosystemState> {
-    this.loading.set(true);
-
-    return this.http.post<EcosystemState>(
-      `${API_BASE_URL}/ecosystems/instances/${id}/state/latest`,
-      {}
-    )
-  }
-
-  loadLatestState(id: string) {
-    this.loading.set(true);
-
+  getLatestState(id: string) {
     return this.http.get<EcosystemState>(
       `${API_BASE_URL}/ecosystems/instances/${id}/state/latest`
-    ).subscribe(state => {
-      this.ecosystemState.set(state);
-      this.loading.set(false);
-    });
-  }
-
-  loadStateHistory(id: string, limit = 200) {
-    return this.http.get<EcosystemState[]>(
-      `${API_BASE_URL}/ecosystems/instances/${id}/state/history`,
-      { params: { limit } }
     );
   }
 
-  /* -------------------------------------------------------
-     HIGH-LEVEL LOADERS (Convenience)
-  ------------------------------------------------------- */
-
-  /** Load everything needed for the dashboard */
-  loadEcosystem(id: string) {
-    this.ecosystemId.set(id);
-    this.loading.set(true);
-
-    // Load instruments + latest state in parallel
-    Promise.all([
-      this.getInstanceInstruments(id).toPromise(),
-      this.http.get<EcosystemState>(
-        `${API_BASE_URL}/ecosystems/instances/${id}/state/latest`
-      ).toPromise()
-    ]).then(([instruments, state]) => {
-      this.instruments.set(instruments || []);
-      this.ecosystemState.set(state || null);
-      this.loading.set(false);
-    });
+  getStateHistory(id: string) {
+    return this.http.get<EcosystemState[]>(
+      `${API_BASE_URL}/ecosystems/instances/${id}/state/history`
+    );
   }
 }

@@ -1,18 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { SimulatorService } from '../../../core/services/simulator.service';
+import { FormBuilder, FormGroup, FormsModule} from '@angular/forms';
 import { BotState } from "../../../core/models/sim";
 import {CommonModule} from "@angular/common";
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 @Component({
   selector: 'app-bot-panel',
-  imports: [CommonModule, MatCardModule, MatDividerModule],
+  imports: [CommonModule, MatCardModule, MatDividerModule, MatSlideToggleModule, FormsModule  ],
   standalone: true,
   template: `
     @if(botState){
         <mat-card class="bot-card">
       <mat-card-title>🤖 Auto-Bot (Scheer Momentum)</mat-card-title>
       <mat-divider></mat-divider>
+      <mat-slide-toggle
+      [(ngModel)]="isChecked"
+      (change)="reloadSimulator()"
+      >Enable Fibonacci</mat-slide-toggle>
       
       <div class="bot-status-msg" [class]="{'buy-action': botState.last_action.includes('BUY'), 'sell-action': botState.last_action.includes('SELL')}">
         Action: <strong>{{botState.last_action}}</strong>
@@ -47,10 +53,17 @@ import { MatDividerModule } from '@angular/material/divider';
   `]
 })
 export class BotPanelComponent implements OnInit {
-  botState?: BotState;
-  simulatorService = inject(SimulatorService);
+  private simService = inject(SimulatorService);
 
-  constructor() {}
+  botState?: BotState;
+  selectedSymbol = computed(() => this.simulatorService.selectedSymbol);
+  simulatorService = inject(SimulatorService);
+  isChecked = true;
+  //isChecked = signal<boolean>(true);
+
+  constructor() {
+
+  }
 
   ngOnInit(): void {
     // Assuming connectMomentum() is the method you use to connect to /ws/momentum
@@ -59,6 +72,16 @@ export class BotPanelComponent implements OnInit {
         this.botState = data.bot_state;
       }
     });
+  }
+
+  reloadSimulator(){
+
+    const body = {
+      mode:'simulator',
+      symbol: this.selectedSymbol(),
+      enable_fibonacci: this.isChecked
+    }
+    this.simulatorService.reloadSimulator(body);
   }
 
   getPnlColor(value: number): string {
