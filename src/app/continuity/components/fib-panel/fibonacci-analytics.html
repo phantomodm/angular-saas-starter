@@ -1,5 +1,4 @@
 <div *ngIf="sim && sim.fibonacci_enabled" class="space-y-6">
-
   <!-- Chart -->
   <mat-card>
     <mat-card-header>
@@ -19,12 +18,14 @@
 
     <mat-card-content class="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
       <ng-container *ngIf="sim.fibonacci_levels as levels">
-        <div *ngFor="let key of fibKeys">
-          <div class="text-xs text-gray-500">{{ key | uppercase }}</div>
-          <div class="font-semibold">
-            {{ levels[key] | number: '1.2-2' }}
+        @for (key of fibKeys; track key) {
+          <div>
+            <div class="text-xs text-gray-500">{{ key | uppercase }}</div>
+            <div class="font-semibold">
+              {{ levels[key] | number: "1.2-2" }}
+            </div>
           </div>
-        </div>
+        }
       </ng-container>
 
       <div class="col-span-full mt-4">
@@ -32,12 +33,12 @@
         <div
           class="text-lg font-bold"
           [ngClass]="{
-            'text-green-600': sim.fibonacci_signal === 'long_entry',
-            'text-red-600': sim.fibonacci_signal === 'short_entry',
-            'text-yellow-600': sim.fibonacci_signal === 'take_profit'
+            'text-green-600': sim.fibonacci_signal === 'long',
+            'text-red-600': sim.fibonacci_signal === 'short',
+            'text-yellow-600': sim.fibonacci_signal === 'neutral',
           }"
         >
-          {{ sim.fibonacci_signal || '—' }}
+          {{ sim.fibonacci_signal || "—" }}
         </div>
       </div>
     </mat-card-content>
@@ -53,21 +54,18 @@
       <div
         *ngFor="let row of fibConfluence"
         class="p-3 rounded text-center"
-        [style.background]="
-          'rgba(255, 100, 0,' + row.score.toFixed(2) + ')'
-        "
+        [style.background]="'rgba(255, 100, 0,' + row.score.toFixed(2) + ')'"
       >
         <div class="text-xs text-gray-800">
           {{ row.level | uppercase }}
         </div>
         <div class="text-sm font-semibold">
-          {{ row.price | number: '1.2-2' }}
+          {{ row.price | number: "1.2-2" }}
         </div>
         <div class="text-xs text-gray-700">
-          Δ {{ row.distance | number: '1.2-2' }}
+          Δ {{ row.distance | number: "1.2-2" }}
         </div>
       </div>
     </mat-card-content>
   </mat-card>
-
 </div>

@@ -15,18 +15,21 @@ import {
   ChartType
 } from 'chart.js';
 
-import annotationPlugin from 'chartjs-plugin-annotation';
+// import annotationPlugin from 'chartjs-plugin-annotation';
+import { MatCardModule } from "@angular/material/card";
+import { CommonModule } from '@angular/common';
+import { MomentumState } from '../../../core/services/simulator.service';
 
-Chart.register(annotationPlugin);
+// Chart.register(annotationPlugin);
 
-interface FibonacciLevels {
+export interface FibonacciLevels {
   [key: string]: number;
 }
 
-interface SimulatorState {
+export interface SimulatorState extends MomentumState {
   fibonacci_enabled: boolean;
   fibonacci_levels: FibonacciLevels | null;
-  fibonacci_signal: string | null;
+  fibonacci_signal: 'long' | 'short' | 'neutral' | null;
   mid_price: number;
 }
 
@@ -37,8 +40,22 @@ interface FibConfluenceRow {
   score: number;
 }
 
+export interface FibonacciLevels {
+  fib_236: number;
+  fib_382: number;
+  fib_500: number;
+  fib_618: number;
+  fib_786: number;
+  ext_127: number;
+  ext_161: number;
+  ext_261: number;
+}
+
+
 @Component({
   selector: 'app-fibonacci-analytics',
+  standalone: true,
+  imports: [MatCardModule , CommonModule],
   templateUrl: './fibonacci-analytics.html',
 })
 export class FibonacciAnalyticsComponent implements OnChanges, AfterViewInit {

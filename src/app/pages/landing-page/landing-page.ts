@@ -7,6 +7,7 @@ import { EcosystemEngineService } from '../ecosystems/ecosystem-engine';
 import { LandingPoller } from '../../core/services/landing-poller';
 import { EcosystemLibraryService } from '../ecosystems/ecosystem-library';
 import { DatePipe } from '@angular/common';
+import { EcosystemPublicService } from '../ecosystems/ecosystem-public';
 
 @Component({
   selector: 'app-landing-page',
@@ -21,30 +22,31 @@ import { DatePipe } from '@angular/common';
   styleUrl: './landing-page.scss',
 })
 export class LandingPage implements OnInit, OnDestroy {
+  private publicService = inject(EcosystemPublicService);
   private engine = inject(EcosystemEngineService);
   private poller = inject(LandingPoller);
-  private library = inject(EcosystemLibraryService);
 
-templates = this.library.templatesSignal;
-
+  templates = this.publicService.templatesSignal;
+  globalContinuity = this.publicService.globalContinuitySignal;
 
   loading = signal(false);
   //loading = this.engine.loading;
   ecosystemState = this.engine.ecosystemState;
 
   ngOnInit() {
-    // 1. Set the Public ID for the Landing Page
-    const publicId = 'public-g-sib-monitor';
-    this.engine.ecosystemId.set(publicId);
+    this.publicService.startPolling();
+    // // 1. Set the Public ID for the Landing Page
+    // const publicId = 'public-g-sib-monitor';
+    // this.engine.ecosystemId.set(publicId);
 
-    // 2. Fetch Initial State
-    this.engine.getLatestState(publicId).subscribe((state) => {
-      this.engine.ecosystemState.set(state);
-      this.engine.loading.set(false);
+    // // 2. Fetch Initial State
+    // this.engine.getLatestState(publicId).subscribe((state) => {
+    //   this.engine.ecosystemState.set(state);
+    //   this.engine.loading.set(false);
 
-      // 3. Start the 5s Poller for Real-time Updates
-      this.poller.startPolling(publicId);
-    });
+    //   // 3. Start the 5s Poller for Real-time Updates
+    //   this.poller.startPolling(publicId);
+    // });
   }
 
   ngOnDestroy() {

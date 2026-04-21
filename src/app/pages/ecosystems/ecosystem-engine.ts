@@ -1,8 +1,9 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { Firestore } from 'firebase/firestore';
 
-const API_BASE_URL = 'https://continuityengine-910896594298.us-central1.run.app';
+export const API_BASE_URL = 'https://continuityengine-910896594298.us-central1.run.app';
 
 export interface EcosystemTemplate {
   id: string;
@@ -42,6 +43,7 @@ export interface EcosystemState {
 @Injectable({ providedIn: 'root' })
 export class EcosystemEngineService {
   private http = inject(HttpClient);
+  private firestore = inject(Firestore);
 
   ecosystemId = signal<string>('');
   ecosystemState = signal<EcosystemState | null>(null);

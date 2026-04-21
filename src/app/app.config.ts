@@ -19,8 +19,9 @@ import { AuthInterceptor } from './core/http/auth.interceptor';
 import { ErrorInterceptor } from './core/http/error.interceptor';
 import { MockAuthService } from './core/auth/providers/mock-auth.service';
 //import { GlobalErrorHandler } from './core/services/global-error-handler.service';
+import * as annotationPlugin from 'chartjs-plugin-annotation';
 
-Chart.register(...registerables);
+Chart.register(...registerables, annotationPlugin);
 
 export const appConfig: ApplicationConfig = {
   providers: [

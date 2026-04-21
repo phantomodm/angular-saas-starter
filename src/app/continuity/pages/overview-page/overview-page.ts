@@ -49,7 +49,6 @@ import { MarketDataPoller } from '../../../core/services/marketdata-poller.servi
     MatGridListModule,
     NgChartsModule,
     Header,
-    AlertsPanel,
     RegimeTimeline,
     ForecastTable,
     TimeframeFilter,

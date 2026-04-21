@@ -1,0 +1,71 @@
+<div class="p-4 md:p-8 space-y-6">
+
+  <h1 class="text-2xl font-semibold">Symbol Management</h1>
+  <p class="text-neutral-500 text-sm">Manage the instruments in your ecosystem</p>
+
+  <!-- Add Symbol Form -->
+  <mat-card class="p-4 space-y-4">
+    <h2 class="text-lg font-semibold">Add Symbol</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Symbol</mat-label>
+        <input title="Enter Symbol" matInput [(ngModel)]="newSymbol" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Weight</mat-label>
+        <input title="Enter Weight" matInput type="number" [(ngModel)]="newWeight" />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="addSymbol()">
+        <mat-icon>add</mat-icon>
+        Add
+      </button>
+    </div>
+  </mat-card>
+
+  <!-- Symbol Table -->
+  <mat-card class="p-4">
+    <h2 class="text-lg font-semibold mb-4">Symbols</h2>
+
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="symbols()" class="min-w-full">
+
+        <ng-container matColumnDef="symbol">
+          <th mat-header-cell *matHeaderCellDef>Symbol</th>
+          <td mat-cell *matCellDef="let row">{{ row.symbol }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="weight">
+          <th mat-header-cell *matHeaderCellDef>Weight</th>
+          <td mat-cell *matCellDef="let row">{{ row.weight }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="volatility">
+          <th mat-header-cell *matHeaderCellDef>Volatility</th>
+          <td mat-cell *matCellDef="let row">{{ row.volatility || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="continuity">
+          <th mat-header-cell *matHeaderCellDef>Continuity</th>
+          <td mat-cell *matCellDef="let row">{{ row.continuity || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="warn" (click)="removeSymbol(row.symbol)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+    </div>
+  </mat-card>
+
+</div>
